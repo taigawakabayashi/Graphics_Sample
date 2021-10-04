@@ -18,9 +18,13 @@ public:
 
     int32_t MainLoop();
 
+    HWND GetHandle(){ return m_handle; }
+
     void Uninit();
 
 private:
+
+    HWND m_handle;
 };
 
 #endif // !APP_H

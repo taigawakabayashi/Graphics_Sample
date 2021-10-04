@@ -49,8 +49,11 @@ public:
 
 private:
 
-    HWND    m_handle;       // Window Handle
-    MSG     m_message;      // Message
+    HWND    m_handle = nullptr;       // Window Handle
+    MSG     m_message;                // Message
 
+    Window(){ ZeroMemory(&m_message,0); };
+    Window(const Window&);
+    Window& operator=(const Window&){};
 };
 #endif // WIN_H

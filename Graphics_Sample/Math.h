@@ -1,4 +1,7 @@
 #pragma once
+#ifndef MATH_H
+#define MATH_H
+
 #include <DirectXMath.h>
 #include <cmath>
 #include <functional>
@@ -1212,3 +1215,5 @@ public:
 	Property<Vector3> scale{ Scale };
 	Property<Vector3> angle{ Angle };
 };
+
+#endif // !MATH_H

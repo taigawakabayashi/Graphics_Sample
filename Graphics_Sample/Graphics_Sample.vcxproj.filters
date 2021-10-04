@@ -31,6 +31,12 @@
     <Filter Include="ヘッダー ファイル\DirectX3D 11">
       <UniqueIdentifier>{5e504452-23ef-479a-85b9-86964069b41b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Shader">
+      <UniqueIdentifier>{976b7d6b-687c-4ff8-8c0a-d8b840cca78d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader">
+      <UniqueIdentifier>{90af1be1-34b7-45d7-81ab-ac450ab8f6e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -51,6 +57,21 @@
     <ClCompile Include="Rasterizer.cpp">
       <Filter>ソース ファイル\DirectX3D 11</Filter>
     </ClCompile>
+    <ClCompile Include="ViewPort.cpp">
+      <Filter>ソース ファイル\DirectX3D 11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11Graphics.cpp">
+      <Filter>ソース ファイル\DirectX3D 11</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChain.cpp">
+      <Filter>ソース ファイル\DirectX3D 11</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>ソース ファイル\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -66,7 +87,22 @@
       <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
     </ClInclude>
     <ClInclude Include="Rasterizer.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewPort.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11Graphics.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>ヘッダー ファイル\Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,9 +15,15 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
     case WM_KEYDOWN:
 
         switch (h_WParam) {
+
         case VK_ESCAPE:
+
             DestroyWindow(h_Handle);
+
+            break;
+
         default:
+
             return DefWindowProc(h_Handle, h_Message, h_WParam, h_LParam);
         }
         return 0;
@@ -40,8 +46,6 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
 
         return DefWindowProc(h_Handle, h_Message, h_WParam, h_LParam);
     }
-
-    return 0;
 }
 
 //*****************************************
@@ -113,8 +117,6 @@ bool Window::Create(const HINSTANCE hInstance,
             nullptr);						// í«â¡à¯êîÇ»Çµ
     }
     else {
-
-        RECT	rWindow, rClient;
 
         RECT rc;
 
