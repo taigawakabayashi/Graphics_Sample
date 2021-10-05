@@ -78,16 +78,16 @@ namespace DirectX11
         {
             m_DriverType = driverType[driverTypeIndex];
 
-            hr=D3D11CreateDevice(nullptr,
-                                 m_DriverType,
-                                 nullptr,
-                                 createDeviceFlag,
-                                 fetureLevels,
-                                 numFetureLevels,
-                                 D3D11_SDK_VERSION,
-                                 &m_Device,
-                                 &m_FeatureLevel,
-                                 &m_ImmediateContext);
+            hr = D3D11CreateDevice(nullptr,
+                                   m_DriverType,
+                                   nullptr,
+                                   createDeviceFlag,
+                                   fetureLevels,
+                                   numFetureLevels,
+                                   D3D11_SDK_VERSION,
+                                   &m_Device,
+                                   &m_FeatureLevel,
+                                   &m_ImmediateContext);
 
             if(SUCCEEDED(hr))
                 break;
@@ -123,10 +123,10 @@ namespace DirectX11
             return false;
 
         // スワップチェイン作成
-        hr = m_SwapChain.CreateSwapChain(m_Device.Get(), hWnd, size);
+        m_SwapChain.CreateSwapChain(m_Device.Get(), hWnd, size);
 
         // ビューポートを作成
-        m_ViewPort.CreateViewPort(Vector2(static_cast<float>(size.x), static_cast<float>(size.x)), Vector2(0.0f, 0.0f));
+        m_ViewPort.CreateViewPort(Vector2(static_cast<float>(size.x), static_cast<float>(size.y)), Vector2(0.0f, 0.0f));
 
         // Zバッファの作成
         m_DepthStencil.CreateZBuffer(m_Device.Get(), size);
@@ -136,6 +136,19 @@ namespace DirectX11
 
         // ラスタライザーの作成
         m_Rasterizer.CreateRasterizer(m_Device.Get());
+
+        D3D11_SAMPLER_DESC smpDesc;
+        ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
+
+        smpDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        smpDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+        smpDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+        smpDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        hr = m_Device->CreateSamplerState(&smpDesc, &m_sampler);
+        if (FAILED(hr)) 
+            return false;
+
+        m_ImmediateContext->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
         return true;
     }

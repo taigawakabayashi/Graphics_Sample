@@ -52,6 +52,7 @@ namespace DirectX11
         ViewPort										m_ViewPort;				// ビューポート
         DepthStencil									m_DepthStencil;
         Rasterizer										m_Rasterizer;
+        ComPtr<ID3D11SamplerState>                      m_sampler;
 
         D3D_DRIVER_TYPE									m_DriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_NULL;			// ドライバタイプ
         D3D_FEATURE_LEVEL								m_FeatureLevel = D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_10_0;			// 機能レベル

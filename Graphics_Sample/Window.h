@@ -40,19 +40,14 @@ public:
     // ShowWindow
     void Show(uint32_t winMode);
 
-    // Execution Message
-    bool ExecMessage();
-
     // Getter
     HWND GetHandle() const;
-    long GetMessage() const;
 
 private:
 
     HWND    m_handle = nullptr;       // Window Handle
-    MSG     m_message;                // Message
 
-    Window(){ ZeroMemory(&m_message,0); };
+    Window(){};
     Window(const Window&);
     Window& operator=(const Window&){};
 };

@@ -16,6 +16,18 @@ public:
     
     bool Init();
 
+    static Shader* GetInstance() 
+    {
+        static Shader instance;
+
+        return &instance;
+    }
+
+    Shader(const Shader&) = delete;
+    Shader& operator = (const Shader&) = delete;
+    Shader(Shader&&) = delete;
+    Shader& operator = (Shader&&) = delete;
+
     ID3D11VertexShader* GetVS(){ return m_vertexShader.Get(); };
     ID3D11InputLayout* GetIL(){ return m_inputLayout.Get(); };
     ID3D11PixelShader* GetPS(){ return m_pixelShader.Get(); };
@@ -25,6 +37,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+
+    Shader(){}
 
     bool CreateVertexShader(ID3D11Device* device, 
                             const char* fileName,
@@ -52,14 +66,15 @@ private:
                           ID3DBlob** ppBlobOut);
 
     // ファイル名を所得
-    std::string ExtractFileName(std::string fullpath, char split);
+    std::string ExtractFileName(std::string fullPath, char split);
 
     // ファイルの拡張子を取得する
-    std::string GetFileExt(const char* filename);
+    std::string GetFileExt(const char* fileName);
 
     // コンパイル済みシェーダーファイルを読み込む
     bool readShader(const char* csoName, std::vector<unsigned char>& byteArray);
 
+    // ファイルからシェーダーを読み込みコンパイルする
     HRESULT CompileShaderFromFile(const char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 
 };

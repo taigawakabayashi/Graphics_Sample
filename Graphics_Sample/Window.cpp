@@ -20,6 +20,8 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
 
             DestroyWindow(h_Handle);
 
+            //PostQuitMessage(0);
+
             break;
 
         default:
@@ -44,8 +46,9 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
 
     default:
 
-        return DefWindowProc(h_Handle, h_Message, h_WParam, h_LParam);
+        break;
     }
+        return DefWindowProc(h_Handle, h_Message, h_WParam, h_LParam);
 }
 
 //*****************************************
@@ -168,27 +171,6 @@ void Window::Show(uint32_t winMode)
 }
 
 //*****************************************
-// ExecMessage.
-// 
-// \return true on success
-//*****************************************
-bool Window::ExecMessage()
-{
-    // メッセージ確認
-    while (PeekMessage(&m_message, m_handle, 0, 0, PM_NOREMOVE))
-    {
-        // メッセージなし
-        if (!(::GetMessage(&m_message, m_handle, 0, 0)))
-            return false;
-
-        TranslateMessage(&m_message);	// キーメッセージの変換
-        DispatchMessage(&m_message);	// メッセージの送出
-    }
-
-    return true;
-}
-
-//*****************************************
 // GetHandle.
 // 
 // \return window handle
@@ -196,14 +178,4 @@ bool Window::ExecMessage()
 HWND Window::GetHandle() const
 {
     return m_handle;
-}
-
-//*****************************************
-// GetMessage.
-// 
-// \return message
-//*****************************************
-long Window::GetMessage() const
-{
-    return m_message.message;
 }

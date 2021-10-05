@@ -37,6 +37,24 @@
     <Filter Include="ソース ファイル\Shader">
       <UniqueIdentifier>{90af1be1-34b7-45d7-81ab-ac450ab8f6e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{8e691d8b-0b97-407e-9f36-b86514e1ab96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\HLSL">
+      <UniqueIdentifier>{281a74ba-91cc-495b-97fc-71f3c691d94c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object">
+      <UniqueIdentifier>{889c7998-d7fd-4943-8d81-c6f822b57019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Object">
+      <UniqueIdentifier>{70cca3dc-c52c-4269-9eb9-8161105d6b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Resouce">
+      <UniqueIdentifier>{f602bf45-b16d-42c7-8318-654bd106e4fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Resouce">
+      <UniqueIdentifier>{f64b5064-48ac-49e0-b3d4-a5e79d997739}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -72,6 +90,12 @@
     <ClCompile Include="Shader.cpp">
       <Filter>ソース ファイル\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\Resouce</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math.h">
@@ -98,11 +122,25 @@
     <ClInclude Include="SwapChain.h">
       <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>ヘッダー ファイル\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>ヘッダー ファイル\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ヘッダー ファイル\Resouce</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\PixelShader.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\VertexShader.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

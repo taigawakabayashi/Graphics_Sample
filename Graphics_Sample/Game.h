@@ -18,5 +18,16 @@ public:
 
 private:
 
+    static Vector3 m_eye;
+    static Vector3 m_up;
+    static Vector3 m_lookat;
+
+    struct CameraMatrix     
+    {
+        XMMATRIX view;
+        XMMATRIX projection;
+    };
+
+    static Microsoft::WRL::ComPtr<ID3D11Buffer> m_cameraBuffer;
 };
 #endif // !GAME_H

@@ -5,11 +5,43 @@ bool Shader::Init()
 {
     ID3D11Device* device = DirectX11::GraphicsMng::GetInstance()->GetDevice();
 
+    D3D11_INPUT_ELEMENT_DESC layout[] = 
+    {
+        {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+        {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+    };
 
+    uint32_t numElements = ARRAYSIZE(layout);
+
+    // 頂点シェーダーを作成
+    bool sts = CreateVertexShader(
+        device,
+        "Shader/VertexShader.hlsl",
+        "main",
+        "vs_5_0",
+        layout,
+        numElements,
+        nullptr,
+        &m_vertexShader,
+        &m_inputLayout);
+
+    if (!sts) 
+        return false;
+
+    // ピクセルシェーダーを作成
+    sts = CreatePixelShader(
+        device,
+        "Shader/PixelShader.hlsl",
+        "main",
+        "ps_5_0",
+        nullptr,
+        &m_pixelShader);
+
+    if (!sts)
+        return false;
+
+    return true;
 }
-
-
-
 
 bool Shader::CreateVertexShader(ID3D11Device* device, 
                                 const char* fileName, 
@@ -102,10 +134,10 @@ HRESULT Shader::CompileShader(const char* szFileName, LPCSTR szEntryPoint, LPCST
     if (extname == "cso") {
         bool sts = readShader(szFileName, byteArray);
         if (!sts) {
-            FILE* fp;
-            fopen_s(&fp, "debug.txt", "a");
-            fprintf(fp, "file open error \n");
-            fclose(fp);
+            //FILE* fp;
+            //fopen_s(&fp, "debug.txt", "a");
+            //fprintf(fp, "file open error \n");
+            //fclose(fp);
             return E_FAIL;
         }
         *ShaderObject = byteArray.data();
@@ -166,8 +198,6 @@ bool Shader::readShader(const char* csoName, std::vector<unsigned char>& byteArr
 
 HRESULT Shader::CompileShaderFromFile(const char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob * *ppBlobOut)
 {
-    ID3DBlob* p1 = nullptr;
-
     HRESULT hr = S_OK;
 
     WCHAR	filename[512];

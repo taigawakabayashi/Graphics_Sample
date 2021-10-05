@@ -11,7 +11,7 @@ int APIENTRY WinMain(_In_     HINSTANCE  h_hInst,
     
     Application app;
 
-    app.Init(h_hInst,h_nWinMode);
+    app.Init(h_hInst, h_nWinMode);
 
     int ret = app.MainLoop();
 

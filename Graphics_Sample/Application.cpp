@@ -45,7 +45,7 @@ bool Application::Init(HINSTANCE hInstance, int32_t winMode)
 
 int32_t Application::MainLoop()
 {
-    Window* window = Window::Instance();
+    MSG message = {};
 
     std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
     std::chrono::system_clock::time_point lastTime = std::chrono::system_clock::now();
@@ -53,33 +53,43 @@ int32_t Application::MainLoop()
     Game::Init(m_handle, Vector2Int(960, 540));
 
     // メインループ
-    while (window->ExecMessage())
+    while (WM_QUIT != message.message)
     {
-        currentTime = std::chrono::system_clock::now();
-        
-        uint64_t deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime).count();
+        if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) 
+        {
+            TranslateMessage(&message);
+            DispatchMessage(&message);
+        }
+        else 
+        {
+            currentTime = std::chrono::system_clock::now();
+            
+            uint64_t deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime).count();
 
-        lastTime = currentTime;
+            lastTime = currentTime;
 
-        // ↓メイン処理
-        Game::Input(deltaTime);
-        Game::Update(deltaTime);
-        Game::Draw(deltaTime);
-        // ↑
+            // ↓メイン処理
+            Game::Input(deltaTime);
+            Game::Update(deltaTime);
+            Game::Draw(deltaTime);
+            // ↑
 
-        int64_t sleepTime = (1000 / 60) - deltaTime;
+            int64_t sleepTime = (1000 * 1000 / 60) - deltaTime;
 
-        //printf("%d\n", deltaTime);
+            //printf("%d\n", deltaTime);
 
-        if (sleepTime > 0) {
+            if (sleepTime > 0) {
 
-            float sleep = sleepTime / 1000.0f;
+                float sleep = sleepTime / 1000.0f;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(sleep)));
+                std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(sleep)));
+            }
         }
     }
 
-    return window->GetMessage();
+    Game::Uninit();
+
+    return message.message;
 }
 
 void Application::Uninit()
