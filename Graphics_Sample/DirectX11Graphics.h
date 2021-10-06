@@ -45,11 +45,10 @@ namespace DirectX11
 
     private:
 
-        ComPtr<ID3D11Device>							m_Device;				// デバイス
-        ComPtr<ID3D11DeviceContext>						m_ImmediateContext;		// デバイスコンテキスト
-        std::vector<ComPtr<ID3D11DeviceContext>>		m_DeferredContext;		// 遅延コンテキスト
-        SwapChain										m_SwapChain;			// スワップチェイン
-        ViewPort										m_ViewPort;				// ビューポート
+        ComPtr<ID3D11Device>							m_Device = nullptr;				// デバイス
+        ComPtr<ID3D11DeviceContext>						m_ImmediateContext = nullptr;	//デバイスコンテキスト
+        SwapChain										m_SwapChain;			        // スワップチェイン
+        ViewPort										m_ViewPort;				        // ビューポート
         DepthStencil									m_DepthStencil;
         Rasterizer										m_Rasterizer;
         ComPtr<ID3D11SamplerState>                      m_sampler;

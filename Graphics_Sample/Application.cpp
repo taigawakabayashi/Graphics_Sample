@@ -5,6 +5,7 @@
 #include <thread>
 #include "Application.h"
 #include "Game.h"
+#include "Timer.h"
 
 bool Application::Init(HINSTANCE hInstance, int32_t winMode)
 {
@@ -13,6 +14,7 @@ bool Application::Init(HINSTANCE hInstance, int32_t winMode)
     // メモリーリークを検出
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+    ////コンソールを作成
     //AllocConsole();
 
     //FILE* m_fp = nullptr; 
@@ -21,24 +23,28 @@ bool Application::Init(HINSTANCE hInstance, int32_t winMode)
     //freopen_s(&m_fp, "CON", "w", stdout);
     //freopen_s(&m_fp, "CON", "r", stdin);
 
-    Window* window = Window::Instance();
+    Window window;
 
     // ウィンドウクラスの登録
-    window->RegisterClass(hInstance, CS_OWNDC, L"Main");
+    window.RegisterClass(hInstance, CS_OWNDC, L"Main");
 
     // ウィンドウの作成
-    sts = window->Create(hInstance,
-                         WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU,
-                         0,
-                         L"Main",
-                         L"Graphics Sample",
-                         false,
-                         Vector2Int(960,540));
+    sts = window.Create(hInstance,
+                        WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU,
+                        0,
+                        L"Main",
+                        L"Graphics Sample",
+                        false,
+                        Vector2Int(960,540));
 
     // ウィンドウの表示
-    window->Show(winMode);
+    window.Show(winMode);
 
-    m_handle = window->GetHandle();
+    // ウィンドウハンドルを保存
+    m_handle = window.GetHandle();
+
+    // アプリケーションインスタンスを保存
+    m_hInstance = hInstance;
 
     return sts;
 }
@@ -47,46 +53,45 @@ int32_t Application::MainLoop()
 {
     MSG message = {};
 
-    std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
-    std::chrono::system_clock::time_point lastTime = std::chrono::system_clock::now();
+    uint64_t deltaTime = 0;
 
+    // 初期化
     Game::Init(m_handle, Vector2Int(960, 540));
 
     // メインループ
     while (WM_QUIT != message.message)
     {
+        // メッセージがある場合はそちらの処理を優先
         if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) 
         {
-            TranslateMessage(&message);
-            DispatchMessage(&message);
+            TranslateMessage(&message);     // メッセージの変換
+            DispatchMessage(&message);      // メッセージの送出
         }
         else 
         {
-            currentTime = std::chrono::system_clock::now();
-            
-            uint64_t deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime).count();
+            // CurrentTime セット & DeltaTime を計算
+            Timer::SetStart();
 
-            lastTime = currentTime;
+            // DeltaTime 取得
+            deltaTime = Timer::GetDeltaTIme();
 
             // ↓メイン処理
-            Game::Input(deltaTime);
-            Game::Update(deltaTime);
-            Game::Draw(deltaTime);
+            Game::Input(deltaTime);     // 入力
+            Game::Update(deltaTime);    // 更新
+            Game::Draw(deltaTime);      // 描画
             // ↑
 
-            int64_t sleepTime = (1000 * 1000 / 60) - deltaTime;
+            // LastTime セット
+            Timer::SetEnd();
 
-            //printf("%d\n", deltaTime);
+            //printf("%dns    %f\n", Timer::GetDeltaTIme(), Timer::GetFPS());
 
-            if (sleepTime > 0) {
-
-                float sleep = sleepTime / 1000.0f;
-
-                std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(sleep)));
-            }
+            // 指定したFPS以上になった場合にスレッドを一時停止する
+            std::this_thread::sleep_for(Timer::GetSleepTImeForFPS(60));
         }
     }
 
+    // 終了処理
     Game::Uninit();
 
     return message.message;

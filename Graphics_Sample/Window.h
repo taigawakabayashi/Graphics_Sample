@@ -15,14 +15,6 @@
 class Window 
 {
 public:
-    
-    // GetInstance
-    static Window* Instance() {
-
-        static Window instance;
-
-        return &instance;
-    }
 
     bool RegisterClass(const HINSTANCE hInstance,
                        const unsigned long style,
@@ -40,15 +32,11 @@ public:
     // ShowWindow
     void Show(uint32_t winMode);
 
-    // Getter
+    // GetHandle
     HWND GetHandle() const;
 
 private:
 
     HWND    m_handle = nullptr;       // Window Handle
-
-    Window(){};
-    Window(const Window&);
-    Window& operator=(const Window&){};
 };
 #endif // WIN_H

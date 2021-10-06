@@ -11,9 +11,9 @@ class Object
 public:
 
     bool Init();
-    void Input(uint32_t deltaTime){}
-    void Update(uint32_t deltaTime);
-    void Draw(uint32_t deltaTime);
+    void Input(uint64_t){}
+    void Update(uint64_t);
+    void Draw(uint64_t);
     void Uninit();
 
     void SetSrv(ID3D11ShaderResourceView* srv){ m_texSrv = srv; }
@@ -35,10 +35,10 @@ private:
         uint32_t idx[3];
     };
 
-    uint32_t m_numVertex;
-    uint32_t m_numIndex;
+    uint32_t m_numVertex = 0;
+    uint32_t m_numIndex = 0;
 
-    XMMATRIX m_worldMtx;
+    XMMATRIX m_worldMtx = XMMatrixIdentity();
 
     ComPtr<ID3D11Buffer> m_vertexBuffer;      // 頂点バッファ
     ComPtr<ID3D11Buffer> m_constantBuffer;    // 定数バッファ

@@ -10,11 +10,19 @@
 #define APP_H
 #include "Window.h"
 
+enum class GRAPGICS
+{
+    DIRECTX11,
+    DIRECTX12,
+    OPENGL,
+    VULKAN,
+};
+
 class Application
 {
 public:
 
-    bool Init(HINSTANCE hInstance,int32_t winMode);
+    bool Init(HINSTANCE hInstance, int32_t winMode);
 
     int32_t MainLoop();
 
@@ -24,7 +32,9 @@ public:
 
 private:
 
-    HWND m_handle;
+    HWND m_handle;              // ウィンドウハンドル
+
+    HINSTANCE m_hInstance;      // アプリケーションインスタンス
 };
 
 #endif // !APP_H

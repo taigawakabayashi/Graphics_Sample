@@ -4,7 +4,6 @@
 bool Texture::CreateTexture(ID3D11ShaderResourceView** srv)
 {
     ID3D11Device* device = DirectX11::GraphicsMng::GetInstance()->GetDevice();
-    ID3D11DeviceContext* devcontext = DirectX11::GraphicsMng::GetInstance()->GetImmediateContext();
 
     DWORD* Color = new DWORD[256 * 256];
 

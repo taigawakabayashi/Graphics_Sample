@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Window">
-      <UniqueIdentifier>{930f2a4a-2152-449d-a5f3-11cbcacc1873}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Window">
-      <UniqueIdentifier>{9e3cac87-2111-4e9b-abb9-6d62e004a9f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Application">
       <UniqueIdentifier>{96fa8c75-bfb6-41ef-bdfb-1e4bd5031430}</UniqueIdentifier>
     </Filter>
@@ -31,35 +25,62 @@
     <Filter Include="ヘッダー ファイル\DirectX3D 11">
       <UniqueIdentifier>{5e504452-23ef-479a-85b9-86964069b41b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Shader">
-      <UniqueIdentifier>{976b7d6b-687c-4ff8-8c0a-d8b840cca78d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Shader">
-      <UniqueIdentifier>{90af1be1-34b7-45d7-81ab-ac450ab8f6e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{8e691d8b-0b97-407e-9f36-b86514e1ab96}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shader\HLSL">
       <UniqueIdentifier>{281a74ba-91cc-495b-97fc-71f3c691d94c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Object">
+    <Filter Include="ソース ファイル\System">
+      <UniqueIdentifier>{49320594-9afb-47a6-b4ad-2dd21d5fc014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\System\Window">
+      <UniqueIdentifier>{930f2a4a-2152-449d-a5f3-11cbcacc1873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System">
+      <UniqueIdentifier>{b97d0fae-0dba-48db-9b01-06d6a0e16390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\System\Window">
+      <UniqueIdentifier>{9e3cac87-2111-4e9b-abb9-6d62e004a9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX3D 11\Graphics">
+      <UniqueIdentifier>{c03cf040-d901-4267-9b4a-5834ca2a4196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX3D 11\Object">
       <UniqueIdentifier>{889c7998-d7fd-4943-8d81-c6f822b57019}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Object">
-      <UniqueIdentifier>{70cca3dc-c52c-4269-9eb9-8161105d6b8c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Resouce">
+    <Filter Include="ソース ファイル\DirectX3D 11\Resouce">
       <UniqueIdentifier>{f602bf45-b16d-42c7-8318-654bd106e4fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Resouce">
+    <Filter Include="ソース ファイル\DirectX3D 11\Shader">
+      <UniqueIdentifier>{90af1be1-34b7-45d7-81ab-ac450ab8f6e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 11\Graphics">
+      <UniqueIdentifier>{009548f8-e3b4-4c0b-9b24-672bee41a284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 11\Object">
+      <UniqueIdentifier>{70cca3dc-c52c-4269-9eb9-8161105d6b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 11\Resouce">
       <UniqueIdentifier>{f64b5064-48ac-49e0-b3d4-a5e79d997739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 11\Shader">
+      <UniqueIdentifier>{976b7d6b-687c-4ff8-8c0a-d8b840cca78d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX3D 12">
+      <UniqueIdentifier>{f0c8f576-b987-4455-ad27-51e7f50eacc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 12">
+      <UniqueIdentifier>{8c4596ee-15ff-4a90-b653-9990aad68387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX3D 12\Graphics">
+      <UniqueIdentifier>{3387f636-486f-41ef-ace6-a9d98db6277a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 12\Graphics">
+      <UniqueIdentifier>{c0b399a5-fe00-408b-943c-455d98916224}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -67,34 +88,40 @@
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>ソース ファイル\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="DepthStencil.cpp">
-      <Filter>ソース ファイル\DirectX3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="Rasterizer.cpp">
-      <Filter>ソース ファイル\DirectX3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewPort.cpp">
-      <Filter>ソース ファイル\DirectX3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX11Graphics.cpp">
-      <Filter>ソース ファイル\DirectX3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="SwapChain.cpp">
-      <Filter>ソース ファイル\DirectX3D 11</Filter>
+      <Filter>ソース ファイル\System\Window</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>ソース ファイル\Shader</Filter>
+      <Filter>ソース ファイル\DirectX3D 11\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>ソース ファイル\Object</Filter>
+      <Filter>ソース ファイル\DirectX3D 11\Object</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>ソース ファイル\Resouce</Filter>
+      <Filter>ソース ファイル\DirectX3D 11\Resouce</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>ソース ファイル\System</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencil.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11Graphics.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Rasterizer.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChain.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewPort.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,34 +132,37 @@
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>ヘッダー ファイル\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencil.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
-    </ClInclude>
-    <ClInclude Include="Rasterizer.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewPort.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX11Graphics.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
-    </ClInclude>
-    <ClInclude Include="SwapChain.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11</Filter>
+      <Filter>ヘッダー ファイル\System\Window</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>ヘッダー ファイル\Shader</Filter>
+      <Filter>ヘッダー ファイル\DirectX3D 11\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>ヘッダー ファイル\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>ヘッダー ファイル\Window</Filter>
+      <Filter>ヘッダー ファイル\DirectX3D 11\Object</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>ヘッダー ファイル\Resouce</Filter>
+      <Filter>ヘッダー ファイル\DirectX3D 11\Resouce</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencil.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11Graphics.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rasterizer.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewPort.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

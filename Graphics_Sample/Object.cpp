@@ -9,9 +9,6 @@ bool Object::Init()
 
     HRESULT hr = S_OK;
 
-    // ワールド行列の初期化
-    m_worldMtx = XMMatrixIdentity();
-
     // 頂点構造体の初期化
     Vertex v[] = 
     {
@@ -113,7 +110,7 @@ bool Object::Init()
     return true;
 }
 
-void Object::Update(uint32_t deltaTime)
+void Object::Update(uint64_t)
 {
     m_angle.y += 0.05f;
 
@@ -145,7 +142,7 @@ void Object::Update(uint32_t deltaTime)
     devcontext->Unmap(m_constantBuffer.Get(), 0);
 }
 
-void Object::Draw(uint32_t deltaTime)
+void Object::Draw(uint64_t)
 {
     ID3D11DeviceContext* devcontext = DirectX11::GraphicsMng::GetInstance()->GetImmediateContext();
 

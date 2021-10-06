@@ -6,19 +6,11 @@
 #pragma comment (lib,"winmm.lib")
 #pragma comment (lib,"dxguid.lib")
 
-namespace DirectX11 
+namespace DirectX11
 {
     bool GraphicsMng::Init(HWND hWnd, Vector2Int size)
     {
         HRESULT hr = S_OK;
-        IDXGIFactory* pFactory = nullptr;				// factory
-        IDXGIAdapter* pAdapter = nullptr;				// videocard
-        IDXGIOutput* pAdapterOutput = nullptr;;		    // monitor
-
-        uint32_t numModes = 0;
-
-        DXGI_MODE_DESC* displayModeList = nullptr;
-        D3D11_BLEND_DESC blendStateDesc;
 
         D3D_DRIVER_TYPE driverType[] =
         {
@@ -39,45 +31,11 @@ namespace DirectX11
 
         uint32_t numFetureLevels = ARRAYSIZE(fetureLevels);
 
-        // Create DXGI Factory
-        hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
-        if(FAILED(hr))
-            return false;
-
-        hr = pFactory->EnumAdapters(0, &pAdapter);
-        if(FAILED(hr))
-            return false;
-
-        hr = pAdapter->EnumOutputs(0, &pAdapterOutput);
-        if(FAILED(hr))
-            return false;
-
-        hr = pAdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, nullptr);
-        if(FAILED(hr))
-            return false;
-
-        displayModeList = new DXGI_MODE_DESC[numModes];
-        if(!displayModeList)
-            return false;
-
-        hr = pAdapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
-
-        delete[] displayModeList;
-        displayModeList = nullptr;
-
-        pAdapterOutput->Release();
-        pAdapterOutput = nullptr;
-
-        pAdapter->Release();
-        pAdapter = nullptr;
-
-        pFactory->Release();
-        pFactory = nullptr;
-
         for (uint32_t driverTypeIndex = 0; driverTypeIndex < numDriverTypes; ++driverTypeIndex)
         {
             m_DriverType = driverType[driverTypeIndex];
 
+            // デバイスの作成
             hr = D3D11CreateDevice(nullptr,
                                    m_DriverType,
                                    nullptr,
@@ -96,6 +54,7 @@ namespace DirectX11
         if(FAILED(hr))
             return false;
 
+        D3D11_BLEND_DESC blendStateDesc;
         // ブレンドステート初期化
         ZeroMemory(&blendStateDesc, sizeof(blendStateDesc));
 
@@ -137,6 +96,7 @@ namespace DirectX11
         // ラスタライザーの作成
         m_Rasterizer.CreateRasterizer(m_Device.Get());
 
+        // サンプラーの設定
         D3D11_SAMPLER_DESC smpDesc;
         ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
 
@@ -190,8 +150,8 @@ namespace DirectX11
         m_ViewPort.SetViewPort(m_ImmediateContext.Get());
     }
 
-    void GraphicsMng::TurnOnZBuffer() {
-
+    void GraphicsMng::TurnOnZBuffer() 
+    {
         ID3D11RenderTargetView* rtvtable[1];
 
         rtvtable[0] = m_SwapChain.GetRenderTargetView();
@@ -203,8 +163,8 @@ namespace DirectX11
         );
     }
 
-    void GraphicsMng::TurnOffZBuffer() {
-
+    void GraphicsMng::TurnOffZBuffer() 
+    {
         ID3D11RenderTargetView* rtvtable[1];
 
         rtvtable[0] = m_SwapChain.GetRenderTargetView();
@@ -216,8 +176,8 @@ namespace DirectX11
         );
     }
 
-    void GraphicsMng::TurnOnAlphaBlending() {
-
+    void GraphicsMng::TurnOnAlphaBlending() 
+    {
         float blendFactor[4];
 
         blendFactor[0] = 0.0f;
@@ -230,8 +190,8 @@ namespace DirectX11
         return;
     }
 
-    void GraphicsMng::TurnOffAlphaBlending() {
-
+    void GraphicsMng::TurnOffAlphaBlending() 
+    {
         float blendFactor[4];
 
         blendFactor[0] = 0.0f;
