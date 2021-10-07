@@ -19,10 +19,10 @@ namespace Timer
         return g_deltaTime;
     }
     
-    std::chrono::milliseconds GetSleepTImeForFPS(uint32_t fps)
+    std::chrono::milliseconds GetSleepTImeForFPS(uint32_t _fps)
     {
         int64_t sleepTime = static_cast<int64_t>
-                            ((1000000000 / fps) - g_deltaTime) / 1000000;
+                            ((1000000000 / _fps) - g_deltaTime) / 1000000;
     
         if (sleepTime < 0)
         {

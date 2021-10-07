@@ -1,8 +1,8 @@
-#include "Rasterizer.h"
+#include "DirectX11/DirectX11_Rasterizer.h"
 
 namespace DirectX11 
 {
-    bool Rasterizer::CreateRasterizer(ID3D11Device* device)
+    bool DirectX11_Rasterizer::CreateRasterizer(ID3D11Device* _pDevice)
     {
         D3D11_RASTERIZER_DESC rasterDesc;
         ZeroMemory(&rasterDesc, sizeof(rasterDesc));
@@ -18,7 +18,7 @@ namespace DirectX11
         rasterDesc.ScissorEnable = false;
         rasterDesc.SlopeScaledDepthBias = 0.0f;
 
-        HRESULT hr = device->CreateRasterizerState(&rasterDesc, &m_rasterState);
+        HRESULT hr = _pDevice->CreateRasterizerState(&rasterDesc, &m_rasterState);
 
         if (FAILED(hr))
             return false;
@@ -26,9 +26,9 @@ namespace DirectX11
         return true;
     }
 
-    void Rasterizer::SetRasterizer(ID3D11DeviceContext* devcontext)
+    void DirectX11_Rasterizer::SetRasterizer(ID3D11DeviceContext* _pDeviceContext)
     {
-        devcontext->RSSetState(m_rasterState.Get());
+        _pDeviceContext->RSSetState(m_rasterState.Get());
     }
 
 }

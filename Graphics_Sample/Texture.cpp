@@ -1,11 +1,11 @@
+#include <DirectX11/DirectX11_GraphicsManager.h>
 #include "Texture.h"
-#include "DirectX11Graphics.h"
 
-bool Texture::CreateTexture(ID3D11ShaderResourceView** srv)
+bool Texture::CreateTexture(ID3D11ShaderResourceView** _ppSrv)
 {
-    ID3D11Device* device = DirectX11::GraphicsMng::GetInstance()->GetDevice();
+    ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
-    DWORD* Color = new DWORD[256 * 256];
+    uint32_t* Color = new uint32_t[256 * 256];
 
     for (int x = 0; x < 256; ++x)
     {
@@ -27,11 +27,11 @@ bool Texture::CreateTexture(ID3D11ShaderResourceView** srv)
             {
                 if (y / 128 != 1)
                 {
-                    Color[x + y * 256] = 0xfff00fff;
+                    Color[x + y * 256] = 0xff00ffff;
                 }
                 else
                 {
-                    Color[x + y * 256] = 0xffff0000;
+                    Color[x + y * 256] = 0xff00ff00;
                 }
             }
 
@@ -73,7 +73,7 @@ bool Texture::CreateTexture(ID3D11ShaderResourceView** srv)
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
     srvDesc.Texture2D.MostDetailedMip = 0;
 
-    hr = device->CreateShaderResourceView(m_texture.Get(), &srvDesc, srv);
+    hr = device->CreateShaderResourceView(m_texture.Get(), &srvDesc, _ppSrv);
 
     if(FAILED(hr))
         return false;

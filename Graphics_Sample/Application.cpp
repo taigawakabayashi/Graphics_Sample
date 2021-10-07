@@ -7,7 +7,7 @@
 #include "Game.h"
 #include "Timer.h"
 
-bool Application::Init(HINSTANCE hInstance, int32_t winMode)
+bool Application::Init(HINSTANCE _hInstance, int32_t _winMode)
 {
     bool sts = false;
 
@@ -26,10 +26,10 @@ bool Application::Init(HINSTANCE hInstance, int32_t winMode)
     Window window;
 
     // ウィンドウクラスの登録
-    window.RegisterClass(hInstance, CS_OWNDC, L"Main");
+    window.RegisterClass(_hInstance, CS_OWNDC, L"Main");
 
     // ウィンドウの作成
-    sts = window.Create(hInstance,
+    sts = window.Create(_hInstance,
                         WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU,
                         0,
                         L"Main",
@@ -38,13 +38,13 @@ bool Application::Init(HINSTANCE hInstance, int32_t winMode)
                         Vector2Int(960,540));
 
     // ウィンドウの表示
-    window.Show(winMode);
+    window.Show(_winMode);
 
     // ウィンドウハンドルを保存
     m_handle = window.GetHandle();
 
     // アプリケーションインスタンスを保存
-    m_hInstance = hInstance;
+    m_hInstance = _hInstance;
 
     return sts;
 }

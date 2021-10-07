@@ -1,7 +1,7 @@
 #pragma once
 #ifndef OBJ_H
 #define OBJ_H
-#include "DirectX11Graphics.h"
+#include "DirectX11/DirectX11_GraphicsManager.h"
 #include "Shader.h"
 
 using Microsoft::WRL::ComPtr;
@@ -16,7 +16,7 @@ public:
     void Draw(uint64_t);
     void Uninit();
 
-    void SetSrv(ID3D11ShaderResourceView* srv){ m_texSrv = srv; }
+    void SetSrv(ID3D11ShaderResourceView* _srv){ m_texSrv = _srv; }
 
 private:
     

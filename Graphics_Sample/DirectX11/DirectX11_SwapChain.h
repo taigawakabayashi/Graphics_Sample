@@ -4,19 +4,19 @@
 
 #include <d3d11.h>
 #include <wrl/client.h>
-#include "Math.h"
+#include <Utility/Math.h>
 
 namespace DirectX11 {
 
     using Microsoft::WRL::ComPtr;
 
-    class SwapChain {
+    class DirectX11_SwapChain {
 
     public:
 
-        bool CreateSwapChain(ID3D11Device* device, HWND hWnd, Vector2Int size);
+        bool CreateSwapChain(ID3D11Device* _pDevice, HWND _hWnd, Vector2Int _size);
 
-        bool CreateRenderTaergetView(ID3D11Device* device);
+        bool CreateRenderTaergetView(ID3D11Device* _pDevice);
 
         IDXGISwapChain* GetSwapChain(){ return m_SwapChain.Get(); }
 

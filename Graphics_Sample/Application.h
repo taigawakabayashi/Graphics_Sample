@@ -22,7 +22,7 @@ class Application
 {
 public:
 
-    bool Init(HINSTANCE hInstance, int32_t winMode);
+    bool Init(HINSTANCE _hInstance, int32_t _winMode);
 
     int32_t MainLoop();
 

@@ -1,15 +1,15 @@
-#include "DepthStencil.h"
+#include "DirectX11/DirectX11_DepthStencil.h"
 
 namespace DirectX11 {
 
-    bool DepthStencil::CreateZBuffer(ID3D11Device* device, Vector2Int size)
+    bool DirectX11_DepthStencil::CreateZBuffer(ID3D11Device* _pDevice, Vector2Int _size)
     {
         D3D11_TEXTURE2D_DESC desc;
 
         ZeroMemory(&desc,sizeof(desc));
 
-        desc.Width = size.x;
-        desc.Height = size.y;
+        desc.Width = _size.x;
+        desc.Height = _size.y;
         desc.MipLevels = 1;
         desc.ArraySize = 1;
         desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -20,7 +20,7 @@ namespace DirectX11 {
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
 
-        HRESULT hr = device->CreateTexture2D(&desc, nullptr, &m_deprhStencilBuffer);
+        HRESULT hr = _pDevice->CreateTexture2D(&desc, nullptr, &m_deprhStencilBuffer);
 
         if (FAILED(hr)) {
 
@@ -30,7 +30,7 @@ namespace DirectX11 {
         return true;
     }
 
-    bool DepthStencil::CreateDepthStencil(ID3D11Device* device)
+    bool DirectX11_DepthStencil::CreateDepthStencil(ID3D11Device* _pDevice)
     {
         D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -57,7 +57,7 @@ namespace DirectX11 {
         depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
         depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-        HRESULT hr =device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+        HRESULT hr =_pDevice->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 
         if (FAILED(hr)) {
 
@@ -70,7 +70,7 @@ namespace DirectX11 {
         depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
         depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-        hr = device->CreateDepthStencilView(m_deprhStencilBuffer.Get() ,&depthStencilViewDesc, &m_depthStencilView);
+        hr = _pDevice->CreateDepthStencilView(m_deprhStencilBuffer.Get() ,&depthStencilViewDesc, &m_depthStencilView);
 
         if (FAILED(hr)) {
 
@@ -80,12 +80,12 @@ namespace DirectX11 {
         return true;
     }
 
-    ID3D11DepthStencilView* DepthStencil::GetStencilView() {
+    ID3D11DepthStencilView* DirectX11_DepthStencil::GetStencilView() {
 
         return m_depthStencilView.Get();
     }
 
-    ID3D11DepthStencilState* DepthStencil::GetStencilState() {
+    ID3D11DepthStencilState* DirectX11_DepthStencil::GetStencilState() {
 
         return m_depthStencilState.Get();
     }

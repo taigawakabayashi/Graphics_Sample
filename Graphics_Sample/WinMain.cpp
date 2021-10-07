@@ -2,15 +2,15 @@
 #include <tchar.h>
 #include "Application.h"
 
-int APIENTRY WinMain(_In_     HINSTANCE  h_hInst,
+int APIENTRY WinMain(_In_     HINSTANCE  _hInst,
                      _In_opt_ HINSTANCE,
                      _In_     LPSTR,
-                     _In_     int		 h_nWinMode) 
+                     _In_     int		 _winMode) 
 {
     //------------------------------
     Application app;
 
-    app.Init(h_hInst, h_nWinMode);
+    app.Init(_hInst, _winMode);
 
     int ret = app.MainLoop();
 

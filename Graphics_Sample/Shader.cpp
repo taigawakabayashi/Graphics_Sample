@@ -1,9 +1,9 @@
+#include <DirectX11/DirectX11_GraphicsManager.h>
 #include "Shader.h"
-#include "DirectX11Graphics.h"
 
 bool Shader::Init()
 {
-    ID3D11Device* device = DirectX11::GraphicsMng::GetInstance()->GetDevice();
+    ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
     D3D11_INPUT_ELEMENT_DESC layout[] = 
     {
@@ -43,15 +43,15 @@ bool Shader::Init()
     return true;
 }
 
-bool Shader::CreateVertexShader(ID3D11Device* device, 
-                                const char* fileName, 
-                                LPCSTR entryPoint,
-                                LPCSTR shaderModel, 
-                                D3D11_INPUT_ELEMENT_DESC* layout,
-                                uint32_t numElements, 
-                                ID3D11ClassLinkage* pClassLinkage, 
-                                ID3D11VertexShader** ppVertexShader, 
-                                ID3D11InputLayout** ppInputLayout)
+bool Shader::CreateVertexShader(ID3D11Device* _pDevice, 
+                                const char* _pFileName, 
+                                LPCSTR _entryPoint,
+                                LPCSTR _shaderModel, 
+                                D3D11_INPUT_ELEMENT_DESC* _pLayout,
+                                uint32_t _numElements, 
+                                ID3D11ClassLinkage* _pClassLinkage, 
+                                ID3D11VertexShader** _ppVertexShader, 
+                                ID3D11InputLayout** _ppInputLayout)
 {
     HRESULT hr;
 
@@ -61,7 +61,7 @@ bool Shader::CreateVertexShader(ID3D11Device* device,
     size_t	ShaderObjectSize;
 
     // ファイルの拡張子に合わせてコンパイル
-    hr = CompileShader(fileName, entryPoint, shaderModel, &ShaderObject, ShaderObjectSize, &pBlob);
+    hr = CompileShader(_pFileName, _entryPoint, _shaderModel, &ShaderObject, ShaderObjectSize, &pBlob);
     if (FAILED(hr))
     {
         if (pBlob)pBlob->Release();
@@ -69,7 +69,7 @@ bool Shader::CreateVertexShader(ID3D11Device* device,
     }
 
     // 頂点シェーダーを生成
-    hr = device->CreateVertexShader(ShaderObject, ShaderObjectSize, pClassLinkage, ppVertexShader);
+    hr = _pDevice->CreateVertexShader(ShaderObject, ShaderObjectSize, _pClassLinkage, _ppVertexShader);
     if (FAILED(hr))
     {
         if (pBlob)pBlob->Release();
@@ -77,12 +77,12 @@ bool Shader::CreateVertexShader(ID3D11Device* device,
     }
 
     // 頂点データ定義生成
-    hr = device->CreateInputLayout(
-        layout,
-        numElements,
+    hr = _pDevice->CreateInputLayout(
+        _pLayout,
+        _numElements,
         ShaderObject,
         ShaderObjectSize,
-        ppInputLayout);
+        _ppInputLayout);
     if (FAILED(hr)) {
         MessageBox(nullptr, L"CreateInputLayout error", L"error", MB_OK);
         pBlob->Release();

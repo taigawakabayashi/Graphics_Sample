@@ -4,18 +4,18 @@
 
 #include <d3d11.h>
 #include <wrl/client.h>
-#include "Math.h"
+#include <Utility/Math.h>
 
 namespace DirectX11 {
 
     using  Microsoft::WRL::ComPtr;
 
-    class DepthStencil {
+    class DirectX11_DepthStencil {
 
     public:
 
-        bool CreateZBuffer(ID3D11Device* device, Vector2Int size);
-        bool CreateDepthStencil(ID3D11Device* device);
+        bool CreateZBuffer(ID3D11Device* _pDevice, Vector2Int _size);
+        bool CreateDepthStencil(ID3D11Device* _pDevice);
 
         ID3D11DepthStencilView* GetStencilView();
         ID3D11DepthStencilState* GetStencilState();

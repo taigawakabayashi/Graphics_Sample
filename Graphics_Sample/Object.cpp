@@ -5,22 +5,48 @@ Texture g_tex;
 
 bool Object::Init()
 {
-    ID3D11Device* device = DirectX11::GraphicsMng::GetInstance()->GetDevice();
+    ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
     HRESULT hr = S_OK;
 
     // 頂点構造体の初期化
     Vertex v[] = 
     {
+        // 正面
         {Vector3(-0.5f, 0.5f,-0.5f), Vector2(0.0f, 0.0f)},
         {Vector3( 0.5f, 0.5f,-0.5f), Vector2(1.0f, 0.0f)},
         {Vector3(-0.5f,-0.5f,-0.5f), Vector2(0.0f, 1.0f)},
         {Vector3( 0.5f,-0.5f,-0.5f), Vector2(1.0f, 1.0f)},
 
+        // 左側面
+        {Vector3(-0.5f, 0.5f, 0.5f), Vector2(1.0f, 0.0f)},
+        {Vector3(-0.5f, 0.5f,-0.5f), Vector2(0.0f, 0.0f)},
+        {Vector3(-0.5f,-0.5f, 0.5f), Vector2(1.0f, 1.0f)},
+        {Vector3(-0.5f,-0.5f,-0.5f), Vector2(0.0f, 1.0f)},
+
+        // 右側面
+        {Vector3( 0.5f, 0.5f,-0.5f), Vector2(1.0f, 0.0f)},
+        {Vector3( 0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
+        {Vector3( 0.5f,-0.5f,-0.5f), Vector2(1.0f, 1.0f)},
+        {Vector3( 0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
+        
+        // 上面
         {Vector3(-0.5f, 0.5f, 0.5f), Vector2(1.0f, 0.0f)},
         {Vector3( 0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
+        {Vector3(-0.5f, 0.5f,-0.5f), Vector2(1.0f, 1.0f)},
+        {Vector3( 0.5f, 0.5f,-0.5f), Vector2(0.0f, 1.0f)},
+
+        // 下面
+        {Vector3(-0.5f,-0.5f,-0.5f), Vector2(1.0f, 0.0f)},
+        {Vector3( 0.5f,-0.5f,-0.5f), Vector2(0.0f, 0.0f)},
         {Vector3(-0.5f,-0.5f, 0.5f), Vector2(1.0f, 1.0f)},
-        {Vector3( 0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)}
+        {Vector3( 0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
+
+        // 裏面
+        {Vector3( 0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
+        {Vector3(-0.5f, 0.5f, 0.5f), Vector2(1.0f, 0.0f)},
+        {Vector3( 0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
+        {Vector3(-0.5f,-0.5f, 0.5f), Vector2(1.0f, 1.0f)},
     };
 
     m_numVertex = ARRAYSIZE(v);
@@ -65,24 +91,24 @@ bool Object::Init()
         {3, 2, 1},
 
         // 左側面
-        {4, 0, 6},
-        {2, 6, 0},
+        {4, 5, 6},
+        {7, 6, 5},
 
         // 右側面
-        {1, 5, 3},
-        {7, 3, 5},
+        { 8,  9, 10},
+        {11, 10,  9},
 
         // 上面
-        {4, 5, 0},
-        {1, 0, 5},
+        {12, 13, 14},
+        {15, 14, 13},
 
         // 下面
-        {2, 3, 6},
-        {7, 6, 3},
+        {16, 17, 18},
+        {19, 18, 17},
         
         // 裏面
-        {5, 4, 7},
-        {6, 7, 4},
+        {20, 21, 22},
+        {23, 22, 21},
     };
 
     m_numIndex = ARRAYSIZE(index) * 3;
@@ -113,8 +139,9 @@ bool Object::Init()
 void Object::Update(uint64_t)
 {
     m_angle.y += 0.05f;
+    //m_angle.x += 0.05f;
 
-    ID3D11DeviceContext* devcontext = DirectX11::GraphicsMng::GetInstance()->GetImmediateContext();
+    ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
     HRESULT hr = S_OK;
 
@@ -144,7 +171,7 @@ void Object::Update(uint64_t)
 
 void Object::Draw(uint64_t)
 {
-    ID3D11DeviceContext* devcontext = DirectX11::GraphicsMng::GetInstance()->GetImmediateContext();
+    ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
     // 定数バッファをセット
     devcontext->VSSetConstantBuffers(0, 1, m_constantBuffer.GetAddressOf());

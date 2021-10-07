@@ -4,35 +4,36 @@
 
 #include <d3d11.h>
 #include <wrl/client.h>
-#include "DepthStencil.h"
-#include "Rasterizer.h"
-#include "SwapChain.h"
-#include "ViewPort.h"
+
+#include <DirectX11/DirectX11_DepthStencil.h>
+#include <DirectX11/DirectX11_Rasterizer.h>
+#include <DirectX11/DirectX11_SwapChain.h>
+#include <DirectX11/DirectX11_ViewPort.h>
 
 namespace DirectX11
 {
-    class GraphicsMng 
+    class DirectX11_GraphicsMng 
     {
     public:
 
-        GraphicsMng(const GraphicsMng&) = delete;
-        GraphicsMng& operator = (const GraphicsMng&) = delete;
-        GraphicsMng(GraphicsMng&&) = delete;
-        GraphicsMng& operator = (GraphicsMng&&) = delete;
+        DirectX11_GraphicsMng(const DirectX11_GraphicsMng&) = delete;
+        DirectX11_GraphicsMng& operator = (const DirectX11_GraphicsMng&) = delete;
+        DirectX11_GraphicsMng(DirectX11_GraphicsMng&&) = delete;
+        DirectX11_GraphicsMng& operator = (DirectX11_GraphicsMng&&) = delete;
 
-        static GraphicsMng* GetInstance() {
+        static DirectX11_GraphicsMng* GetInstance() {
 
-            static GraphicsMng instance;
+            static DirectX11_GraphicsMng instance;
 
             return &instance;
         }
 
-        bool Init(HWND hWnd, Vector2Int size);
+        bool Init(HWND _hWnd, Vector2Int _size);
         void Uninit();
 
         void Swap();
 
-        void ClearRenderTargetView(float ClearColor[]);
+        void ClearRenderTargetView(float _clearColor[]);
         void ClearDepthStencilView();
         void SetViewPort();
         void TurnOnZBuffer();
@@ -47,10 +48,10 @@ namespace DirectX11
 
         ComPtr<ID3D11Device>							m_Device = nullptr;				// デバイス
         ComPtr<ID3D11DeviceContext>						m_ImmediateContext = nullptr;	//デバイスコンテキスト
-        SwapChain										m_SwapChain;			        // スワップチェイン
-        ViewPort										m_ViewPort;				        // ビューポート
-        DepthStencil									m_DepthStencil;
-        Rasterizer										m_Rasterizer;
+        DirectX11_SwapChain										m_SwapChain;			        // スワップチェイン
+        DirectX11_ViewPort										m_ViewPort;				        // ビューポート
+        DirectX11_DepthStencil									m_DepthStencil;
+        DirectX11_Rasterizer										m_Rasterizer;
         ComPtr<ID3D11SamplerState>                      m_sampler;
 
         D3D_DRIVER_TYPE									m_DriverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_NULL;			// ドライバタイプ
@@ -59,11 +60,11 @@ namespace DirectX11
         ComPtr<ID3D11BlendState>						m_alphaEnableBlendingState;		// アルファブレンドステート（有効）
         ComPtr<ID3D11BlendState>						m_alphaDisableBlendingState;	// アルファブレンドステート（無効）
 
-        GraphicsMng(){}
+        DirectX11_GraphicsMng(){}
 
     };
 
-    void BeforeRender(float ClearColor[]);
+    void BeforeRender(float _clearColor[]);
     void AfterRender();
 
     void TurnOnZBuffer();

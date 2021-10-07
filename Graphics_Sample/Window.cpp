@@ -7,18 +7,18 @@
 //********************************************************************************************************
 #include "Window.h"
 
-static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WParam, LPARAM h_LParam) {
+static LRESULT APIENTRY WindowProc(HWND _handle, UINT _message, WPARAM _wParam, LPARAM _lParam) {
 
-    switch (h_Message)
+    switch (_message)
     {
         // キー押下
     case WM_KEYDOWN:
 
-        switch (h_WParam) {
+        switch (_wParam) {
 
         case VK_ESCAPE:
 
-            DestroyWindow(h_Handle);
+            DestroyWindow(_handle);
 
             //PostQuitMessage(0);
 
@@ -26,7 +26,7 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
 
         default:
 
-            return DefWindowProc(h_Handle, h_Message, h_WParam, h_LParam);
+            return DefWindowProc(_handle, _message, _wParam, _lParam);
         }
         return 0;
 
@@ -48,7 +48,7 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
 
         break;
     }
-        return DefWindowProc(h_Handle, h_Message, h_WParam, h_LParam);
+        return DefWindowProc(_handle, _message, _wParam, _lParam);
 }
 
 //*****************************************
@@ -59,20 +59,20 @@ static LRESULT APIENTRY WindowProc(HWND h_Handle, UINT h_Message, WPARAM h_WPara
 // \param className
 // \return true on success
 //*****************************************
-bool Window::RegisterClass(const HINSTANCE hInstance, const unsigned long style, const wchar_t* className)
+bool Window::RegisterClass(const HINSTANCE _hInstance, const unsigned long _style, const wchar_t* _pClassName)
 {
     WNDCLASSEX WndClassEx;
     WndClassEx.cbSize = sizeof(WNDCLASSEX);
-    WndClassEx.style = style;
+    WndClassEx.style = _style;
     WndClassEx.lpfnWndProc = WindowProc;
     WndClassEx.cbClsExtra = 0L;
     WndClassEx.cbWndExtra = 0L;
-    WndClassEx.hInstance = hInstance;
+    WndClassEx.hInstance = _hInstance;
     WndClassEx.hIcon = nullptr;
     WndClassEx.hCursor = nullptr;
     WndClassEx.hbrBackground = nullptr;
     WndClassEx.lpszMenuName = nullptr;
-    WndClassEx.lpszClassName = className;
+    WndClassEx.lpszClassName = _pClassName;
     WndClassEx.hIconSm = NULL;
 
     if (!RegisterClassEx(&WndClassEx))
@@ -97,53 +97,53 @@ bool Window::RegisterClass(const HINSTANCE hInstance, const unsigned long style,
 // 
 // @return true on success
 //*****************************************
-bool Window::Create(const HINSTANCE hInstance,
-                    const unsigned long style, 
-                    const unsigned long exStyle, 
-                    const wchar_t* className,
-                    const wchar_t* title,
-                    const bool fullScreen, 
-                    const Vector2Int size)
+bool Window::Create(const HINSTANCE _hInstance,
+                    const unsigned long _style, 
+                    const unsigned long _exStyle, 
+                    const wchar_t* _pClassName,
+                    const wchar_t* _pTitle,
+                    const bool _fullScreen, 
+                    const Vector2Int _size)
 {
-    if (fullScreen) {
+    if (_fullScreen) {
 
         m_handle = CreateWindowEx(
-            exStyle,
-            className,						// ウィンドウクラスの名前
-            title,							// タイトル
+            _exStyle,
+            _pClassName,					// ウィンドウクラスの名前
+            _pTitle,						// タイトル
             WS_POPUP,						// ウィンドウスタイル
             0, 0,							// ウィンドウ位置 縦, 横
-            size.x, size.y,					// ウィンドウサイズ
+            _size.x, _size.y,				// ウィンドウサイズ
             nullptr,						// 親ウィンドウなし
             nullptr,						// メニューなし
-            hInstance,						// インスタンスハンドル
+            _hInstance,						// インスタンスハンドル
             nullptr);						// 追加引数なし
     }
     else {
 
         RECT rc;
 
-        SetRect(&rc, 0, 0, size.x, size.y);
-        AdjustWindowRectEx(&rc, style, FALSE, exStyle);
+        SetRect(&rc, 0, 0, _size.x, _size.y);
+        AdjustWindowRectEx(&rc, _style, FALSE, _exStyle);
 
         m_handle = CreateWindowEx(
-            exStyle,
-            className,										// ウィンドウクラスの名前
-            title,											// タイトル
+            _exStyle,
+            _pClassName,									// ウィンドウクラスの名前
+            _pTitle,										// タイトル
             //WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU,	// ウィンドウスタイル
-            style,		                                    // ウィンドウスタイル
+            _style,		                                    // ウィンドウスタイル
             0,0,											// ウィンドウ位置 縦, 横
             rc.right - rc.left, rc.bottom - rc.top,			// ウィンドウサイズ
             HWND_DESKTOP,									// 親ウィンドウなし
             nullptr,										// メニューなし
-            hInstance,										// インスタンスハンドル
+            _hInstance,										// インスタンスハンドル
             nullptr);										// 追加引数なし
 
         // ウィンドウの位置を再調整
         SetWindowPos(m_handle, 
                      nullptr, 
-                     GetSystemMetrics(SM_CXSCREEN) / 2 - size.x / 2, 
-                     GetSystemMetrics(SM_CYSCREEN) / 2 - size.y / 2, 
+                     GetSystemMetrics(SM_CXSCREEN) / 2 - _size.x / 2, 
+                     GetSystemMetrics(SM_CYSCREEN) / 2 - _size.y / 2, 
                      0, 0, 
                      SWP_NOSIZE | SWP_NOZORDER);
     }
@@ -163,9 +163,9 @@ bool Window::Create(const HINSTANCE hInstance,
 // 
 // \param winMode
 //*****************************************
-void Window::Show(uint32_t winMode)
+void Window::Show(uint32_t _winMode)
 {
-    ShowWindow(m_handle, winMode);
+    ShowWindow(m_handle, _winMode);
 
     UpdateWindow(m_handle);
 }

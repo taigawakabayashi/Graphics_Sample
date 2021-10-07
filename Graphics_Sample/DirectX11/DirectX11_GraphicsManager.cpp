@@ -1,4 +1,4 @@
-#include "DirectX11Graphics.h"
+#include "DirectX11/DirectX11_GraphicsManager.h"
 
 #pragma comment (lib,"d3d11.lib")
 #pragma comment (lib,"dxgi.lib")
@@ -8,10 +8,11 @@
 
 namespace DirectX11
 {
-    bool GraphicsMng::Init(HWND hWnd, Vector2Int size)
+    bool DirectX11_GraphicsMng::Init(HWND _hWnd, Vector2Int _size)
     {
         HRESULT hr = S_OK;
 
+        // ドライバータイプ
         D3D_DRIVER_TYPE driverType[] =
         {
             D3D_DRIVER_TYPE_HARDWARE,
@@ -82,13 +83,13 @@ namespace DirectX11
             return false;
 
         // スワップチェイン作成
-        m_SwapChain.CreateSwapChain(m_Device.Get(), hWnd, size);
+        m_SwapChain.CreateSwapChain(m_Device.Get(), _hWnd, _size);
 
         // ビューポートを作成
-        m_ViewPort.CreateViewPort(Vector2(static_cast<float>(size.x), static_cast<float>(size.y)), Vector2(0.0f, 0.0f));
+        m_ViewPort.CreateViewPort(Vector2(static_cast<float>(_size.x), static_cast<float>(_size.y)), Vector2(0.0f, 0.0f));
 
         // Zバッファの作成
-        m_DepthStencil.CreateZBuffer(m_Device.Get(), size);
+        m_DepthStencil.CreateZBuffer(m_Device.Get(), _size);
 
         // DepthStencilの作成
         m_DepthStencil.CreateDepthStencil(m_Device.Get());
@@ -113,7 +114,7 @@ namespace DirectX11
         return true;
     }
 
-    void GraphicsMng::Uninit()
+    void DirectX11_GraphicsMng::Uninit()
     {
         if (m_ImmediateContext) 
         {
@@ -126,31 +127,31 @@ namespace DirectX11
         }
     }
 
-    void GraphicsMng::Swap()
+    void DirectX11_GraphicsMng::Swap()
     {
         m_SwapChain.GetSwapChain()->Present(0, 0);
     }
 
-    void GraphicsMng::ClearRenderTargetView(float ClearColor[]) 
+    void DirectX11_GraphicsMng::ClearRenderTargetView(float _clearColor[]) 
     {
-        m_ImmediateContext->ClearRenderTargetView(m_SwapChain.GetRenderTargetView(), ClearColor);
+        m_ImmediateContext->ClearRenderTargetView(m_SwapChain.GetRenderTargetView(), _clearColor);
 
         ID3D11RenderTargetView* temp = m_SwapChain.GetRenderTargetView();
 
         m_ImmediateContext->OMSetRenderTargets(1, &temp, m_DepthStencil.GetStencilView());
     }
 
-    void GraphicsMng::ClearDepthStencilView()
+    void DirectX11_GraphicsMng::ClearDepthStencilView()
     {
         m_ImmediateContext->ClearDepthStencilView(m_DepthStencil.GetStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     }
 
-    void GraphicsMng::SetViewPort()
+    void DirectX11_GraphicsMng::SetViewPort()
     {
         m_ViewPort.SetViewPort(m_ImmediateContext.Get());
     }
 
-    void GraphicsMng::TurnOnZBuffer() 
+    void DirectX11_GraphicsMng::TurnOnZBuffer() 
     {
         ID3D11RenderTargetView* rtvtable[1];
 
@@ -163,7 +164,7 @@ namespace DirectX11
         );
     }
 
-    void GraphicsMng::TurnOffZBuffer() 
+    void DirectX11_GraphicsMng::TurnOffZBuffer() 
     {
         ID3D11RenderTargetView* rtvtable[1];
 
@@ -176,7 +177,7 @@ namespace DirectX11
         );
     }
 
-    void GraphicsMng::TurnOnAlphaBlending() 
+    void DirectX11_GraphicsMng::TurnOnAlphaBlending() 
     {
         float blendFactor[4];
 
@@ -190,7 +191,7 @@ namespace DirectX11
         return;
     }
 
-    void GraphicsMng::TurnOffAlphaBlending() 
+    void DirectX11_GraphicsMng::TurnOffAlphaBlending() 
     {
         float blendFactor[4];
 
@@ -204,37 +205,37 @@ namespace DirectX11
         return;
     }
 
-    void BeforeRender(float ClearColor[]) 
+    void BeforeRender(float _clearColor[]) 
     {
-        GraphicsMng::GetInstance()->ClearRenderTargetView(ClearColor);
+        DirectX11_GraphicsMng::GetInstance()->ClearRenderTargetView(_clearColor);
 
-        GraphicsMng::GetInstance()->ClearDepthStencilView();
+        DirectX11_GraphicsMng::GetInstance()->ClearDepthStencilView();
 
-        GraphicsMng::GetInstance()->SetViewPort();
+        DirectX11_GraphicsMng::GetInstance()->SetViewPort();
     }
 
     void AfterRender() 
     {
-        GraphicsMng::GetInstance()->Swap();
+        DirectX11_GraphicsMng::GetInstance()->Swap();
     }
 
     void TurnOnZBuffer()
     {
-        GraphicsMng::GetInstance()->TurnOnZBuffer();
+        DirectX11_GraphicsMng::GetInstance()->TurnOnZBuffer();
     }
 
     void TurnOffZBuffer() 
     {
-        GraphicsMng::GetInstance()->TurnOffZBuffer();
+        DirectX11_GraphicsMng::GetInstance()->TurnOffZBuffer();
     }
 
     void TurnOnAlphaBlend() 
     {
-        GraphicsMng::GetInstance()->TurnOnAlphaBlending();
+        DirectX11_GraphicsMng::GetInstance()->TurnOnAlphaBlending();
     }
 
     void TurnOffAlphaBlend() 
     {
-        GraphicsMng::GetInstance()->TurnOffAlphaBlending();
+        DirectX11_GraphicsMng::GetInstance()->TurnOffAlphaBlending();
     }
 }

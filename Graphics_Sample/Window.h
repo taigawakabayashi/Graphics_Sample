@@ -10,27 +10,27 @@
 #define WIN_H
 
 #include <Windows.h>
-#include "Math.h"
+#include <Utility/Math.h>
 
 class Window 
 {
 public:
 
-    bool RegisterClass(const HINSTANCE hInstance,
-                       const unsigned long style,
-                       const wchar_t* className);
+    bool RegisterClass(const HINSTANCE _hInstance,
+                       const unsigned long _style,
+                       const wchar_t* _pClassName);
 
     // CreateWindow
-    bool Create(const HINSTANCE hInstance,
-                const unsigned long style,
-                const unsigned long exStyle,
-                const wchar_t* className,
-                const wchar_t* title,
-                const bool fullScreen,
-                const Vector2Int size);
+    bool Create(const HINSTANCE _hInstance,
+                const unsigned long _style,
+                const unsigned long _exStyle,
+                const wchar_t* _pClassName,
+                const wchar_t* _pTitle,
+                const bool _fullScreen,
+                const Vector2Int _size);
 
     // ShowWindow
-    void Show(uint32_t winMode);
+    void Show(uint32_t _winMode);
 
     // GetHandle
     HWND GetHandle() const;

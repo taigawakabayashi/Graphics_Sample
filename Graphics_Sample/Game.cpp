@@ -17,16 +17,16 @@ namespace Game
 
     static Microsoft::WRL::ComPtr<ID3D11Buffer> g_cameraBuffer = nullptr;
 
-    bool Init(HWND hWnd, Vector2Int size)
+    bool Init(HWND _hWnd, Vector2Int _size)
     {
-        bool sts = DirectX11::GraphicsMng::GetInstance()->Init(hWnd, size);
+        bool sts = DirectX11::DirectX11_GraphicsMng::GetInstance()->Init(_hWnd, _size);
 
         DirectX11::TurnOnZBuffer();
         DirectX11::TurnOnAlphaBlend();
 
         sts = Shader::GetInstance()->Init();
 
-        ID3D11Device* device = DirectX11::GraphicsMng::GetInstance()->GetDevice();
+        ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
         g_obj.Init();
 
@@ -46,17 +46,17 @@ namespace Game
         return sts;
     }
 
-    void Input(uint64_t deltaTime)
+    void Input(uint64_t _deltaTime)
     {
-        if (deltaTime >= 0) {
+        if (_deltaTime >= 0) {
 
 
         }
     }
 
-    void Update(uint64_t deltaTime)
+    void Update(uint64_t _deltaTime)
     {
-        if (deltaTime >= 0) {
+        if (_deltaTime >= 0) {
 
             CameraMatrix cMatrix;
 
@@ -66,7 +66,7 @@ namespace Game
             cMatrix.view = XMMatrixTranspose(cMatrix.view);
             cMatrix.projection = XMMatrixTranspose(cMatrix.projection);
 
-            ID3D11DeviceContext* devcontext = DirectX11::GraphicsMng::GetInstance()->GetImmediateContext();
+            ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
             D3D11_MAPPED_SUBRESOURCE data;
 
@@ -76,23 +76,23 @@ namespace Game
 
             devcontext->Unmap(g_cameraBuffer.Get(), 0);
 
-            g_obj.Update(deltaTime);
+            g_obj.Update(_deltaTime);
         }
     }
 
-    void Draw(uint64_t deltaTime)
+    void Draw(uint64_t _deltaTime)
     {
-        if (deltaTime >= 0) {
+        if (_deltaTime >= 0) {
 
-            float col[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
+            float col[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
             DirectX11::BeforeRender(col);
 
-            ID3D11DeviceContext* devcontext = DirectX11::GraphicsMng::GetInstance()->GetImmediateContext();
+            ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
             devcontext->VSSetConstantBuffers(1, 1, g_cameraBuffer.GetAddressOf());
 
-            g_obj.Draw(deltaTime);
+            g_obj.Draw(_deltaTime);
 
             DirectX11::AfterRender();
         }
@@ -102,6 +102,6 @@ namespace Game
     {
         g_obj.Uninit();
 
-        DirectX11::GraphicsMng::GetInstance()->Uninit();
+        DirectX11::DirectX11_GraphicsMng::GetInstance()->Uninit();
     }
 }

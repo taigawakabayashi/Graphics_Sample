@@ -118,6 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -142,33 +143,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="DepthStencil.cpp" />
-    <ClCompile Include="DirectX11Graphics.cpp" />
+    <ClCompile Include="DirectX11\DirectX11_DepthStencil.cpp" />
+    <ClCompile Include="DirectX11\DirectX11_GraphicsManager.cpp" />
+    <ClCompile Include="DirectX11\DirectX11_Rasterizer.cpp" />
+    <ClCompile Include="DirectX11\DirectX11_SwapChain.cpp" />
+    <ClCompile Include="DirectX11\DirectX11_ViewPort.cpp" />
+    <ClCompile Include="DirectX12\DirectX12_GraphicsManager.cpp" />
+    <ClCompile Include="DirectX12\DirectX12_ViewPort.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Math.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="ViewPort.cpp" />
+    <ClCompile Include="Utility\Math.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="DepthStencil.h" />
-    <ClInclude Include="DirectX11Graphics.h" />
+    <ClInclude Include="DirectX11\DirectX11_DepthStencil.h" />
+    <ClInclude Include="DirectX11\DirectX11_GraphicsManager.h" />
+    <ClInclude Include="DirectX11\DirectX11_Rasterizer.h" />
+    <ClInclude Include="DirectX11\DirectX11_SwapChain.h" />
+    <ClInclude Include="DirectX11\DirectX11_ViewPort.h" />
+    <ClInclude Include="DirectX12\DirectX12_GraphicsManager.h" />
+    <ClInclude Include="DirectX12\DirectX12_ViewPort.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Math.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="ViewPort.h" />
+    <ClInclude Include="Utility\Math.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

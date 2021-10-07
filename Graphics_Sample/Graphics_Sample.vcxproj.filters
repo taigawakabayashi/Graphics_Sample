@@ -79,11 +79,14 @@
     <Filter Include="ヘッダー ファイル\DirectX3D 12\Graphics">
       <UniqueIdentifier>{c0b399a5-fe00-408b-943c-455d98916224}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Utirity">
+      <UniqueIdentifier>{a95e4ba6-c319-4531-88bb-544094353457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Utirity">
+      <UniqueIdentifier>{bff6fc41-49f4-433a-8cfc-df9fe0eb195d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Math.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>ソース ファイル\Application</Filter>
     </ClCompile>
@@ -105,29 +108,35 @@
     <ClCompile Include="WinMain.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="DepthStencil.cpp">
-      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX11Graphics.cpp">
-      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Rasterizer.cpp">
-      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SwapChain.cpp">
-      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewPort.cpp">
-      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_DepthStencil.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_GraphicsManager.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_Rasterizer.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_SwapChain.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_ViewPort.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_GraphicsManager.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_ViewPort.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Math.cpp">
+      <Filter>ソース ファイル\Utirity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Math.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
@@ -146,23 +155,32 @@
     <ClInclude Include="Game.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DepthStencil.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX11Graphics.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Rasterizer.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="SwapChain.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewPort.h">
-      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_DepthStencil.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_GraphicsManager.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_Rasterizer.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_SwapChain.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_ViewPort.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_GraphicsManager.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_ViewPort.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Math.h">
+      <Filter>ヘッダー ファイル\Utirity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

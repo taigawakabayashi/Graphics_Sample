@@ -8,7 +8,7 @@ class Texture
 {
 public:
 
-    bool CreateTexture(ID3D11ShaderResourceView** srv);
+    bool CreateTexture(ID3D11ShaderResourceView** _ppSrv);
 
     ID3D11ShaderResourceView* GetSrv(){ return m_texSrv.Get(); }
 
