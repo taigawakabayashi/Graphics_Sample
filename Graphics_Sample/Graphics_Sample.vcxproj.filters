@@ -135,6 +135,9 @@
     <ClCompile Include="Utility\Math.cpp">
       <Filter>ソース ファイル\Utirity</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_SwapChain.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="Utility\Math.h">
       <Filter>ヘッダー ファイル\Utirity</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_SwapChain.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

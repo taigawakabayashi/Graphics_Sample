@@ -3,8 +3,9 @@
 #define GAME_H
 
 #include <DirectX11/DirectX11_GraphicsManager.h>
+#include <DirectX12/DirectX12_GraphicsManager.h>
 
-namespace Game 
+namespace Rnderer 
 {
     bool Init(HWND _hWnd, Vector2Int _size);
 

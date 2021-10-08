@@ -83,7 +83,7 @@ namespace DirectX11 {
             return false;
 
         // バックバッファへのポインタを指定してレンダーターゲットビューを作成
-        hr = _pDevice->CreateRenderTargetView(pBackBuffer, NULL, m_RenderTargetView.GetAddressOf());
+        hr = _pDevice->CreateRenderTargetView(pBackBuffer, nullptr, m_RenderTargetView.GetAddressOf());
         pBackBuffer->Release();
         pBackBuffer = 0;
 

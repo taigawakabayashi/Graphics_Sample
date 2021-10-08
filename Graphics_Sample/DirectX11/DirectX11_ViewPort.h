@@ -1,6 +1,6 @@
 #pragma once
-#ifndef VP_H
-#define VP_H
+#ifndef DX11_VP_H
+#define DX11_VP_H
 
 #include	<d3d11.h>
 #include	<wrl/client.h>
@@ -24,4 +24,4 @@ namespace DirectX11
     };
 
 }
-#endif // !VP_H
+#endif // !DX11_VP_H

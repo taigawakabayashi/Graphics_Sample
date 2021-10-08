@@ -8,6 +8,375 @@
 
 using namespace DirectX;
 
+#pragma region Vector2Int
+
+struct Vector2Int {
+
+public:
+
+	int32_t x;
+	int32_t y;
+
+	Vector2Int() = default;
+
+	Vector2Int(const Vector2Int&) = default;
+	Vector2Int& operator=(const Vector2Int&) = default;
+
+	Vector2Int(Vector2Int&&) = default;
+	Vector2Int& operator=(Vector2Int&&) = default;
+
+	Vector2Int(const XMINT2& _value) {
+
+		this->x = _value.x;
+		this->y = _value.y;
+	}
+	Vector2Int& operator= (const XMINT2& _value) {
+
+		this->x = _value.x;
+		this->y = _value.y;
+
+		return *this;
+	}
+
+	static Vector2Int zero() {
+
+		return Vector2Int(0, 0);
+	}
+
+	static Vector2Int one() {
+
+		return Vector2Int(1, 1);
+	}
+
+	static Vector2Int up() {
+
+		return Vector2Int(0, 1);
+	}
+
+	static Vector2Int down() {
+
+		return Vector2Int(0, -1);
+	}
+
+	static Vector2Int left() {
+
+		return Vector2Int(-1, 0);
+	}
+
+	static Vector2Int right() {
+
+		return Vector2Int(1, 0);
+	}
+
+	operator XMINT2() {
+
+		return XMINT2(x, y);
+	}
+
+	bool operator!=(Vector2Int _v) {
+
+		return (this->x != _v.x || this->y != _v.y);
+	}
+
+	bool operator==(Vector2Int _v) {
+
+		return (this->x == _v.x && this->y == _v.y);
+	}
+
+	Vector2Int& operator+=(const Vector2Int& _v) {
+
+		this->x += _v.x;
+		this->y += _v.y;
+
+		return *this;
+	}
+
+	Vector2Int& operator-=(const Vector2Int& _v) {
+
+		this->x -= _v.x;
+		this->y -= _v.y;
+
+		return *this;
+	}
+
+	Vector2Int& operator*=(const Vector2Int& _v) {
+
+		this->x *= _v.x;
+		this->y *= _v.y;
+
+		return *this;
+	}
+
+	Vector2Int& operator*=(const int32_t& _v) {
+
+		this->x *= _v;
+		this->y *= _v;
+
+		return *this;
+	}
+
+	Vector2Int& operator/=(const Vector2Int& _v) {
+
+		if (_v.x != 0) {
+
+			this->x /= _v.x;
+		}
+		else {
+
+			this->x = static_cast<int32_t>(std::nan(""));
+		}
+
+		if (_v.y != 0) {
+
+			this->y /= _v.y;
+		}
+		else {
+
+			this->y = static_cast<int32_t>(std::nan(""));
+		}
+
+		return *this;
+	}
+
+	Vector2Int& operator/=(const int32_t& _i) {
+
+		if (_i != 0) {
+
+			this->x /= _i;
+			this->y /= _i;
+		}
+		else {
+
+			this->x /= static_cast<int32_t>(std::nan(""));
+			this->y /= static_cast<int32_t>(std::nan(""));
+		}
+
+		return *this;
+	}
+
+	// ’·‚³
+	int32_t Length() {
+
+		return static_cast<int32_t>(sqrt((x * x) + (y * y)));
+	}
+
+	constexpr Vector2Int(int32_t _x, int32_t _y) : x(_x), y(_y) {}
+};
+
+Vector2Int operator+ (const XMINT2& _x, const Vector2Int& _v);
+Vector2Int operator+ (const Vector2Int& _v, const XMINT2& _x);
+Vector2Int operator+ (const Vector2Int& _v1, const Vector2Int& _v2);
+
+Vector2Int operator- (const XMINT2& _x, const Vector2Int& _v);
+Vector2Int operator- (const Vector2Int& _v, const XMINT2& _x);
+Vector2Int operator- (const Vector2Int& _v1, const Vector2Int& _v2);
+
+Vector2Int operator* (const XMINT2& _x, const Vector2Int& _v);
+Vector2Int operator* (const Vector2Int& _v, const XMINT2& _x);
+Vector2Int operator* (const int32_t& _i, const Vector2Int& _v);
+Vector2Int operator* (const Vector2Int& _v, const int32_t& _i);
+Vector2Int operator* (const Vector2Int& _v1, const Vector2Int& _v2);
+
+Vector2Int operator/ (const XMINT2& _x, const Vector2Int& _v);
+Vector2Int operator/ (const Vector2Int& _v, const XMINT2& _x);
+Vector2Int operator/ (const Vector2Int& _v, const int32_t& _i);
+Vector2Int operator/ (const Vector2Int& _v1, const Vector2Int& _v2);
+#pragma endregion
+
+#pragma region Vector3Int
+
+struct Vector3Int {
+
+public:
+
+	int32_t x;
+	int32_t y;
+	int32_t z;
+
+	Vector3Int() = default;
+
+	Vector3Int(const Vector3Int&) = default;
+	Vector3Int& operator=(const Vector3Int&) = default;
+
+	Vector3Int(Vector3Int&&) = default;
+	Vector3Int& operator=(Vector3Int&&) = default;
+
+	Vector3Int(const XMINT3& _value) {
+
+		this->x = _value.x;
+		this->y = _value.y;
+		this->z = _value.z;
+	}
+	Vector3Int& operator= (const XMINT3& _value) {
+
+		this->x = _value.x;
+		this->y = _value.y;
+		this->z = _value.z;
+
+		return *this;
+	}
+
+	static Vector3Int zero() {
+
+		return Vector3Int(0, 0, 0);
+	}
+
+	static Vector3Int one() {
+
+		return Vector3Int(1, 1, 1);
+	}
+
+	static Vector3Int up() {
+
+		return Vector3Int(0, 1, 0);
+	}
+
+	static Vector3Int down() {
+
+		return Vector3Int(0, -1, 0);
+	}
+
+	static Vector3Int left() {
+
+		return Vector3Int(-1, 0, 0);
+	}
+
+	static Vector3Int right() {
+
+		return Vector3Int(1, 0, 0);
+	}
+
+	operator XMINT3() {
+
+		return XMINT3(x, y, z);
+	}
+
+	bool operator!=(Vector3Int _v) {
+
+		return (this->x != _v.x || this->y != _v.y || this->z != _v.z);
+	}
+
+	bool operator==(Vector3Int _v) {
+
+		return (this->x == _v.x && this->y == _v.y && this->z == _v.z);
+	}
+
+	Vector3Int& operator+=(const Vector3Int& _v) {
+
+		this->x += _v.x;
+		this->y += _v.y;
+		this->z += _v.z;
+
+		return *this;
+	}
+
+	Vector3Int& operator-=(const Vector3Int& _v) {
+
+		this->x -= _v.x;
+		this->y -= _v.y;
+		this->z -= _v.z;
+
+		return *this;
+	}
+
+	Vector3Int& operator*=(const Vector3Int& _v) {
+
+		this->x *= _v.x;
+		this->y *= _v.y;
+		this->z *= _v.z;
+
+		return *this;
+	}
+
+	Vector3Int& operator*=(const int32_t& _i) {
+
+		this->x *= _i;
+		this->y *= _i;
+		this->z *= _i;
+
+		return *this;
+	}
+
+	Vector3Int& operator/=(const Vector3Int& _v) {
+
+		if (_v.x != 0) {
+
+			this->x /= _v.x;
+		}
+		else {
+
+			this->x = static_cast<int32_t>(std::nan(""));
+		}
+
+		if (_v.y != 0) {
+
+			this->y /= _v.y;
+		}
+		else {
+
+			this->y = static_cast<int32_t>(std::nan(""));
+		}
+
+		if (_v.z != 0) {
+
+			this->z /= _v.z;
+		}
+		else {
+
+			this->z = static_cast<int32_t>(std::nan(""));
+		}
+
+		return *this;
+	}
+
+	Vector3Int& operator/=(const int32_t& _i) {
+
+		if (_i != 0) {
+
+			this->x /= _i;
+			this->y /= _i;
+			this->z /= _i;
+		}
+		else {
+
+			this->x /= static_cast<int32_t>(std::nan(""));
+			this->y /= static_cast<int32_t>(std::nan(""));
+			this->z /= static_cast<int32_t>(std::nan(""));
+		}
+
+		return *this;
+	}
+
+	// ’·‚³
+	int32_t Length() {
+
+		return static_cast<int32_t>(sqrt((x * x) + (y * y) + (z * z)));
+	}
+
+	constexpr Vector3Int(int32_t _x, int32_t _y, int32_t _z) : x(_x), y(_y), z(_z) {}
+	constexpr Vector3Int(int32_t _x, int32_t _y) : x(_x), y(_y), z(0) {}
+};
+
+Vector3Int operator+ (const XMINT3& _x, const Vector3Int& _v);
+Vector3Int operator+ (const Vector3Int& _v, const XMINT3& _x);
+Vector3Int operator+ (const Vector3Int& _v1, const Vector3Int& _v2);
+
+Vector3Int operator- (const XMINT3& _x, const Vector3Int& _v);
+Vector3Int operator- (const Vector3Int& _v, const XMINT3& _x);
+Vector3Int operator- (const Vector3Int& _v1, const Vector3Int& _v2);
+
+Vector3Int operator* (const XMINT3& _x, const Vector3Int& _v);
+Vector3Int operator* (const Vector3Int& _v, const XMINT3& _x);
+Vector3Int operator* (const int32_t& _i, const Vector3Int& _v);
+Vector3Int operator* (const Vector3Int& _v, const int32_t& _i);
+Vector3Int operator* (const Vector3Int& _v1, const Vector3Int& _v2);
+
+Vector3Int operator/ (const XMINT3& _x, const Vector3Int& _v);
+Vector3Int operator/ (const Vector3Int& _v, const XMINT3& _x);
+Vector3Int operator/ (const Vector3Int& _v, const int32_t& _i);
+Vector3Int operator/ (const Vector3Int& _v1, const Vector3Int& _v2);
+#pragma endregion
+
 #pragma region Vector2
 
 struct Vector2 {
@@ -839,408 +1208,24 @@ Vector4 operator/ (const Vector4& _v, const float& _f);
 Vector4 operator/ (const Vector4& _v1, const Vector4& _v2);
 #pragma endregion
 
-#pragma region Vector2Int
-
-struct Vector2Int {
-
-public:
-
-	int32_t x;
-	int32_t y;
-
-	Vector2Int() = default;
-
-	Vector2Int(const Vector2Int&) = default;
-	Vector2Int& operator=(const Vector2Int&) = default;
-
-	Vector2Int(Vector2Int&&) = default;
-	Vector2Int& operator=(Vector2Int&&) = default;
-
-	Vector2Int(const Vector2& _value) {
-
-		this->x = static_cast<uint32_t>(_value.x);
-		this->y = static_cast<uint32_t>(_value.y);
-	}
-	Vector2Int& operator= (const Vector2& _value) {
-
-		this->x = static_cast<uint32_t>(_value.x);
-		this->y = static_cast<uint32_t>(_value.y);
-
-		return *this;
-	}
-
-	Vector2Int(const XMINT2& _value) {
-
-		this->x = _value.x;
-		this->y = _value.y;
-	}
-	Vector2Int& operator= (const XMINT2& _value) {
-
-		this->x = _value.x;
-		this->y = _value.y;
-
-		return *this;
-	}
-
-	static Vector2Int zero() {
-
-		return Vector2Int(0, 0);
-	}
-
-	static Vector2Int one() {
-
-		return Vector2Int(1, 1);
-	}
-
-	static Vector2Int up() {
-
-		return Vector2Int(0, 1);
-	}
-
-	static Vector2Int down() {
-
-		return Vector2Int(0, -1);
-	}
-
-	static Vector2Int left() {
-
-		return Vector2Int(-1, 0);
-	}
-
-	static Vector2Int right() {
-
-		return Vector2Int(1, 0);
-	}
-
-	operator XMINT2() {
-
-		return XMINT2(x, y);
-	}
-
-	bool operator!=(Vector2Int _v) {
-
-		return (this->x != _v.x || this->y != _v.y);
-	}
-
-	bool operator==(Vector2Int _v) {
-
-		return (this->x == _v.x && this->y == _v.y);
-	}
-
-	Vector2Int& operator+=(const Vector2Int& _v) {
-
-		this->x += _v.x;
-		this->y += _v.y;
-
-		return *this;
-	}
-
-	Vector2Int& operator-=(const Vector2Int& _v) {
-
-		this->x -= _v.x;
-		this->y -= _v.y;
-
-		return *this;
-	}
-
-	Vector2Int& operator*=(const Vector2Int& _v) {
-
-		this->x *= _v.x;
-		this->y *= _v.y;
-
-		return *this;
-	}
-
-	Vector2Int& operator*=(const int32_t& _v) {
-
-		this->x *= _v;
-		this->y *= _v;
-
-		return *this;
-	}
-
-	Vector2Int& operator/=(const Vector2Int& _v) {
-
-		if (_v.x != 0) {
-
-			this->x /= _v.x;
-		}
-		else {
-
-			this->x = static_cast<int32_t>(std::nan(""));
-		}
-
-		if (_v.y != 0) {
-
-			this->y /= _v.y;
-		}
-		else {
-
-			this->y = static_cast<int32_t>(std::nan(""));
-		}
-
-		return *this;
-	}
-
-	Vector2Int& operator/=(const int32_t& _i) {
-
-		if (_i != 0) {
-
-			this->x /= _i;
-			this->y /= _i;
-		}
-		else {
-
-			this->x /= static_cast<int32_t>(std::nan(""));
-			this->y /= static_cast<int32_t>(std::nan(""));
-		}
-
-		return *this;
-	}
-
-	// ’·‚³
-	int32_t Length() {
-
-		return static_cast<int32_t>(sqrt((x * x) + (y * y)));
-	}
-
-	constexpr Vector2Int(int32_t _x, int32_t _y) : x(_x), y(_y) {}
-};
-
-Vector2Int operator+ (const XMINT2& _x, const Vector2Int& _v);
-Vector2Int operator+ (const Vector2Int& _v, const XMINT2& _x);
-Vector2Int operator+ (const Vector2Int& _v1, const Vector2Int& _v2);
-
-Vector2Int operator- (const XMINT2& _x, const Vector2Int& _v);
-Vector2Int operator- (const Vector2Int& _v, const XMINT2& _x);
-Vector2Int operator- (const Vector2Int& _v1, const Vector2Int& _v2);
-
-Vector2Int operator* (const XMINT2& _x, const Vector2Int& _v);
-Vector2Int operator* (const Vector2Int& _v, const XMINT2& _x);
-Vector2Int operator* (const int32_t& _i, const Vector2Int& _v);
-Vector2Int operator* (const Vector2Int& _v, const int32_t& _i);
-Vector2Int operator* (const Vector2Int& _v1, const Vector2Int& _v2);
-
-Vector2Int operator/ (const XMINT2& _x, const Vector2Int& _v);
-Vector2Int operator/ (const Vector2Int& _v, const XMINT2& _x);
-Vector2Int operator/ (const Vector2Int& _v, const int32_t& _i);
-Vector2Int operator/ (const Vector2Int& _v1, const Vector2Int& _v2);
-#pragma endregion
-
-#pragma region Vector3Int
-
-struct Vector3Int {
-
-public:
-
-	int32_t x;
-	int32_t y;
-	int32_t z;
-
-	Vector3Int() = default;
-
-	Vector3Int(const Vector3Int&) = default;
-	Vector3Int& operator=(const Vector3Int&) = default;
-
-	Vector3Int(Vector3Int&&) = default;
-	Vector3Int& operator=(Vector3Int&&) = default;
-
-	Vector3Int(const Vector3& _value) {
-
-		this->x = static_cast<uint32_t>(_value.x);
-		this->y = static_cast<uint32_t>(_value.y);
-		this->z = static_cast<uint32_t>(_value.z);
-	}
-	Vector3Int& operator= (const Vector3& _value) {
-
-		this->x = static_cast<uint32_t>(_value.x);
-		this->y = static_cast<uint32_t>(_value.y);
-		this->z = static_cast<uint32_t>(_value.z);
-
-		return *this;
-	}
-
-	Vector3Int(const XMINT3& _value) {
-
-		this->x = _value.x;
-		this->y = _value.y;
-		this->z = _value.z;
-	}
-	Vector3Int& operator= (const XMINT3& _value) {
-
-		this->x = _value.x;
-		this->y = _value.y;
-		this->z = _value.z;
-
-		return *this;
-	}
-
-	static Vector3Int zero() {
-
-		return Vector3Int(0, 0, 0);
-	}
-
-	static Vector3Int one() {
-
-		return Vector3Int(1, 1, 1);
-	}
-
-	static Vector3Int up() {
-
-		return Vector3Int(0, 1, 0);
-	}
-
-	static Vector3Int down() {
-
-		return Vector3Int(0, -1, 0);
-	}
-
-	static Vector3Int left() {
-
-		return Vector3Int(-1, 0, 0);
-	}
-
-	static Vector3Int right() {
-
-		return Vector3Int(1, 0, 0);
-	}
-
-	operator XMINT3() {
-
-		return XMINT3(x, y, z);
-	}
-
-	bool operator!=(Vector3Int _v) {
-
-		return (this->x != _v.x || this->y != _v.y || this->z != _v.z);
-	}
-
-	bool operator==(Vector3Int _v) {
-
-		return (this->x == _v.x && this->y == _v.y && this->z == _v.z);
-	}
-
-	Vector3Int& operator+=(const Vector3Int& _v) {
-
-		this->x += _v.x;
-		this->y += _v.y;
-		this->z += _v.z;
-
-		return *this;
-	}
-
-	Vector3Int& operator-=(const Vector3Int& _v) {
-
-		this->x -= _v.x;
-		this->y -= _v.y;
-		this->z -= _v.z;
-
-		return *this;
-	}
-
-	Vector3Int& operator*=(const Vector3Int& _v) {
-
-		this->x *= _v.x;
-		this->y *= _v.y;
-		this->z *= _v.z;
-
-		return *this;
-	}
-
-	Vector3Int& operator*=(const int32_t& _i) {
-
-		this->x *= _i;
-		this->y *= _i;
-		this->z *= _i;
-
-		return *this;
-	}
-
-	Vector3Int& operator/=(const Vector3Int& _v) {
-
-		if (_v.x != 0) {
-
-			this->x /= _v.x;
-		}
-		else {
-
-			this->x = static_cast<int32_t>(std::nan(""));
-		}
-
-		if (_v.y != 0) {
-
-			this->y /= _v.y;
-		}
-		else {
-
-			this->y = static_cast<int32_t>(std::nan(""));
-		}
-
-		if (_v.z != 0) {
-
-			this->z /= _v.z;
-		}
-		else {
-
-			this->z = static_cast<int32_t>(std::nan(""));
-		}
-
-		return *this;
-	}
-
-	Vector3Int& operator/=(const int32_t& _i) {
-
-		if (_i != 0) {
-
-			this->x /= _i;
-			this->y /= _i;
-			this->z /= _i;
-		}
-		else {
-
-			this->x /= static_cast<int32_t>(std::nan(""));
-			this->y /= static_cast<int32_t>(std::nan(""));
-			this->z /= static_cast<int32_t>(std::nan(""));
-		}
-
-		return *this;
-	}
-
-	// ’·‚³
-	int32_t Length() {
-
-		return static_cast<int32_t>(sqrt((x * x) + (y * y) + (z * z)));
-	}
-
-	constexpr Vector3Int(int32_t _x, int32_t _y, int32_t _z) : x(_x), y(_y), z(_z) {}
-	constexpr Vector3Int(int32_t _x, int32_t _y) : x(_x), y(_y), z(0) {}
-};
-
-Vector3Int operator+ (const XMINT3& _x, const Vector3Int& _v);
-Vector3Int operator+ (const Vector3Int& _v, const XMINT3& _x);
-Vector3Int operator+ (const Vector3Int& _v1, const Vector3Int& _v2);
-
-Vector3Int operator- (const XMINT3& _x, const Vector3Int& _v);
-Vector3Int operator- (const Vector3Int& _v, const XMINT3& _x);
-Vector3Int operator- (const Vector3Int& _v1, const Vector3Int& _v2);
-
-Vector3Int operator* (const XMINT3& _x, const Vector3Int& _v);
-Vector3Int operator* (const Vector3Int& _v, const XMINT3& _x);
-Vector3Int operator* (const int32_t& _i, const Vector3Int& _v);
-Vector3Int operator* (const Vector3Int& _v, const int32_t& _i);
-Vector3Int operator* (const Vector3Int& _v1, const Vector3Int& _v2);
-
-Vector3Int operator/ (const XMINT3& _x, const Vector3Int& _v);
-Vector3Int operator/ (const Vector3Int& _v, const XMINT3& _x);
-Vector3Int operator/ (const Vector3Int& _v, const int32_t& _i);
-Vector3Int operator/ (const Vector3Int& _v1, const Vector3Int& _v2);
-#pragma endregion
-
 #pragma region Matrix4x4
 
 struct Matrix4x4 
 {
 public:
+
+	union 
+	{
+		struct
+		{
+			float _11, _12, _13, _14;
+			float _21, _22, _23, _24;
+			float _31, _32, _33, _34;
+			float _41, _42, _43, _44;
+
+		}m[4][4];
+	};
+
 
 };
 

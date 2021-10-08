@@ -1,6 +1,6 @@
 #pragma once
-#ifndef RASTER_H
-#define RASTER_H
+#ifndef DX11_RASTER_H
+#define DX11_RASTER_H
 
 #include <d3d11.h>
 #include <wrl/client.h>
@@ -24,4 +24,4 @@ namespace DirectX11
         ComPtr<ID3D11RasterizerState> m_rasterState;
     };
 }
-#endif // !RASTER_H
+#endif // !DX11_RASTER_H

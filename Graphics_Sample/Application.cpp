@@ -56,7 +56,7 @@ int32_t Application::MainLoop()
     uint64_t deltaTime = 0;
 
     // 初期化
-    Game::Init(m_handle, Vector2Int(960, 540));
+    Rnderer::Init(m_handle, Vector2Int(960, 540));
 
     // メインループ
     while (WM_QUIT != message.message)
@@ -76,9 +76,9 @@ int32_t Application::MainLoop()
             deltaTime = Timer::GetDeltaTIme();
 
             // ↓メイン処理
-            Game::Input(deltaTime);     // 入力
-            Game::Update(deltaTime);    // 更新
-            Game::Draw(deltaTime);      // 描画
+            Rnderer::Input(deltaTime);     // 入力
+            Rnderer::Update(deltaTime);    // 更新
+            Rnderer::Draw(deltaTime);      // 描画
             // ↑
 
             // LastTime セット
@@ -92,7 +92,7 @@ int32_t Application::MainLoop()
     }
 
     // 終了処理
-    Game::Uninit();
+    Rnderer::Uninit();
 
     return message.message;
 }

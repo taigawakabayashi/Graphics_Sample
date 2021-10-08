@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DEPTH_H
-#define DEPTH_H
+#ifndef DX11_DEPTH_H
+#define DX11_DEPTH_H
 
 #include <d3d11.h>
 #include <wrl/client.h>
@@ -28,4 +28,4 @@ namespace DirectX11 {
     };
 
 }
-#endif // !DEPTH_H
+#endif // !DX11_DEPTH_H

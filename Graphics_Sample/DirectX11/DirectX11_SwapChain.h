@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SWAP_H
-#define SWAP_H
+#ifndef DX11_SWAP_H
+#define DX11_SWAP_H
 
 #include <d3d11.h>
 #include <wrl/client.h>
@@ -28,4 +28,4 @@ namespace DirectX11 {
         ComPtr<ID3D11RenderTargetView>  m_RenderTargetView;
     };
 }
-#endif // !SWAP_H
+#endif // !DX11_SWAP_H

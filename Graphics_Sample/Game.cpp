@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Object.h"
 
-namespace Game 
+namespace Rnderer 
 {
     Object g_obj;
 
@@ -19,7 +19,7 @@ namespace Game
 
     bool Init(HWND _hWnd, Vector2Int _size)
     {
-        bool sts = DirectX11::DirectX11_GraphicsMng::GetInstance()->Init(_hWnd, _size);
+        /*bool sts = DirectX11::DirectX11_GraphicsMng::GetInstance()->Init(_hWnd, _size);
 
         DirectX11::TurnOnZBuffer();
         DirectX11::TurnOnAlphaBlend();
@@ -38,10 +38,12 @@ namespace Game
         cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         cameraBufferDesc.ByteWidth = sizeof(CameraMatrix);
 
-        HRESULT hr = device->CreateBuffer(&cameraBufferDesc, nullptr, &g_cameraBuffer);
+        HRESULT hr = device->CreateBuffer(&cameraBufferDesc, nullptr, &g_cameraBuffer);*/
 
-        if (FAILED(hr))
-            return false;
+        /*if (FAILED(hr))
+            return false;*/
+
+        bool sts = DirectX12::DirectX12_GraphicsMng::GetInstance()->Init(_hWnd, _size);
 
         return sts;
     }
@@ -56,7 +58,7 @@ namespace Game
 
     void Update(uint64_t _deltaTime)
     {
-        if (_deltaTime >= 0) {
+        if (_deltaTime < 0) {
 
             CameraMatrix cMatrix;
 
@@ -78,11 +80,15 @@ namespace Game
 
             g_obj.Update(_deltaTime);
         }
+        else 
+        {
+            
+        }
     }
 
     void Draw(uint64_t _deltaTime)
     {
-        if (_deltaTime >= 0) {
+        if (_deltaTime < 0) {
 
             float col[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -96,12 +102,21 @@ namespace Game
 
             DirectX11::AfterRender();
         }
+        else 
+        {
+            float col[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
+
+            DirectX12::BeforeRender(col);
+
+            DirectX12::AfterRender();
+        }
     }
 
     void Uninit()
     {
         g_obj.Uninit();
 
-        DirectX11::DirectX11_GraphicsMng::GetInstance()->Uninit();
+        //DirectX11::DirectX11_GraphicsMng::GetInstance()->Uninit();
+        //DirectX12::DirectX12_GraphicsMng::GetInstance()->Uninit();
     }
 }
