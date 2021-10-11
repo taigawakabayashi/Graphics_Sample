@@ -45,6 +45,8 @@ namespace Rnderer
 
         bool sts = DirectX12::DirectX12_GraphicsMng::GetInstance()->Init(_hWnd, _size);
 
+        Shader::GetInstance()->InitDirectX12();
+
         return sts;
     }
 

@@ -4,18 +4,23 @@
 
 #include <d3dcompiler.h>
 #include <d3d11.h>
+#include <d3d12.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
 #include <locale>
 #include <wrl/client.h>
 
+enum class Shaders
+{
+    VS,
+    PS,
+};
+
 class Shader 
 {
 public:
     
-    bool Init();
-
     static Shader* GetInstance() 
     {
         static Shader instance;
@@ -23,14 +28,17 @@ public:
         return &instance;
     }
 
-    Shader(const Shader&) = delete;
-    Shader& operator = (const Shader&) = delete;
-    Shader(Shader&&) = delete;
-    Shader& operator = (Shader&&) = delete;
+    bool Init();
+    bool InitDirectX12();
 
+    // 11
     ID3D11VertexShader* GetVS(){ return m_vertexShader.Get(); };
     ID3D11InputLayout* GetIL(){ return m_inputLayout.Get(); };
     ID3D11PixelShader* GetPS(){ return m_pixelShader.Get(); };
+
+    // 12
+    D3D12_SHADER_BYTECODE m_shaders[2] = { 0, 0 };
+    D3D12_SHADER_BYTECODE GetShaderByte(Shaders _shaders){ return m_shaders[static_cast<int>(_shaders)]; };
 
 private:
     
@@ -39,6 +47,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
     Shader(){}
+    Shader(const Shader&) = delete;
+    Shader& operator = (const Shader&) = delete;
+    Shader(Shader&&) = delete;
+    Shader& operator = (Shader&&) = delete;
 
     bool CreateVertexShader(ID3D11Device* _pDevice, 
                             const char* _pFileName,
@@ -56,6 +68,8 @@ private:
                            LPCSTR _shaderModel,
                            ID3D11ClassLinkage* _pClassLinkage,
                            ID3D11PixelShader** _ppPixelShader);
+    
+    bool LoadShaderFile(const char* _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders);
 
     // Shader‚ðƒRƒ“ƒpƒCƒ‹
     HRESULT CompileShader(const char* _pFileName, 

@@ -3,40 +3,52 @@
 
 bool Shader::Init()
 {
-    ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
+    //ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
-    D3D11_INPUT_ELEMENT_DESC layout[] = 
-    {
-        {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-        {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-    };
+    //D3D11_INPUT_ELEMENT_DESC layout[] = 
+    //{
+    //    {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+    //    {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+    //};
 
-    uint32_t numElements = ARRAYSIZE(layout);
+    //uint32_t numElements = ARRAYSIZE(layout);
 
-    // 頂点シェーダーを作成
-    bool sts = CreateVertexShader(
-        device,
-        "Shader/VertexShader.hlsl",
-        "main",
-        "vs_5_0",
-        layout,
-        numElements,
-        nullptr,
-        &m_vertexShader,
-        &m_inputLayout);
+    //// 頂点シェーダーを作成
+    //bool sts = CreateVertexShader(
+    //    device,
+    //    "Shader/VertexShader.hlsl",
+    //    "main",
+    //    "vs_5_0",
+    //    layout,
+    //    numElements,
+    //    nullptr,
+    //    &m_vertexShader,
+    //    &m_inputLayout);
 
-    if (!sts) 
+    //if (!sts) 
+    //    return false;
+
+    //// ピクセルシェーダーを作成
+    //sts = CreatePixelShader(
+    //    device,
+    //    "Shader/PixelShader.hlsl",
+    //    "main",
+    //    "ps_5_0",
+    //    nullptr,
+    //    &m_pixelShader);
+    //if (!sts)
+    //    return false;
+
+    return true;
+}
+
+bool Shader::InitDirectX12()
+{
+    bool sts = LoadShaderFile("Shader/VertexShader.hlsl", "main", "vs_5_1", Shaders::VS);
+    if (!sts)
         return false;
 
-    // ピクセルシェーダーを作成
-    sts = CreatePixelShader(
-        device,
-        "Shader/PixelShader.hlsl",
-        "main",
-        "ps_5_0",
-        nullptr,
-        &m_pixelShader);
-
+    sts = LoadShaderFile("Shader/PixelShader.hlsl", "main", "ps_5_1", Shaders::PS);
     if (!sts)
         return false;
 
@@ -120,6 +132,24 @@ bool Shader::CreatePixelShader(ID3D11Device* device,
         if (pBlob)pBlob->Release();
         return false;
     }
+
+    return true;
+}
+
+bool Shader::LoadShaderFile(const char* _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders)
+{
+    HRESULT hr = S_OK;
+
+    ID3DBlob* tempBlobe = nullptr;
+    void* tempObject = nullptr;
+    size_t tempSize = 0;
+
+    hr = CompileShader(_pFileName, _entryPoint, _shaderModel, &tempObject, tempSize, &tempBlobe);
+    if(FAILED(hr))
+        return false;
+
+    m_shaders[static_cast<int>(_shaders)].BytecodeLength = tempBlobe->GetBufferSize();
+    m_shaders[static_cast<int>(_shaders)].pShaderBytecode = tempBlobe->GetBufferPointer();
 
     return true;
 }

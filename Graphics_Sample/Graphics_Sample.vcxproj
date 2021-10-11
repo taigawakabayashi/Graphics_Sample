@@ -149,6 +149,7 @@
     <ClCompile Include="DirectX11\DirectX11_SwapChain.cpp" />
     <ClCompile Include="DirectX11\DirectX11_ViewPort.cpp" />
     <ClCompile Include="DirectX12\DirectX12_GraphicsManager.cpp" />
+    <ClCompile Include="DirectX12\DirectX12_PipeLineStateObject.cpp" />
     <ClCompile Include="DirectX12\DirectX12_SwapChain.cpp" />
     <ClCompile Include="DirectX12\DirectX12_ViewPort.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="DirectX11\DirectX11_SwapChain.h" />
     <ClInclude Include="DirectX11\DirectX11_ViewPort.h" />
     <ClInclude Include="DirectX12\DirectX12_GraphicsManager.h" />
+    <ClInclude Include="DirectX12\DirectX12_PipeLineStateObject.h" />
     <ClInclude Include="DirectX12\DirectX12_SwapChain.h" />
     <ClInclude Include="DirectX12\DirectX12_ViewPort.h" />
     <ClInclude Include="Game.h" />

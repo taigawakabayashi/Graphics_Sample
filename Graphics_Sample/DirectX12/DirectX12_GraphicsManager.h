@@ -12,7 +12,7 @@ namespace DirectX12
 {
     using Microsoft::WRL::ComPtr;
 
-    class DirectX12_GraphicsMng 
+    class DirectX12_GraphicsMng
     {
     public:
 
