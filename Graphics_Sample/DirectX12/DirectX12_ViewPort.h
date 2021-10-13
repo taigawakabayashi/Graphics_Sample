@@ -21,6 +21,8 @@ namespace DirectX12
     private:
 
         D3D12_VIEWPORT m_viewPort = { 0 };
+
+        D3D12_RECT     m_scissorRect = { 0 };
     };
 }
 

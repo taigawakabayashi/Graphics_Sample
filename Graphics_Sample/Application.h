@@ -10,7 +10,7 @@
 #define APP_H
 #include "Window.h"
 
-enum class GRAPGICS
+enum class GraphicsAPI
 {
     DIRECTX11,
     DIRECTX12,

@@ -1,197 +1,249 @@
 #include "DirectX12/DirectX12_SwapChain.h"
+#include "DirectX12_GraphicsManager.h"
 
-namespace DirectX12{
+namespace DirectX12 {
 
-    bool DirectX12_SwapChain::CreateSwapChain(ID3D12CommandQueue* _pCommandQueue, HWND _hWnd, Vector2Int _size)
-    {
-        HRESULT hr;
+	bool DirectX12_SwapChain::CreateSwapChain(ID3D12CommandQueue* _pCommandQueue, HWND _hWnd, Vector2Int _size)
+	{
+		HRESULT hr;
 
-        // スワップチェインの初期設定
-        DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-        swapChainDesc.BufferCount = 2;
-        swapChainDesc.BufferDesc.Width = _size.x;
-        swapChainDesc.BufferDesc.Height = _size.y;
-        swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.OutputWindow = _hWnd;
-        swapChainDesc.SampleDesc.Count = 1;
-        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-        swapChainDesc.Windowed = true;
+		DXGI_SWAP_CHAIN_DESC1 desc = {};
+		desc.Width = _size.x;
+		desc.Height = _size.y;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Stereo = false;                                // フルスクリーン指定
+		desc.SampleDesc = DXGI_SAMPLE_DESC{ 1,0 };
+		desc.BufferUsage = DXGI_USAGE_BACK_BUFFER;            // バッファ識別
+		desc.BufferCount = 2;								// バックバッファ数
+		desc.Scaling = DXGI_SCALING_STRETCH;                // バックバッファのスケーリング指定
+		desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;    // スワップ時のバッファの扱い
+		desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;        // アルファモード??
+		desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;// 動作オプション (フルスクリーン切り替え可)
 
-        IDXGIFactory* pFactory = nullptr;
+		// スワップチェインの初期設定
+		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+		swapChainDesc.BufferCount = 2;
+		swapChainDesc.BufferDesc.Width = _size.x;
+		swapChainDesc.BufferDesc.Height = _size.y;
+		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.OutputWindow = _hWnd;
+		swapChainDesc.SampleDesc.Count = 1;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		swapChainDesc.Windowed = true;
 
-        IDXGISwapChain* pTempSwap = nullptr;
+		IDXGIFactory4* pFactory = nullptr;
 
-        hr = CreateDXGIFactory1(IID_PPV_ARGS(&pFactory));
+		IDXGISwapChain1* pTempSwap = nullptr;
 
-        // スワップチェインの作成
-        hr = pFactory->CreateSwapChain(_pCommandQueue, &swapChainDesc, &pTempSwap);
-        if (FAILED(hr))
-            return false;
+		hr = CreateDXGIFactory1(IID_PPV_ARGS(&pFactory));
 
-        // GetCurrentBackBufferIndexを使うためにIDXGISwapChain3にする
-        hr = pTempSwap->QueryInterface(IID_PPV_ARGS(&m_swapChain));
-        if (FAILED(hr))
-            return false;
+		// スワップチェインの作成
+		hr = pFactory->CreateSwapChainForHwnd(
+			_pCommandQueue,
+			_hWnd,
+			&desc,
+			nullptr,
+			nullptr,
+			&pTempSwap);
+		if (FAILED(hr))
+			return false;
 
-        // 現在のバックバッファのインデックスを取得
-        m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+		// GetCurrentBackBufferIndexを使うためにIDXGISwapChain3にする
+		hr = pTempSwap->QueryInterface(IID_PPV_ARGS(&m_swapChain));
+		if (FAILED(hr))
+			return false;
 
-        // 解放処理
-        pFactory->Release();
-        pFactory = nullptr;
+		// 現在のバックバッファのインデックスを取得
+		m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
-        pTempSwap->Release();
-        pTempSwap = nullptr;
+		m_swapChain->AddRef();
 
-        return true;
-    }
+		// 解放処理
+		pFactory->Release();
+		pFactory = nullptr;
 
-    bool DirectX12_SwapChain::CreateDescriptorHeap(ID3D12Device* _pDevice)
-    {
-        HRESULT hr = S_OK;
+		pTempSwap->Release();
+		pTempSwap = nullptr;
 
-        // DescriptorHeapの初期設定
-        D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
-        ZeroMemory(&heapDesc, sizeof(heapDesc));
+		return true;
+	}
 
-        heapDesc.NumDescriptors = 2;                        // バックバッファの数
-        heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;     // レンダーターゲットビューのためのヒープ
-        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;   // デフォルト
-        heapDesc.NodeMask = 0;                              // デフォルト
+	bool DirectX12_SwapChain::CreateDescriptorHeap(ID3D12Device* _pDevice)
+	{
+		HRESULT hr = S_OK;
 
-        // DescriptorHeapの作成
-        hr = _pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_descriptorHeap));
-        if(FAILED(hr))
-            return false;
+		// DescriptorHeapの初期設定
+		D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
+		ZeroMemory(&heapDesc, sizeof(heapDesc));
 
-        // RenderTargetViewのオフセットを取得
-        m_rtvDescriptorSize = _pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		heapDesc.NumDescriptors = 2;                        // バックバッファの数
+		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;     // レンダーターゲットビューのためのヒープ
+		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;   // デフォルト
+		heapDesc.NodeMask = 0;                              // デフォルト
 
-        // Heap内の開始アドレスを取得
-        D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		// DescriptorHeapの作成
+		hr = _pDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_rtvDescriptorHeap));
+		if (FAILED(hr))
+			return false;
 
-        // バックバッファの数だけRTVを作成
-        for (int i = 0; i < 2; ++i) 
-        {
-            // バックバッファを取得
-            hr = m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargetView[i]));
-            if(FAILED(hr))
-                return false;
+		m_rtvDescriptorHeap->SetName(L"SwapChain_Heap");
 
-            // バックバッファをもとにRenderTargetViewを作成
-            _pDevice->CreateRenderTargetView(m_renderTargetView[i].Get(), nullptr, handle);
+		// RenderTargetViewのオフセットを取得
+		m_rtvDescriptorSize = _pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-            // 次のアドレスに以降
-            handle.ptr += m_rtvDescriptorSize;
-        }
+		// Heap内の開始アドレスを取得
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-        return true;
-    }
+		// バックバッファの数だけRTVを作成
+		for (int i = 0; i < 2; ++i)
+		{
+			// バックバッファを取得
+			hr = m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargetView[i]));
+			if (FAILED(hr))
+				return false;
 
-    bool DirectX12_SwapChain::CreateRenderTaergetView(ID3D12Device*)
-    {
-        return false;
-    }
+			// バックバッファをもとにRenderTargetViewを作成
+			_pDevice->CreateRenderTargetView(m_renderTargetView[i].Get(), nullptr, handle);
 
-    bool DirectX12_SwapChain::CreateFence(ID3D12Device* _pDevice)
-    {
-        HRESULT hr = S_OK;
+			// 次のアドレスに以降
+			handle.ptr += m_rtvDescriptorSize;
+		}
 
-        // フェンスの作成
-        hr = _pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
-        if(FAILED(hr))
-            return false;
+		m_renderTargetView[0]->SetName(L"SwapChain_RTV_0");
+		m_renderTargetView[1]->SetName(L"SwapChain_RTV_1");
 
-        // カウント
-        m_fenceValue = 1;
+		return true;
+	}
 
-        // フェンス用のイベントを作成
-        m_fenceEvent =  CreateEventEx(nullptr, FALSE, false, EVENT_ALL_ACCESS);
+	bool DirectX12_SwapChain::CreateRenderTaergetView(ID3D12Device*)
+	{
+		return false;
+	}
 
-        return true;
-    }
+	bool DirectX12_SwapChain::CreateDepthStencilView(ID3D12Device* _pDevice, Vector2Int _size)
+	{
+		HRESULT hr = S_OK;
 
-    void DirectX12_SwapChain::SetRenderTargetView(ID3D12GraphicsCommandList* _pCommandList)
-    {
-        D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		//深度バッファ用のデスクリプタヒープの作成
+		D3D12_DESCRIPTOR_HEAP_DESC depthDesc{};
+		depthDesc.NumDescriptors		= 1;
+		depthDesc.Type					= D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+		depthDesc.Flags					= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		depthDesc.NodeMask				= 0;
+		hr = _pDevice->CreateDescriptorHeap(&depthDesc, IID_PPV_ARGS(&m_dsvDescriptorHeap));
+		if (FAILED(hr)) 
+			return false;
+		
 
-        handle.ptr += (m_frameIndex * m_rtvDescriptorSize);
+		//深度バッファの作成
+		D3D12_HEAP_PROPERTIES heapProp{};
+		D3D12_RESOURCE_DESC resourceDesc{};
+		D3D12_CLEAR_VALUE clearValue{};
 
-        _pCommandList->OMSetRenderTargets(1, &handle, false, nullptr);
-    }
+		heapProp.Type					= D3D12_HEAP_TYPE_DEFAULT;
+		heapProp.CPUPageProperty		= D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+		heapProp.MemoryPoolPreference	= D3D12_MEMORY_POOL_UNKNOWN;
+		heapProp.CreationNodeMask		= 0;
+		heapProp.VisibleNodeMask		= 0;
 
-    void DirectX12_SwapChain::ClearRenderTargetView(ID3D12GraphicsCommandList* _pCommandList, float _clearColor[])
-    {
-        // バリア初期設定
-        D3D12_RESOURCE_BARRIER barrier;
+		resourceDesc.Dimension			= D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		resourceDesc.Width				= _size.x;
+		resourceDesc.Height				= _size.y;
+		resourceDesc.DepthOrArraySize	= 1;
+		resourceDesc.MipLevels			= 0;
+		resourceDesc.Format				= DXGI_FORMAT_R32_TYPELESS;
+		resourceDesc.Layout				= D3D12_TEXTURE_LAYOUT_UNKNOWN;
+		resourceDesc.SampleDesc.Count	= 1;
+		resourceDesc.SampleDesc.Quality = 0;
+		resourceDesc.Flags				= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
-        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;                      // Resourceの状態遷移に対してバリアを設定
-        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;                           // 特に設定しなければこれでいい
-        barrier.Transition.pResource = m_renderTargetView[m_frameIndex].Get();      // バリアを張るResourceを設定
-        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;              // 状態遷移前のState
-        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;         // 状態遷移後のState
-        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;   // どのサブリソースに対してバリアを張るか
+		clearValue.Format				= DXGI_FORMAT_D32_FLOAT;
+		clearValue.DepthStencil.Depth	= 1.0f;
+		clearValue.DepthStencil.Stencil = 0;
 
-        // バリアを設定
-        _pCommandList->ResourceBarrier(1, &barrier);
+		hr = _pDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue, IID_PPV_ARGS(&m_depthStencilView));
+		if (FAILED(hr))
+			return false;
 
-        // Heap内の開始アドレスを取得
-        D3D12_CPU_DESCRIPTOR_HANDLE handle = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-        // 現在のRenderTargetViewのアドレスに移動
-        handle.ptr += (m_frameIndex * m_rtvDescriptorSize);
+		//深度バッファのビューの作成
+		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 
-        // RendrTargetViewをセット
-        _pCommandList->OMSetRenderTargets(1, &handle, false, nullptr);
+		dsvDesc.ViewDimension			= D3D12_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Format					= DXGI_FORMAT_D32_FLOAT;
+		dsvDesc.Texture2D.MipSlice		= 0;
+		dsvDesc.Flags					= D3D12_DSV_FLAG_NONE;
 
-        // RenderTargetViewを指定色でクリア
-        _pCommandList->ClearRenderTargetView(handle, _clearColor, 0, nullptr);
-    }
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-    void DirectX12_SwapChain::WaitFenceEvent(ID3D12CommandQueue* _pCommandQueue, ID3D12GraphicsCommandList* _pCommandList)
-    {
-        // バリア初期設定 
-        D3D12_RESOURCE_BARRIER barrier;
+		_pDevice->CreateDepthStencilView(m_depthStencilView.Get(), &dsvDesc, handle);
 
-        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;                      // Resourceの状態遷移に対してバリアを設定
-        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;                           // 特に設定しなければこれでいい
-        barrier.Transition.pResource = m_renderTargetView[m_frameIndex].Get();      // バリアを張るResourceを設定
-        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;        // 状態遷移前のState
-        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;               // 状態遷移後のState
-        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;   // どのサブリソースに対してバリアを張るか
+		return true;
+	}
 
-        // バリアを設定
-        _pCommandList->ResourceBarrier(1, &barrier);
+	void DirectX12_SwapChain::SetRenderTargetView(ID3D12GraphicsCommandList* _pCommandList)
+	{
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-        // 現在のカウント
-        uint64_t fenceValue = m_fenceValue;
+		handle.ptr += static_cast<SIZE_T>(m_frameIndex * m_rtvDescriptorSize);
 
-        // フェンスにカウントをセット？
-        _pCommandQueue->Signal(m_fence.Get(), fenceValue);
+		_pCommandList->OMSetRenderTargets(1, &handle, false, nullptr);
+	}
 
-        // カウントを増やす
-        ++m_fenceValue;
+	void DirectX12_SwapChain::ClearRenderTargetView(ID3D12GraphicsCommandList* _pCommandList, float _clearColor[])
+	{
+		// バリア初期設定
+		D3D12_RESOURCE_BARRIER barrier;
 
-        // 完了したカウントを取得
-        uint64_t compValue = m_fence->GetCompletedValue();
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;                      // Resourceの状態遷移に対してバリアを設定
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;                           // 特に設定しなければこれでいい
+		barrier.Transition.pResource = m_renderTargetView[m_frameIndex].Get();      // バリアを張るResourceを設定
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;              // 状態遷移前のState
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;         // 状態遷移後のState
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;   // どのサブリソースに対してバリアを張るか
 
-        // まだ実行完了してなければ
-        if (compValue < fenceValue)
-        {   
-            // 完了すればイベントをキック
-            m_fence->SetEventOnCompletion(fenceValue, m_fenceEvent);
+		// バリアを設定
+		_pCommandList->ResourceBarrier(1, &barrier);
 
-            // イベントがキックされるまで待つ
-            WaitForSingleObject(m_fenceEvent, INFINITE);
-        }
-    }
+		// Heap内の開始アドレスを取得
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-    void DirectX12_SwapChain::UpdateFrameIndex()
-    {
-        // 現在のバックバッファのインデックスを取得
-        m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-    }
+		// 現在のRenderTargetViewのアドレスに移動
+		rtvHandle.ptr += static_cast<SIZE_T>(m_frameIndex * m_rtvDescriptorSize);
+
+		// RenderTargetViewを指定色でクリア
+		_pCommandList->ClearRenderTargetView(rtvHandle, _clearColor, 0, nullptr);
+
+		// 
+		_pCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+		// RendrTargetViewをセット
+		_pCommandList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
+	}
+
+	void DirectX12_SwapChain::SetResourceBarrier(ID3D12GraphicsCommandList* _pCommandList)
+	{
+		// バリア初期設定 
+		D3D12_RESOURCE_BARRIER barrier;
+
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;                      // Resourceの状態遷移に対してバリアを設定
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;                           // 特に設定しなければこれでいい
+		barrier.Transition.pResource = m_renderTargetView[m_frameIndex].Get();      // バリアを張るResourceを設定
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;        // 状態遷移前のState
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;               // 状態遷移後のState
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;   // どのサブリソースに対してバリアを張るか
+
+		// バリアを設定
+		_pCommandList->ResourceBarrier(1, &barrier);
+	}
+
+	void DirectX12_SwapChain::UpdateFrameIndex()
+	{
+		// 現在のバックバッファのインデックスを取得
+		m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+	}
 }

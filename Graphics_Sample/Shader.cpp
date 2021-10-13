@@ -3,271 +3,275 @@
 
 bool Shader::Init()
 {
-    //ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
+	//ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
-    //D3D11_INPUT_ELEMENT_DESC layout[] = 
-    //{
-    //    {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-    //    {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-    //};
+	//D3D11_INPUT_ELEMENT_DESC layout[] = 
+	//{
+	//    {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+	//    {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+	//};
 
-    //uint32_t numElements = ARRAYSIZE(layout);
+	//uint32_t numElements = ARRAYSIZE(layout);
 
-    //// 頂点シェーダーを作成
-    //bool sts = CreateVertexShader(
-    //    device,
-    //    "Shader/VertexShader.hlsl",
-    //    "main",
-    //    "vs_5_0",
-    //    layout,
-    //    numElements,
-    //    nullptr,
-    //    &m_vertexShader,
-    //    &m_inputLayout);
+	//// 頂点シェーダーを作成
+	//bool sts = CreateVertexShader(
+	//    device,
+	//    "Shader/VertexShader.hlsl",
+	//    "main",
+	//    "vs_5_0",
+	//    layout,
+	//    numElements,
+	//    nullptr,
+	//    &m_vertexShader,
+	//    &m_inputLayout);
 
-    //if (!sts) 
-    //    return false;
+	//if (!sts) 
+	//    return false;
 
-    //// ピクセルシェーダーを作成
-    //sts = CreatePixelShader(
-    //    device,
-    //    "Shader/PixelShader.hlsl",
-    //    "main",
-    //    "ps_5_0",
-    //    nullptr,
-    //    &m_pixelShader);
-    //if (!sts)
-    //    return false;
+	//// ピクセルシェーダーを作成
+	//sts = CreatePixelShader(
+	//    device,
+	//    "Shader/PixelShader.hlsl",
+	//    "main",
+	//    "ps_5_0",
+	//    nullptr,
+	//    &m_pixelShader);
+	//if (!sts)
+	//    return false;
 
-    return true;
+	return true;
 }
 
 bool Shader::InitDirectX12()
 {
-    bool sts = LoadShaderFile("Shader/VertexShader.hlsl", "main", "vs_5_1", Shaders::VS);
-    if (!sts)
-        return false;
+	bool sts = LoadShaderFile(L"Shader/VertexShader12.hlsl", "main", "vs_5_1", Shaders::VS);
+	if (!sts)
+		return false;
 
-    sts = LoadShaderFile("Shader/PixelShader.hlsl", "main", "ps_5_1", Shaders::PS);
-    if (!sts)
-        return false;
+	sts = LoadShaderFile(L"Shader/PixelShader12.hlsl", "main", "ps_5_1", Shaders::PS);
+	if (!sts)
+		return false;
 
-    return true;
+	return true;
 }
 
 bool Shader::CreateVertexShader(ID3D11Device* _pDevice, 
-                                const char* _pFileName, 
-                                LPCSTR _entryPoint,
-                                LPCSTR _shaderModel, 
-                                D3D11_INPUT_ELEMENT_DESC* _pLayout,
-                                uint32_t _numElements, 
-                                ID3D11ClassLinkage* _pClassLinkage, 
-                                ID3D11VertexShader** _ppVertexShader, 
-                                ID3D11InputLayout** _ppInputLayout)
+								const char* _pFileName, 
+								LPCSTR _entryPoint,
+								LPCSTR _shaderModel, 
+								D3D11_INPUT_ELEMENT_DESC* _pLayout,
+								uint32_t _numElements, 
+								ID3D11ClassLinkage* _pClassLinkage, 
+								ID3D11VertexShader** _ppVertexShader, 
+								ID3D11InputLayout** _ppInputLayout)
 {
-    HRESULT hr;
+	HRESULT hr;
 
-    ID3DBlob* pBlob = nullptr;
+	ID3DBlob* pBlob = nullptr;
 
-    void* ShaderObject;
-    size_t	ShaderObjectSize;
+	void* ShaderObject;
+	size_t	ShaderObjectSize;
 
-    // ファイルの拡張子に合わせてコンパイル
-    hr = CompileShader(_pFileName, _entryPoint, _shaderModel, &ShaderObject, ShaderObjectSize, &pBlob);
-    if (FAILED(hr))
-    {
-        if (pBlob)pBlob->Release();
-        return false;
-    }
+	// ファイルの拡張子に合わせてコンパイル
+	hr = CompileShader(_pFileName, _entryPoint, _shaderModel, &ShaderObject, ShaderObjectSize, &pBlob);
+	if (FAILED(hr))
+	{
+		if (pBlob)pBlob->Release();
+		return false;
+	}
 
-    // 頂点シェーダーを生成
-    hr = _pDevice->CreateVertexShader(ShaderObject, ShaderObjectSize, _pClassLinkage, _ppVertexShader);
-    if (FAILED(hr))
-    {
-        if (pBlob)pBlob->Release();
-        return false;
-    }
+	// 頂点シェーダーを生成
+	hr = _pDevice->CreateVertexShader(ShaderObject, ShaderObjectSize, _pClassLinkage, _ppVertexShader);
+	if (FAILED(hr))
+	{
+		if (pBlob)pBlob->Release();
+		return false;
+	}
 
-    // 頂点データ定義生成
-    hr = _pDevice->CreateInputLayout(
-        _pLayout,
-        _numElements,
-        ShaderObject,
-        ShaderObjectSize,
-        _ppInputLayout);
-    if (FAILED(hr)) {
-        MessageBox(nullptr, L"CreateInputLayout error", L"error", MB_OK);
-        pBlob->Release();
-        return false;
-    }
+	// 頂点データ定義生成
+	hr = _pDevice->CreateInputLayout(
+		_pLayout,
+		_numElements,
+		ShaderObject,
+		ShaderObjectSize,
+		_ppInputLayout);
+	if (FAILED(hr)) {
+		MessageBox(nullptr, L"CreateInputLayout error", L"error", MB_OK);
+		pBlob->Release();
+		return false;
+	}
 
-    return true;
+	return true;
 }
 
 bool Shader::CreatePixelShader(ID3D11Device* device, 
-                               const char* fileName, 
-                               LPCSTR entryPoint, 
-                               LPCSTR shaderModel, 
-                               ID3D11ClassLinkage* pClassLinkage, 
-                               ID3D11PixelShader** ppPixelShader)
+							   const char* fileName, 
+							   LPCSTR entryPoint, 
+							   LPCSTR shaderModel, 
+							   ID3D11ClassLinkage* pClassLinkage, 
+							   ID3D11PixelShader** ppPixelShader)
 {
-    HRESULT hr;
+	HRESULT hr;
 
-    ID3DBlob* pBlob = nullptr;
+	ID3DBlob* pBlob = nullptr;
 
-    void* ShaderObject;
-    size_t	ShaderObjectSize;
+	void* ShaderObject;
+	size_t	ShaderObjectSize;
 
-    // ファイルの拡張子に合わせてコンパイル
-    hr = CompileShader(fileName, entryPoint, shaderModel, &ShaderObject, ShaderObjectSize, &pBlob);
-    if (FAILED(hr))
-    {
-        return false;
-    }
+	// ファイルの拡張子に合わせてコンパイル
+	hr = CompileShader(fileName, entryPoint, shaderModel, &ShaderObject, ShaderObjectSize, &pBlob);
+	if (FAILED(hr))
+	{
+		return false;
+	}
 
-    // ピクセルシェーダーを生成
-    hr = device->CreatePixelShader(ShaderObject, ShaderObjectSize, pClassLinkage, ppPixelShader);
-    if (FAILED(hr))
-    {
-        if (pBlob)pBlob->Release();
-        return false;
-    }
+	// ピクセルシェーダーを生成
+	hr = device->CreatePixelShader(ShaderObject, ShaderObjectSize, pClassLinkage, ppPixelShader);
+	if (FAILED(hr))
+	{
+		if (pBlob)pBlob->Release();
+		return false;
+	}
 
-    return true;
+	return true;
 }
 
-bool Shader::LoadShaderFile(const char* _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders)
+bool Shader::LoadShaderFile(LPCWSTR _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders)
 {
-    HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
 
-    ID3DBlob* tempBlobe = nullptr;
-    void* tempObject = nullptr;
-    size_t tempSize = 0;
+#if defined(_DEBUG)
+	UINT compile_flag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+	UINT compile_flag = 0;
+#endif
 
-    hr = CompileShader(_pFileName, _entryPoint, _shaderModel, &tempObject, tempSize, &tempBlobe);
-    if(FAILED(hr))
-        return false;
+	ID3DBlob* tempBlobe = nullptr;
 
-    m_shaders[static_cast<int>(_shaders)].BytecodeLength = tempBlobe->GetBufferSize();
-    m_shaders[static_cast<int>(_shaders)].pShaderBytecode = tempBlobe->GetBufferPointer();
+	hr = D3DCompileFromFile(_pFileName, nullptr, nullptr, _entryPoint, _shaderModel, compile_flag, 0, &tempBlobe, nullptr);
+	if(FAILED(hr))
+		return false;
 
-    return true;
+	m_shaders[static_cast<int>(_shaders)].BytecodeLength = tempBlobe->GetBufferSize();
+	m_shaders[static_cast<int>(_shaders)].pShaderBytecode = tempBlobe->GetBufferPointer();
+
+	return true;
 }
 
 HRESULT Shader::CompileShader(const char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, void** ShaderObject, size_t& ShaderObjectSize, ID3DBlob** ppBlobOut)
 {
-    HRESULT hr;
-    static std::vector<unsigned char> byteArray;
-    *ppBlobOut = nullptr;
+	HRESULT hr;
+	static std::vector<unsigned char> byteArray;
+	*ppBlobOut = nullptr;
 
-    std::string extname = GetFileExt(szFileName);
-    if (extname == "cso") {
-        bool sts = readShader(szFileName, byteArray);
-        if (!sts) {
-            //FILE* fp;
-            //fopen_s(&fp, "debug.txt", "a");
-            //fprintf(fp, "file open error \n");
-            //fclose(fp);
-            return E_FAIL;
-        }
-        *ShaderObject = byteArray.data();
-        ShaderObjectSize = byteArray.size();
-    }
-    else {
-        hr = CompileShaderFromFile(szFileName, szEntryPoint, szShaderModel, ppBlobOut);
-        if (FAILED(hr)) {
-            if (*ppBlobOut)(*ppBlobOut)->Release();
-            return E_FAIL;
-        }
-        *ShaderObject = (*ppBlobOut)->GetBufferPointer();
-        ShaderObjectSize = (*ppBlobOut)->GetBufferSize();
-    }
+	std::string extname = GetFileExt(szFileName);
+	if (extname == "cso") {
+		bool sts = readShader(szFileName, byteArray);
+		if (!sts) {
+			//FILE* fp;
+			//fopen_s(&fp, "debug.txt", "a");
+			//fprintf(fp, "file open error \n");
+			//fclose(fp);
+			return E_FAIL;
+		}
+		*ShaderObject = byteArray.data();
+		ShaderObjectSize = byteArray.size();
+	}
+	else {
+		hr = CompileShaderFromFile(szFileName, szEntryPoint, szShaderModel, ppBlobOut);
+		if (FAILED(hr)) {
+			if (*ppBlobOut)(*ppBlobOut)->Release();
+			return E_FAIL;
+		}
+		*ShaderObject = (*ppBlobOut)->GetBufferPointer();
+		ShaderObjectSize = (*ppBlobOut)->GetBufferSize();
+	}
 
-    return S_OK;
+	return S_OK;
 }
 
 
 std::string Shader::ExtractFileName(std::string fullpath, char split)
 {
-    unsigned int path_i = static_cast<unsigned int>(fullpath.find_last_of(split) + 1);	//7
-    unsigned int ext_i = static_cast<unsigned int>(fullpath.find_last_of("."));			//10
-    std::string pathname = fullpath.substr(0, path_i + 1);								//0文字目から７文字切り出す "C:\\aaa\\"
-    std::string extname = fullpath.substr(ext_i, fullpath.size() - ext_i);				// 10文字目から４文字切り出す ".txt"
-    std::string filename = fullpath.substr(path_i, ext_i - path_i);//
+	unsigned int path_i = static_cast<unsigned int>(fullpath.find_last_of(split) + 1);	//7
+	unsigned int ext_i = static_cast<unsigned int>(fullpath.find_last_of("."));			//10
+	std::string pathname = fullpath.substr(0, path_i + 1);								//0文字目から７文字切り出す "C:\\aaa\\"
+	std::string extname = fullpath.substr(ext_i, fullpath.size() - ext_i);				// 10文字目から４文字切り出す ".txt"
+	std::string filename = fullpath.substr(path_i, ext_i - path_i);//
 
-    return filename + extname;
+	return filename + extname;
 }
 
 std::string Shader::GetFileExt(const char* filename) 
 {
-    std::string extname;
+	std::string extname;
 
-    std::string fullpathstr(filename);
-    size_t ext_i = fullpathstr.find_last_of(".");
-    extname = fullpathstr.substr(ext_i + 1, fullpathstr.size() - ext_i);
-    return extname;
+	std::string fullpathstr(filename);
+	size_t ext_i = fullpathstr.find_last_of(".");
+	extname = fullpathstr.substr(ext_i + 1, fullpathstr.size() - ext_i);
+	return extname;
 }
 
 bool Shader::readShader(const char* csoName, std::vector<unsigned char>& byteArray)
 {
-    FILE* fp;
-    int ret = fopen_s(&fp, csoName, "rb");
-    if (ret != 0) {
-        return false;
-    }
-    fseek(fp, 0, SEEK_END);
-    int size = ftell(fp);
-    byteArray.resize(size);
-    fseek(fp, 0, SEEK_SET);
+	FILE* fp;
+	int ret = fopen_s(&fp, csoName, "rb");
+	if (ret != 0) {
+		return false;
+	}
+	fseek(fp, 0, SEEK_END);
+	int size = ftell(fp);
+	byteArray.resize(size);
+	fseek(fp, 0, SEEK_SET);
 
-    fread(byteArray.data(), byteArray.size(), 1, fp);
-    fclose(fp);
+	fread(byteArray.data(), byteArray.size(), 1, fp);
+	fclose(fp);
 
-    return true;
+	return true;
 }
 
 HRESULT Shader::CompileShaderFromFile(const char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob * *ppBlobOut)
 {
-    HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
 
-    WCHAR	filename[512];
-    size_t 	wLen = 0;
-    int err = 0;
+	WCHAR	filename[512];
+	size_t 	wLen = 0;
+	int err = 0;
 
-    // char -> wcharに変換
-    setlocale(LC_ALL, "japanese");
-    err = mbstowcs_s(&wLen, filename, 512, szFileName, _TRUNCATE);
+	// char -> wcharに変換
+	setlocale(LC_ALL, "japanese");
+	err = mbstowcs_s(&wLen, filename, 512, szFileName, _TRUNCATE);
 
-    DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
-    // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
-    // the release configuration of this program.
-    dwShaderFlags |= D3DCOMPILE_DEBUG;
+	// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+	// Setting this flag improves the shader debugging experience, but still allows 
+	// the shaders to be optimized and to run exactly the way they will run in 
+	// the release configuration of this program.
+	dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-    ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DCompileFromFile(
-        filename,							// filename LPCWST pFileName
-        nullptr,							// D3D_SHADER_MACRO *pDefines
-        D3D_COMPILE_STANDARD_FILE_INCLUDE,	// ID3DInclude *pInclude
-        szEntryPoint,						// LPCSTR pEntrypoint
-        szShaderModel,						// LPCSTR pTarget
-        dwShaderFlags,						// UINT Flags1
-        0,									// UINT Flags2
-        ppBlobOut,							// ID3DBlob** ppCode
-        &pErrorBlob);						// ID3DBlob** ppErrorMsg 
-    if (FAILED(hr))
-    {
-        if (pErrorBlob != nullptr) {
-            MessageBox(NULL,
-                (wchar_t*)pErrorBlob->GetBufferPointer(), L"Error", MB_OK);
-        }
-        if (pErrorBlob) pErrorBlob->Release();
-        return hr;
-    }
-    if (pErrorBlob) pErrorBlob->Release();
+	ID3DBlob* pErrorBlob = nullptr;
+	hr = D3DCompileFromFile(
+		filename,							// filename LPCWST pFileName
+		nullptr,							// D3D_SHADER_MACRO *pDefines
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,	// ID3DInclude *pInclude
+		szEntryPoint,						// LPCSTR pEntrypoint
+		szShaderModel,						// LPCSTR pTarget
+		dwShaderFlags,						// UINT Flags1
+		0,									// UINT Flags2
+		ppBlobOut,							// ID3DBlob** ppCode
+		&pErrorBlob);						// ID3DBlob** ppErrorMsg 
+	if (FAILED(hr))
+	{
+		if (pErrorBlob != nullptr) {
+			MessageBox(NULL,
+				(wchar_t*)pErrorBlob->GetBufferPointer(), L"Error", MB_OK);
+		}
+		if (pErrorBlob) pErrorBlob->Release();
+		return hr;
+	}
+	if (pErrorBlob) pErrorBlob->Release();
 
-    return S_OK;
+	return S_OK;
 }

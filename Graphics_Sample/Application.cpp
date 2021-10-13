@@ -24,6 +24,7 @@ bool Application::Init(HINSTANCE _hInstance, int32_t _winMode)
     //freopen_s(&m_fp, "CON", "r", stdin);
 
     Window window;
+    Window window2;
 
     // ウィンドウクラスの登録
     window.RegisterClass(_hInstance, CS_OWNDC, L"Main");

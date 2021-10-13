@@ -10,45 +10,42 @@
 
 namespace DirectX12 
 {
-    using Microsoft::WRL::ComPtr;
+	using Microsoft::WRL::ComPtr;
 
-    class DirectX12_SwapChain 
-    {
-    public:
+	class DirectX12_SwapChain 
+	{
+	public:
 
-        bool CreateSwapChain(ID3D12CommandQueue* _pCommandQueue, HWND _hWnd, Vector2Int _size);
+		bool CreateSwapChain(ID3D12CommandQueue* _pCommandQueue, HWND _hWnd, Vector2Int _size);
 
-        bool CreateDescriptorHeap(ID3D12Device* _pDevice);
+		bool CreateDescriptorHeap(ID3D12Device* _pDevice);
 
-        bool CreateRenderTaergetView(ID3D12Device* _pDevice);
+		bool CreateRenderTaergetView(ID3D12Device* _pDevice);
 
-        bool CreateFence(ID3D12Device* _pDevice);
+		bool CreateDepthStencilView(ID3D12Device* _pDevice, Vector2Int _size);
 
-        void SetRenderTargetView(ID3D12GraphicsCommandList* _pCommandList);
+		void SetRenderTargetView(ID3D12GraphicsCommandList* _pCommandList);
 
-        void ClearRenderTargetView(ID3D12GraphicsCommandList* _pCommandList, float _clearColor[]);
+		void ClearRenderTargetView(ID3D12GraphicsCommandList* _pCommandList, float _clearColor[]);
 
-        void WaitFenceEvent(ID3D12CommandQueue* _pCommandQueue, ID3D12GraphicsCommandList* _pCommandList);
+		void SetResourceBarrier(ID3D12GraphicsCommandList* _pCommandList);
 
-        void UpdateFrameIndex();
+		void UpdateFrameIndex();
 
-        IDXGISwapChain3* GetSwapChain() { return m_swapChain.Get(); }
-        //ID3D12RenderTargetView* GetRenderTargetView() { return m_RenderTargetView.Get(); }
+		IDXGISwapChain3* GetSwapChain() { return m_swapChain.Get(); }
 
-    private:
+	private:
 
-        ComPtr<IDXGISwapChain3>             m_swapChain = nullptr;
-        ComPtr<ID3D12DescriptorHeap>        m_descriptorHeap = nullptr;
-        ComPtr<ID3D12Resource>              m_renderTargetView[2] = { nullptr, nullptr };
+		ComPtr<IDXGISwapChain3>				m_swapChain = nullptr;
+		ComPtr<ID3D12DescriptorHeap>        m_rtvDescriptorHeap = nullptr;
+		ComPtr<ID3D12Resource>				m_renderTargetView[2] = { nullptr, nullptr };
 
-        ComPtr<ID3D12Fence>                 m_fence = nullptr;
-        uint64_t                            m_fenceValue = 0;
-        HANDLE                              m_fenceEvent = nullptr;
+		ComPtr<ID3D12DescriptorHeap>        m_dsvDescriptorHeap = nullptr;
+		ComPtr<ID3D12Resource>				m_depthStencilView = nullptr;
 
-        uint32_t m_frameIndex = 0;
-        uint32_t m_rtvDescriptorSize = 0;
-        //ComPtr<ID3D11RenderTargetView>  m_RenderTargetView;
-    };
+		uint64_t							m_frameIndex = 0;
+		uint64_t							m_rtvDescriptorSize = 0;
+	};
 }
 
 #endif // !DX12_SWAP_H

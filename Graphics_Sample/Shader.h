@@ -42,9 +42,9 @@ public:
 
 private:
     
-    Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
-    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout = nullptr;
 
     Shader(){}
     Shader(const Shader&) = delete;
@@ -69,7 +69,7 @@ private:
                            ID3D11ClassLinkage* _pClassLinkage,
                            ID3D11PixelShader** _ppPixelShader);
     
-    bool LoadShaderFile(const char* _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders);
+    bool LoadShaderFile(LPCWSTR _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders);
 
     // Shader‚ðƒRƒ“ƒpƒCƒ‹
     HRESULT CompileShader(const char* _pFileName, 

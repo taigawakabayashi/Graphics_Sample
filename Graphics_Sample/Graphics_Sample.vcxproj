@@ -152,6 +152,7 @@
     <ClCompile Include="DirectX12\DirectX12_PipeLineStateObject.cpp" />
     <ClCompile Include="DirectX12\DirectX12_SwapChain.cpp" />
     <ClCompile Include="DirectX12\DirectX12_ViewPort.cpp" />
+    <ClCompile Include="DirectX12_Resources.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="DirectX12\DirectX12_PipeLineStateObject.h" />
     <ClInclude Include="DirectX12\DirectX12_SwapChain.h" />
     <ClInclude Include="DirectX12\DirectX12_ViewPort.h" />
+    <ClInclude Include="DirectX12_Resources.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shader.h" />
@@ -184,7 +186,13 @@
     <FxCompile Include="Shader\PixelShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Shader\PixelShader12.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shader\VertexShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shader\VertexShader12.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>

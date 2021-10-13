@@ -141,6 +141,9 @@
     <ClCompile Include="DirectX12\DirectX12_PipeLineStateObject.cpp">
       <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12_Resources.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -194,12 +197,21 @@
     <ClInclude Include="DirectX12\DirectX12_PipeLineStateObject.h">
       <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12_Resources.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\PixelShader.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="Shader\VertexShader.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\PixelShader12.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\VertexShader12.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
