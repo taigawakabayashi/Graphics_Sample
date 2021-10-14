@@ -9,14 +9,7 @@
 #ifndef APP_H
 #define APP_H
 #include "Window.h"
-
-enum class GraphicsAPI
-{
-    DIRECTX11,
-    DIRECTX12,
-    OPENGL,
-    VULKAN,
-};
+#include "Game.h"
 
 class Application
 {
@@ -32,9 +25,11 @@ public:
 
 private:
 
-    HWND m_handle;              // ウィンドウハンドル
+    HWND m_handle = nullptr;              // ウィンドウハンドル
 
-    HINSTANCE m_hInstance;      // アプリケーションインスタンス
+    HINSTANCE m_hInstance = nullptr;      // アプリケーションインスタンス
+
+    GraphicsAPI m_useAPI = GraphicsAPI::DIRECTX11;       //
 };
 
 #endif // !APP_H

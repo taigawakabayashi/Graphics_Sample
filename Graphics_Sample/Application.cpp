@@ -4,98 +4,151 @@
 #include <chrono>
 #include <thread>
 #include "Application.h"
-#include "Game.h"
 #include "Timer.h"
+
+#pragma comment(lib, "winmm.lib")
 
 bool Application::Init(HINSTANCE _hInstance, int32_t _winMode)
 {
-    bool sts = false;
+	bool sts = false;
 
-    // メモリーリークを検出
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	m_useAPI = GraphicsAPI::DIRECTX12;
 
-    ////コンソールを作成
-    //AllocConsole();
+	wchar_t* Title = nullptr;
 
-    //FILE* m_fp = nullptr; 
+	switch (m_useAPI)
+	{
+	case GraphicsAPI::DIRECTX11:
+	{
 
-    //// 標準出力の割り当て
-    //freopen_s(&m_fp, "CON", "w", stdout);
-    //freopen_s(&m_fp, "CON", "r", stdin);
+		wchar_t title[] = L"Graphics Sample DirectX11";
 
-    Window window;
-    Window window2;
+		Title = title;
 
-    // ウィンドウクラスの登録
-    window.RegisterClass(_hInstance, CS_OWNDC, L"Main");
+		break;
+	}
+	case GraphicsAPI::DIRECTX12:
+	{
+		wchar_t title[] = L"Graphics Sample DirectX12";
 
-    // ウィンドウの作成
-    sts = window.Create(_hInstance,
-                        WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU,
-                        0,
-                        L"Main",
-                        L"Graphics Sample",
-                        false,
-                        Vector2Int(960,540));
+		Title = title;
 
-    // ウィンドウの表示
-    window.Show(_winMode);
+		break;
+	}
+	case GraphicsAPI::OPENGL:
+	{
+		wchar_t title[] = L"Graphics Sample OpenGL";
 
-    // ウィンドウハンドルを保存
-    m_handle = window.GetHandle();
+		Title = title;
+		break;
+	}
+	case GraphicsAPI::VULKAN:
+	{
+		wchar_t title[] = L"Graphics Sample Vulkan";
 
-    // アプリケーションインスタンスを保存
-    m_hInstance = _hInstance;
+		Title = title;
 
-    return sts;
+		break;
+	}
+	}
+
+	// メモリーリークを検出
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	////コンソールを作成
+	//AllocConsole();
+
+	//FILE* m_fp = nullptr; 
+
+	//// 標準出力の割り当て
+	//freopen_s(&m_fp, "CON", "w", stdout);
+	//freopen_s(&m_fp, "CON", "r", stdin);
+
+	Window window;
+
+	// ウィンドウクラスの登録
+	window.RegisterClass(_hInstance, CS_OWNDC, L"Main");
+
+	// ウィンドウの作成
+	sts = window.Create(_hInstance,
+						WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU,
+						0,
+						L"Main",
+						Title,
+						false,
+						Vector2Int(960,540));
+
+	// ウィンドウの表示
+	window.Show(_winMode);
+
+	// ウィンドウハンドルを保存
+	m_handle = window.GetHandle();
+
+	// アプリケーションインスタンスを保存
+	m_hInstance = _hInstance;
+
+	return sts;
 }
 
 int32_t Application::MainLoop()
 {
-    MSG message = {};
+	MSG message = {};
 
-    uint64_t deltaTime = 0;
+	uint64_t deltaTime = 0;
+	wchar_t fpsCounter[256] = L"";
 
-    // 初期化
-    Rnderer::Init(m_handle, Vector2Int(960, 540));
+	Timer timer(60);
+	timer.SetStart();
 
-    // メインループ
-    while (WM_QUIT != message.message)
-    {
-        // メッセージがある場合はそちらの処理を優先
-        if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) 
-        {
-            TranslateMessage(&message);     // メッセージの変換
-            DispatchMessage(&message);      // メッセージの送出
-        }
-        else 
-        {
-            // CurrentTime セット & DeltaTime を計算
-            Timer::SetStart();
+	// 初期化
+	Render::Init(m_handle, Vector2Int(960, 540), m_useAPI);
 
-            // DeltaTime 取得
-            deltaTime = Timer::GetDeltaTIme();
+	// メインループ
+	while (WM_QUIT != message.message)
+	{
+		// メッセージがある場合はそちらの処理を優先
+		if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) 
+		{
+			TranslateMessage(&message);     // メッセージの変換
+			DispatchMessage(&message);      // メッセージの送出
+		}
+		else 
+		{
+			// LastTime セット
+			timer.SetEnd();
 
-            // ↓メイン処理
-            Rnderer::Input(deltaTime);     // 入力
-            Rnderer::Update(deltaTime);    // 更新
-            Rnderer::Draw(deltaTime);      // 描画
-            // ↑
+			if (!timer.OverTime()) 
+			{
+				for (int i = 0; i < 10; ++i) 
+				{
+					_mm_pause();
+				}
+			}
+			else
+			{
+				deltaTime = timer.GetDeltaTime();
 
-            // LastTime セット
-            Timer::SetEnd();
+				// ↓メイン処理
+				Render::Input(deltaTime);     // 入力
+				Render::Update(deltaTime);    // 更新
+				Render::Draw(deltaTime);      // 描画
+				// ↑
 
-            //printf("%dns    %f\n", Timer::GetDeltaTIme(), Timer::GetFPS());
+				/*swprintf_s(fpsCounter, 256, L"FPS:%.1f", timer.GetFPS());
 
-            // 指定したFPS以上になった場合にスレッドを一時停止する
-            std::this_thread::sleep_for(Timer::GetSleepTImeForFPS(60));
-        }
-    }
+				SetWindowText(m_handle, fpsCounter);*/
 
-    // 終了処理
-    Rnderer::Uninit();
+				// CurrentTime セット
+				timer.SetStart();
+			}
 
-    return message.message;
+		}
+	}
+
+	// 終了処理
+	Render::Uninit();
+
+	return message.message;
 }
 
 void Application::Uninit()

@@ -3,52 +3,52 @@
 
 bool Shader::Init()
 {
-	//ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
+	ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
-	//D3D11_INPUT_ELEMENT_DESC layout[] = 
-	//{
-	//    {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-	//    {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-	//};
+	D3D11_INPUT_ELEMENT_DESC layout[] = 
+	{
+	    {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+	    {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+	};
 
-	//uint32_t numElements = ARRAYSIZE(layout);
+	uint32_t numElements = ARRAYSIZE(layout);
 
-	//// 頂点シェーダーを作成
-	//bool sts = CreateVertexShader(
-	//    device,
-	//    "Shader/VertexShader.hlsl",
-	//    "main",
-	//    "vs_5_0",
-	//    layout,
-	//    numElements,
-	//    nullptr,
-	//    &m_vertexShader,
-	//    &m_inputLayout);
+	// 頂点シェーダーを作成
+	bool sts = CreateVertexShader(
+	    device,
+	    "Shader/VertexShader.hlsl",
+	    "main",
+	    "vs_5_0",
+	    layout,
+	    numElements,
+	    nullptr,
+	    &m_vertexShader,
+	    &m_inputLayout);
 
-	//if (!sts) 
-	//    return false;
+	if (!sts) 
+	    return false;
 
-	//// ピクセルシェーダーを作成
-	//sts = CreatePixelShader(
-	//    device,
-	//    "Shader/PixelShader.hlsl",
-	//    "main",
-	//    "ps_5_0",
-	//    nullptr,
-	//    &m_pixelShader);
-	//if (!sts)
-	//    return false;
+	// ピクセルシェーダーを作成
+	sts = CreatePixelShader(
+	    device,
+	    "Shader/PixelShader.hlsl",
+	    "main",
+	    "ps_5_0",
+	    nullptr,
+	    &m_pixelShader);
+	if (!sts)
+	    return false;
 
 	return true;
 }
 
 bool Shader::InitDirectX12()
 {
-	bool sts = LoadShaderFile(L"Shader/VertexShader12.hlsl", "main", "vs_5_1", Shaders::VS);
+	bool sts = LoadShaderFile(L"Shader/VertexShader.hlsl", "main", "vs_5_1", Shaders::VS);
 	if (!sts)
 		return false;
 
-	sts = LoadShaderFile(L"Shader/PixelShader12.hlsl", "main", "ps_5_1", Shaders::PS);
+	sts = LoadShaderFile(L"Shader/PixelShader.hlsl", "main", "ps_5_1", Shaders::PS);
 	if (!sts)
 		return false;
 
@@ -155,6 +155,8 @@ bool Shader::LoadShaderFile(LPCWSTR _pFileName, LPCSTR _entryPoint, LPCSTR _shad
 	m_shaders[static_cast<int>(_shaders)].BytecodeLength = tempBlobe->GetBufferSize();
 	m_shaders[static_cast<int>(_shaders)].pShaderBytecode = tempBlobe->GetBufferPointer();
 
+	tempBlobe = nullptr;
+
 	return true;
 }
 
@@ -189,7 +191,6 @@ HRESULT Shader::CompileShader(const char* szFileName, LPCSTR szEntryPoint, LPCST
 
 	return S_OK;
 }
-
 
 std::string Shader::ExtractFileName(std::string fullpath, char split)
 {

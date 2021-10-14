@@ -1,29 +1,82 @@
 #include "Game.h"
-#include "Object.h"
 
-namespace Rnderer 
+namespace Render 
 {
-	Object g_obj;
-	Object_DirectX12 g_obj12;
+	Renderer* renderer = nullptr;
 
-	Vector3 g_eye = Vector3(0.0f, 2.0f, -5.0f);
-	Vector3 g_up = Vector3::up();
-	Vector3 g_lookat = Vector3::zero();
-
-	struct CameraMatrix
+	bool Init(HWND _hWnd, Vector2Int _size, GraphicsAPI _api)
 	{
-		XMMATRIX view;
-		XMMATRIX projection;
-	};
+		switch (_api) 
+		{
+		case GraphicsAPI::DIRECTX11:
 
-	static Microsoft::WRL::ComPtr<ID3D11Buffer> g_cameraBuffer = nullptr;
-	static Microsoft::WRL::ComPtr<ID3D12Resource> g_cameraBuffer12 = nullptr;
+			renderer = new DirectX11_Renderer;
 
-	bool Init(HWND _hWnd, Vector2Int _size)
+			break;
+
+		case GraphicsAPI::DIRECTX12:
+
+			renderer = new DirectX12_Renderer;
+
+			break;
+
+		case GraphicsAPI::OPENGL:
+
+			renderer = nullptr;
+
+			return false;
+
+		case GraphicsAPI::VULKAN:
+
+			renderer = nullptr;
+
+			return false;
+
+		default:
+
+			return false;
+		}
+
+		return renderer->Init(_hWnd, _size);
+	}
+
+	void Input(uint64_t) 
+	{
+
+	}
+
+	void Update(uint64_t _deltaTime)
+	{
+		renderer->Update(_deltaTime);
+	}
+
+	void Draw(uint64_t _deltaTime)
+	{
+		float col[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		renderer->BeforeRender(col);
+
+		renderer->Draw(_deltaTime);
+
+		renderer->AfterRender();
+	}
+
+	void Uninit()
+	{
+		renderer->Uninit();
+
+		delete renderer;
+
+		renderer = nullptr;
+	}
+
+#pragma region DirectX11_Renderer
+
+	bool DirectX11_Renderer::Init(HWND _hWnd, Vector2Int _size)
 	{
 		HRESULT hr = S_OK;
 
-		/*bool sts = DirectX11::DirectX11_GraphicsMng::GetInstance()->Init(_hWnd, _size);
+		bool sts = DirectX11::DirectX11_GraphicsMng::GetInstance()->Init(_hWnd, _size);
 
 		DirectX11::TurnOnZBuffer();
 		DirectX11::TurnOnAlphaBlend();
@@ -32,7 +85,9 @@ namespace Rnderer
 
 		ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
-		g_obj.Init();
+		m_obj = new DirectX11_Object;
+
+		m_obj->Init();
 
 		D3D11_BUFFER_DESC cameraBufferDesc;
 		ZeroMemory(&cameraBufferDesc, sizeof(cameraBufferDesc));
@@ -42,9 +97,77 @@ namespace Rnderer
 		cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cameraBufferDesc.ByteWidth = sizeof(CameraMatrix);
 
-		hr = device->CreateBuffer(&cameraBufferDesc, nullptr, &g_cameraBuffer);
+		hr = device->CreateBuffer(&cameraBufferDesc, nullptr, &m_cameraBuffer);
 		if (FAILED(hr))
-			return false;*/
+			return false;
+
+		return sts;
+	}
+
+	void DirectX11_Renderer::Update(uint64_t _deltaTime)
+	{
+		if (_deltaTime >= 0) {
+
+			CameraMatrix cMatrix;
+
+			cMatrix.view = XMMatrixLookAtLH(m_eye, m_lookat, m_up);
+			cMatrix.projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 960.0f / 540.0f, 0.1f, 1000.0f);
+
+			cMatrix.view = XMMatrixTranspose(cMatrix.view);
+			cMatrix.projection = XMMatrixTranspose(cMatrix.projection);
+
+			ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
+
+			D3D11_MAPPED_SUBRESOURCE data;
+
+			devcontext->Map(m_cameraBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+			memcpy_s(data.pData, data.RowPitch, &cMatrix, sizeof(CameraMatrix));
+
+			devcontext->Unmap(m_cameraBuffer.Get(), 0);
+
+			m_obj->Update(_deltaTime);
+		}
+	}
+
+	void DirectX11_Renderer::Draw(uint64_t _deltaTime)
+	{
+		float col[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+		ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
+
+		devcontext->VSSetConstantBuffers(1, 1, m_cameraBuffer.GetAddressOf());
+
+		m_obj->Draw(_deltaTime);
+	}
+
+	void DirectX11_Renderer::Uninit()
+	{
+		m_obj->Uninit();
+
+		delete m_obj;
+		m_obj = nullptr;
+
+		DirectX11::DirectX11_GraphicsMng::GetInstance()->Uninit();
+	}
+
+	void DirectX11_Renderer::BeforeRender(float _clearColor[])
+	{
+		DirectX11::BeforeRender(_clearColor);
+	}
+
+	void DirectX11_Renderer::AfterRender()
+	{
+		DirectX11::AfterRender();
+	}
+
+#pragma endregion
+
+#pragma region DirectX12_Renderer
+
+	bool DirectX12_Renderer::Init(HWND _hWnd, Vector2Int _size)
+	{
+		HRESULT hr = S_OK;
 
 		Shader::GetInstance()->InitDirectX12();
 
@@ -52,7 +175,9 @@ namespace Rnderer
 
 		ID3D12Device* pDevice = DirectX12::DirectX12_GraphicsMng::GetInstance()->GetDevice();
 
-		g_obj12.Init();
+		m_obj = new DirectX12_Object;
+
+		m_obj->Init();
 
 		// 定数バッファの作成
 		{
@@ -83,21 +208,21 @@ namespace Rnderer
 				&constantDesc,
 				D3D12_RESOURCE_STATE_GENERIC_READ,
 				nullptr,
-				IID_PPV_ARGS(&g_cameraBuffer12));
+				IID_PPV_ARGS(&m_cameraBuffer));
 			if (FAILED(hr))
 				return false;
 
 			CameraMatrix* data;
 
-			hr = g_cameraBuffer12->Map(0, nullptr, reinterpret_cast<void**>(&data));
+			hr = m_cameraBuffer->Map(0, nullptr, reinterpret_cast<void**>(&data));
 
-			data->view = XMMatrixLookAtLH(g_eye, g_lookat, g_up);
+			data->view = XMMatrixLookAtLH(m_eye, m_lookat, m_up);
 			data->projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 960.0f / 540.0f, 0.1f, 1000.0f);
 
 			data->view = XMMatrixTranspose(data->view);
 			data->projection = XMMatrixTranspose(data->projection);
 
-			g_cameraBuffer12->Unmap(0, nullptr);
+			m_cameraBuffer->Unmap(0, nullptr);
 
 			data = nullptr;
 		}
@@ -105,80 +230,26 @@ namespace Rnderer
 		return sts;
 	}
 
-	void Input(uint64_t _deltaTime)
+	void DirectX12_Renderer::Update(uint64_t _deltaTime)
 	{
-		if (_deltaTime >= 0) {
-
-
-		}
+		m_obj->Update(_deltaTime);
 	}
 
-	void Update(uint64_t _deltaTime)
+	void DirectX12_Renderer::Draw(uint64_t _deltaTime)
 	{
-		if (_deltaTime < 0) {
+		ID3D12GraphicsCommandList* pCommandList = DirectX12::DirectX12_GraphicsMng::GetInstance()->GetCommandList();
 
-			CameraMatrix cMatrix;
+		pCommandList->SetGraphicsRootConstantBufferView(1, m_cameraBuffer->GetGPUVirtualAddress());
 
-			cMatrix.view = XMMatrixLookAtLH(g_eye, g_lookat, g_up);
-			cMatrix.projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 960.0f / 540.0f, 0.1f, 1000.0f);
-
-			cMatrix.view = XMMatrixTranspose(cMatrix.view);
-			cMatrix.projection = XMMatrixTranspose(cMatrix.projection);
-
-			ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
-
-			D3D11_MAPPED_SUBRESOURCE data;
-
-			devcontext->Map(g_cameraBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
-
-			memcpy_s(data.pData, data.RowPitch, &cMatrix, sizeof(CameraMatrix));
-
-			devcontext->Unmap(g_cameraBuffer.Get(), 0);
-
-			g_obj.Update(_deltaTime);
-		}
-		else 
-		{
-			g_obj12.Update(_deltaTime);
-		}
+		m_obj->Draw(_deltaTime);
 	}
 
-	void Draw(uint64_t _deltaTime)
+	void DirectX12_Renderer::Uninit()
 	{
-		if (_deltaTime < 0) {
+		m_obj->Uninit();
 
-			float col[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-			DirectX11::BeforeRender(col);
-
-			ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
-
-			devcontext->VSSetConstantBuffers(1, 1, g_cameraBuffer.GetAddressOf());
-
-			g_obj.Draw(_deltaTime);
-
-			DirectX11::AfterRender();
-		}
-		else 
-		{
-			float col[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
-
-			DirectX12::BeforeRender(col);
-
-			ID3D12GraphicsCommandList* pCommandList = DirectX12::DirectX12_GraphicsMng::GetInstance()->GetCommandList();
-
-			pCommandList->SetGraphicsRootConstantBufferView(1, g_cameraBuffer12->GetGPUVirtualAddress());
-
-			g_obj12.Draw(_deltaTime);
-
-			DirectX12::AfterRender();
-		}
-	}
-
-	void Uninit()
-	{
-		g_obj.Uninit();
-		g_obj12.Uninit();
+		delete m_obj;
+		m_obj = nullptr;
 
 		DirectX12::DirectX12_GraphicsMng::GetInstance()->Uninit();
 
@@ -192,7 +263,17 @@ namespace Rnderer
 
 		debug->Release();
 		device->Release();
-
-		//DirectX11::DirectX11_GraphicsMng::GetInstance()->Uninit();
 	}
+
+	void DirectX12_Renderer::BeforeRender(float _clearColor[])
+	{
+		DirectX12::BeforeRender(_clearColor);
+	}
+
+	void DirectX12_Renderer::AfterRender()
+	{
+		DirectX12::AfterRender();
+	}
+
+#pragma endregion
 }

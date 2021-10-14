@@ -1,9 +1,6 @@
 #include "Object.h"
-#include "Texture.h"
 
-Texture g_tex;
-
-bool Object::Init()
+bool DirectX11_Object::Init()
 {
 	ID3D11Device* device = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetDevice();
 
@@ -131,12 +128,12 @@ bool Object::Init()
 	if(FAILED(hr))
 		return false;
 
-	g_tex.CreateTexture(&m_texSrv);
+	m_tex.CreateTexture(&m_texSrv);
 
 	return true;
 }
 
-void Object::Update(uint64_t)
+void DirectX11_Object::Update(uint64_t)
 {
 	m_angle.y += 0.05f;
 	//m_angle.x += 0.05f;
@@ -169,7 +166,7 @@ void Object::Update(uint64_t)
 	devcontext->Unmap(m_constantBuffer.Get(), 0);
 }
 
-void Object::Draw(uint64_t)
+void DirectX11_Object::Draw(uint64_t)
 {
 	ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
@@ -200,12 +197,12 @@ void Object::Draw(uint64_t)
 	devcontext->DrawIndexed(m_numIndex, 0, 0);
 }
 
-void Object::Uninit()
+void DirectX11_Object::Uninit()
 {
 	
 }
 
-bool Object_DirectX12::Init()
+bool DirectX12_Object::Init()
 {
 	ID3D12Device* pDevice = DirectX12::DirectX12_GraphicsMng::GetInstance()->GetDevice();
 
@@ -216,9 +213,9 @@ bool Object_DirectX12::Init()
 	{
 		// 正面
 		{Vector3(-0.5f, 0.5f,-0.5f), Vector2(0.0f, 0.0f)},
-		{Vector3(0.5f, 0.5f,-0.5f), Vector2(1.0f, 0.0f)},
+		{Vector3( 0.5f, 0.5f,-0.5f), Vector2(1.0f, 0.0f)},
 		{Vector3(-0.5f,-0.5f,-0.5f), Vector2(0.0f, 1.0f)},
-		{Vector3(0.5f,-0.5f,-0.5f), Vector2(1.0f, 1.0f)},
+		{Vector3( 0.5f,-0.5f,-0.5f), Vector2(1.0f, 1.0f)},
 
 		// 左側面
 		{Vector3(-0.5f, 0.5f, 0.5f), Vector2(1.0f, 0.0f)},
@@ -234,20 +231,20 @@ bool Object_DirectX12::Init()
 
 		// 上面
 		{Vector3(-0.5f, 0.5f, 0.5f), Vector2(1.0f, 0.0f)},
-		{Vector3(0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
+		{Vector3( 0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
 		{Vector3(-0.5f, 0.5f,-0.5f), Vector2(1.0f, 1.0f)},
-		{Vector3(0.5f, 0.5f,-0.5f), Vector2(0.0f, 1.0f)},
+		{Vector3( 0.5f, 0.5f,-0.5f), Vector2(0.0f, 1.0f)},
 
 		// 下面
 		{Vector3(-0.5f,-0.5f,-0.5f), Vector2(1.0f, 0.0f)},
-		{Vector3(0.5f,-0.5f,-0.5f), Vector2(0.0f, 0.0f)},
+		{Vector3( 0.5f,-0.5f,-0.5f), Vector2(0.0f, 0.0f)},
 		{Vector3(-0.5f,-0.5f, 0.5f), Vector2(1.0f, 1.0f)},
-		{Vector3(0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
+		{Vector3( 0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
 
 		// 裏面
-		{Vector3(0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
+		{Vector3( 0.5f, 0.5f, 0.5f), Vector2(0.0f, 0.0f)},
 		{Vector3(-0.5f, 0.5f, 0.5f), Vector2(1.0f, 0.0f)},
-		{Vector3(0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
+		{Vector3( 0.5f,-0.5f, 0.5f), Vector2(0.0f, 1.0f)},
 		{Vector3(-0.5f,-0.5f, 0.5f), Vector2(1.0f, 1.0f)},
 	};
 
@@ -428,19 +425,14 @@ bool Object_DirectX12::Init()
 	// IndexBufferViewを作成
 	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
 	m_indexBufferView.SizeInBytes = sizeof(Index) * ARRAYSIZE(index);
-	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+	m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
 
-	g_tex.CreateTexture12();
-
-	// カメラ行列を作成
-	m_viewMtx = XMMatrixLookAtLH({ 0.0f, 2.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f,1.0f,0.0f });
-
-	m_projectionMtx = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 960.0f / 540.0f, 0.1f, 1000.0f);
+	m_tex.CreateTexture12();
 
 	return true;
 }
 
-void Object_DirectX12::Update(uint64_t)
+void DirectX12_Object::Update(uint64_t)
 {
 	m_angle.y += 0.05f;
 	//m_angle.x += 0.05f;
@@ -455,7 +447,7 @@ void Object_DirectX12::Update(uint64_t)
 
 	mtxScale = XMMatrixScalingFromVector(m_scale);
 
-	m_worldMtx = (mtxScale * mtxRotation * mtxTransration)/* * m_viewMtx * m_projectionMtx*/;
+	m_worldMtx = (mtxScale * mtxRotation * mtxTransration);
 
 	m_worldMtx = XMMatrixTranspose(m_worldMtx);
 
@@ -466,7 +458,7 @@ void Object_DirectX12::Update(uint64_t)
 	m_constantBufferIndex = (m_constantBufferIndex + 1) % 2;
 }
 
-void Object_DirectX12::Draw(uint64_t)
+void DirectX12_Object::Draw(uint64_t)
 {
 	ID3D12GraphicsCommandList* pCommandList = DirectX12::DirectX12_GraphicsMng::GetInstance()->GetCommandList();
 
@@ -485,12 +477,13 @@ void Object_DirectX12::Draw(uint64_t)
 	pCommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// テクスチャのセット
+	m_tex.SetTexture(pCommandList);
 
 	// Draw
-	pCommandList->DrawIndexedInstanced(m_numIndex ,1, 0, 0, 0);
+	pCommandList->DrawIndexedInstanced(m_numIndex, 1, 0, 0, 0);
 }
 
-void Object_DirectX12::Uninit()
+void DirectX12_Object::Uninit()
 {
 	// Unmap
 	m_constantBuffer[0]->Unmap(0, nullptr);

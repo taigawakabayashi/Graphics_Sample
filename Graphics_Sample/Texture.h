@@ -22,7 +22,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texSrv;
 
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>    m_texSrvDescriptorHeap;
-    Microsoft::WRL::ComPtr<ID3D12Resource>          m_texSrv12;
+    Microsoft::WRL::ComPtr<ID3D12Resource>          m_texture12;
 };
 
 

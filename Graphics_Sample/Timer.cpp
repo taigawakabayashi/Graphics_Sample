@@ -1,55 +1,28 @@
 #include "Timer.h"
 
-namespace Timer 
+void Timer::SetStart() 
 {
-    //-----------------------------------------------------------
-    // ÉOÉçÅ[ÉoÉãïœêî
-    //-----------------------------------------------------------
-    std::chrono::steady_clock::
-    time_point g_currentTime = std::chrono::steady_clock::now();
-    
-    std::chrono::steady_clock::
-    time_point g_lastTime = std::chrono::steady_clock::now();
-    
-    uint64_t g_deltaTime = 0;
-    
-    
-    uint64_t GetDeltaTIme()
-    {
-        return g_deltaTime;
-    }
-    
-    std::chrono::milliseconds GetSleepTImeForFPS(uint32_t _fps)
-    {
-        int64_t sleepTime = static_cast<int64_t>
-                            ((1000000000 / _fps) - g_deltaTime) / 1000000;
-    
-        if (sleepTime < 0)
-        {
-            sleepTime = 1;
-        }
-    
-        return std::chrono::milliseconds(sleepTime);
-    }
-    
-    void SetStart()
-    {
-        g_currentTime = std::chrono::steady_clock::now();
-    
-        g_deltaTime = std::chrono::duration_cast
-                      <std::chrono::microseconds>
-                      (g_currentTime - g_lastTime).count();
-    }
-    
-    void SetEnd()
-    {
-        g_lastTime = g_currentTime;
-    }
-    
-    float GetFPS()
-    {
-        float fps = (1000000.0f / g_deltaTime);
-    
-        return fps;
-    }
+	m_currentTime = std::chrono::steady_clock::now();
+}
+
+void Timer::SetEnd()
+{
+	m_lastTime = std::chrono::steady_clock::now();
+}
+
+uint64_t Timer::GetDeltaTime()
+{
+	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastTime - m_currentTime).count());
+}
+
+float Timer::GetFPS()
+{
+	float fps = (1000000000.0f/ static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(m_lastTime - m_currentTime).count()));
+
+	return roundf(fps);
+}
+
+bool Timer::OverTime()
+{
+	return m_currentTime + m_waitTime < m_lastTime;
 }

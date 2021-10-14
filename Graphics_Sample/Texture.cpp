@@ -121,7 +121,7 @@ bool Texture::CreateTexture12()
         }
     }
 
-    //深度バッファ用のデスクリプタヒープの作成
+    //テクスチャ用のデスクリプタヒープの作成
     D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc{};
     srvHeapDesc.NumDescriptors = 1;
     srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -132,28 +132,31 @@ bool Texture::CreateTexture12()
         return false;
     }
 
-    //深度バッファの作成
+    //テクスチャ用リソースの作成
     D3D12_HEAP_PROPERTIES heapProp{};
     D3D12_RESOURCE_DESC resourceDesc{};
 
-    heapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
-    heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-    heapProp.CreationNodeMask = 0;
-    heapProp.VisibleNodeMask = 0;
+    heapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+    heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+    heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+    heapProp.CreationNodeMask = 1;
+    heapProp.VisibleNodeMask = 1;
 
     resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     resourceDesc.Width = 256;
     resourceDesc.Height = 256;
     resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
     resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.SampleDesc = { 1, 0 };
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 
-    hr = pDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_texSrv12));
+    hr = pDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_texture12));
     if (FAILED(hr)) {
         return false;
     }
 
+    // ShaderResourceViewを作成
     D3D12_CPU_DESCRIPTOR_HANDLE srvHandle{};
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 
@@ -162,16 +165,30 @@ bool Texture::CreateTexture12()
     srvDesc.Texture2D.MipLevels             = 1;
     srvDesc.Texture2D.MostDetailedMip       = 0;
     srvDesc.Texture2D.PlaneSlice            = 0;
-    srvDesc.Texture2D.ResourceMinLODClamp   = 0.0F;
+    srvDesc.Texture2D.ResourceMinLODClamp   = 0.0f;
     srvDesc.Shader4ComponentMapping         = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
     srvHandle = m_texSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-    pDevice->CreateShaderResourceView(m_texSrv12.Get(), &srvDesc, srvHandle);
+    pDevice->CreateShaderResourceView(m_texture12.Get(), &srvDesc, srvHandle);
+
+    D3D12_BOX box = { 0, 0, 0, 256, 256, 1 };
+
+    if (FAILED(m_texture12->WriteToSubresource(0, &box, Color, sizeof(uint32_t) * 256, sizeof(uint32_t) * 256))) 
+    {
+        return false;
+    }
+
+    delete[] Color;
+    Color = nullptr;
 
     return false;
 }
 
-void Texture::SetTexture(ID3D12GraphicsCommandList*)
+void Texture::SetTexture(ID3D12GraphicsCommandList* _pCommandList)
 {
+    ID3D12DescriptorHeap* pHeaps[] = { m_texSrvDescriptorHeap.Get() };
 
+    _pCommandList->SetDescriptorHeaps(1, pHeaps);
+
+    _pCommandList->SetGraphicsRootDescriptorTable(2, m_texSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }

@@ -8,8 +8,16 @@ namespace DirectX12 {
 	
 #pragma region RootSignature
 		{
+			D3D12_DESCRIPTOR_RANGE ranges[1]{};
+
+			ranges[0].BaseShaderRegister = 0;
+			ranges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+			ranges[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+			ranges[0].RegisterSpace = 0;
+			ranges[0].NumDescriptors = 1;
+
 			// RootSignatureの作成
-			D3D12_ROOT_PARAMETER rootParameter[2]{};
+			D3D12_ROOT_PARAMETER rootParameter[3]{};
 
 			rootParameter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameter[0].Descriptor.ShaderRegister = 0;
@@ -20,13 +28,35 @@ namespace DirectX12 {
 			rootParameter[1].Descriptor.ShaderRegister = 1;
 			rootParameter[1].Descriptor.RegisterSpace = 0;
 			rootParameter[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		
+
+			rootParameter[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameter[2].DescriptorTable.NumDescriptorRanges = 1;
+			rootParameter[2].DescriptorTable.pDescriptorRanges = ranges;
+			rootParameter[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+			// サンプラーステート
+			D3D12_STATIC_SAMPLER_DESC samplerDesc = {};
+			samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+			samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			samplerDesc.MipLODBias = 0;
+			samplerDesc.MaxAnisotropy = 0;
+			samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+			samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE;
+			samplerDesc.MinLOD = 0.0f;
+			samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+			samplerDesc.ShaderRegister = 0;
+			samplerDesc.RegisterSpace = 0;
+			samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			 
+			//
 			D3D12_ROOT_SIGNATURE_DESC rootDesc = {};
 
 			rootDesc.NumParameters = _countof(rootParameter);
 			rootDesc.pParameters = rootParameter;
-			rootDesc.NumStaticSamplers = 0;
-			rootDesc.pStaticSamplers = nullptr;
+			rootDesc.NumStaticSamplers = 1;
+			rootDesc.pStaticSamplers = &samplerDesc;
 			rootDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 			ID3DBlob* pSignature;
@@ -55,7 +85,7 @@ namespace DirectX12 {
 			D3D12_RASTERIZER_DESC rasterDesc = {};
 
 			rasterDesc.FillMode = D3D12_FILL_MODE_SOLID;
-			rasterDesc.CullMode = D3D12_CULL_MODE_NONE;
+			rasterDesc.CullMode = D3D12_CULL_MODE_BACK;
 			rasterDesc.FrontCounterClockwise = false;
 			rasterDesc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
 			rasterDesc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;

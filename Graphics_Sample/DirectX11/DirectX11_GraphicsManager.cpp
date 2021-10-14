@@ -8,234 +8,241 @@
 
 namespace DirectX11
 {
-    bool DirectX11_GraphicsMng::Init(HWND _hWnd, Vector2Int _size)
-    {
-        HRESULT hr = S_OK;
+	bool DirectX11_GraphicsMng::Init(HWND _hWnd, Vector2Int _size)
+	{
+		HRESULT hr = S_OK;
 
-        // ドライバータイプ
-        D3D_DRIVER_TYPE driverType[] =
-        {
-            D3D_DRIVER_TYPE_HARDWARE,
-            D3D_DRIVER_TYPE_WARP,
-            D3D_DRIVER_TYPE_REFERENCE
-        };
+		// ドライバータイプ
+		D3D_DRIVER_TYPE driverType[] =
+		{
+			D3D_DRIVER_TYPE_HARDWARE,
+			D3D_DRIVER_TYPE_WARP,
+			D3D_DRIVER_TYPE_REFERENCE
+		};
 
-        uint32_t numDriverTypes = ARRAYSIZE(driverType);
-        uint32_t createDeviceFlag = 0;
+		uint32_t numDriverTypes = ARRAYSIZE(driverType);
+		uint32_t createDeviceFlag = 0;
 
-        // 機能レベル
-        D3D_FEATURE_LEVEL fetureLevels[] = 
-        {
-            D3D_FEATURE_LEVEL_11_1,
-            D3D_FEATURE_LEVEL_11_0,
-        };
+#ifdef _DEBUG
 
-        uint32_t numFetureLevels = ARRAYSIZE(fetureLevels);
+		createDeviceFlag |= D3D11_CREATE_DEVICE_DEBUG;
 
-        for (uint32_t driverTypeIndex = 0; driverTypeIndex < numDriverTypes; ++driverTypeIndex)
-        {
-            m_DriverType = driverType[driverTypeIndex];
+#endif // _DEBUG
 
-            // デバイスの作成
-            hr = D3D11CreateDevice(nullptr,
-                                   m_DriverType,
-                                   nullptr,
-                                   createDeviceFlag,
-                                   fetureLevels,
-                                   numFetureLevels,
-                                   D3D11_SDK_VERSION,
-                                   &m_Device,
-                                   &m_FeatureLevel,
-                                   &m_ImmediateContext);
 
-            if(SUCCEEDED(hr))
-                break;
-        }
+		// 機能レベル
+		D3D_FEATURE_LEVEL fetureLevels[] = 
+		{
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
+		};
 
-        if(FAILED(hr))
-            return false;
+		uint32_t numFetureLevels = ARRAYSIZE(fetureLevels);
 
-        D3D11_BLEND_DESC blendStateDesc;
-        // ブレンドステート初期化
-        ZeroMemory(&blendStateDesc, sizeof(blendStateDesc));
+		for (uint32_t driverTypeIndex = 0; driverTypeIndex < numDriverTypes; ++driverTypeIndex)
+		{
+			m_DriverType = driverType[driverTypeIndex];
 
-        // ブレンドステート設定(アルファブレンド可)
-        blendStateDesc.RenderTarget[0].BlendEnable = true;
-        blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-        blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-        blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-        blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-        blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-        blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+			// デバイスの作成
+			hr = D3D11CreateDevice(nullptr,
+								   m_DriverType,
+								   nullptr,
+								   createDeviceFlag,
+								   fetureLevels,
+								   numFetureLevels,
+								   D3D11_SDK_VERSION,
+								   &m_Device,
+								   &m_FeatureLevel,
+								   &m_ImmediateContext);
 
-        // ブレンドステート作成
-        hr = m_Device->CreateBlendState(&blendStateDesc, &m_alphaEnableBlendingState);
-        if(FAILED(hr))
-            return false;
+			if(SUCCEEDED(hr))
+				break;
+		}
 
-        // ブレンドステート設定(アルファブレンド不可)
-        blendStateDesc.RenderTarget[0].BlendEnable = false;
+		if(FAILED(hr))
+			return false;
 
-        // ブレンドステート作成
-        hr = m_Device->CreateBlendState(&blendStateDesc, &m_alphaDisableBlendingState);
-        if (FAILED(hr))
-            return false;
+		D3D11_BLEND_DESC blendStateDesc;
+		// ブレンドステート初期化
+		ZeroMemory(&blendStateDesc, sizeof(blendStateDesc));
 
-        // スワップチェイン作成
-        m_SwapChain.CreateSwapChain(m_Device.Get(), _hWnd, _size);
+		// ブレンドステート設定(アルファブレンド可)
+		blendStateDesc.RenderTarget[0].BlendEnable = true;
+		blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-        // ビューポートを作成
-        m_ViewPort.CreateViewPort(Vector2(static_cast<float>(_size.x), static_cast<float>(_size.y)), Vector2(0.0f, 0.0f));
+		// ブレンドステート作成
+		hr = m_Device->CreateBlendState(&blendStateDesc, &m_alphaEnableBlendingState);
+		if(FAILED(hr))
+			return false;
 
-        // Zバッファの作成
-        m_DepthStencil.CreateZBuffer(m_Device.Get(), _size);
+		// ブレンドステート設定(アルファブレンド不可)
+		blendStateDesc.RenderTarget[0].BlendEnable = false;
 
-        // DepthStencilの作成
-        m_DepthStencil.CreateDepthStencil(m_Device.Get());
+		// ブレンドステート作成
+		hr = m_Device->CreateBlendState(&blendStateDesc, &m_alphaDisableBlendingState);
+		if (FAILED(hr))
+			return false;
 
-        // ラスタライザーの作成
-        m_Rasterizer.CreateRasterizer(m_Device.Get());
+		// スワップチェイン作成
+		m_SwapChain.CreateSwapChain(m_Device.Get(), _hWnd, _size);
 
-        // サンプラーの設定
-        D3D11_SAMPLER_DESC smpDesc;
-        ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
+		// ビューポートを作成
+		m_ViewPort.CreateViewPort(Vector2(static_cast<float>(_size.x), static_cast<float>(_size.y)), Vector2(0.0f, 0.0f));
 
-        smpDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        smpDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-        smpDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-        smpDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-        hr = m_Device->CreateSamplerState(&smpDesc, &m_sampler);
-        if (FAILED(hr)) 
-            return false;
+		// Zバッファの作成
+		m_DepthStencil.CreateZBuffer(m_Device.Get(), _size);
 
-        m_ImmediateContext->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
+		// DepthStencilの作成
+		m_DepthStencil.CreateDepthStencil(m_Device.Get());
 
-        return true;
-    }
+		// ラスタライザーの作成
+		m_Rasterizer.CreateRasterizer(m_Device.Get());
 
-    void DirectX11_GraphicsMng::Uninit()
-    {
-        if (m_ImmediateContext) 
-        {
-            m_ImmediateContext->ClearState();
-        }
+		// サンプラーの設定
+		D3D11_SAMPLER_DESC smpDesc;
+		ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
 
-        if (m_SwapChain.GetSwapChain()) 
-        {
-            m_SwapChain.GetSwapChain()->SetFullscreenState(false, nullptr);
-        }
-    }
+		smpDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		smpDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		smpDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		smpDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		hr = m_Device->CreateSamplerState(&smpDesc, &m_sampler);
+		if (FAILED(hr)) 
+			return false;
 
-    void DirectX11_GraphicsMng::Swap()
-    {
-        m_SwapChain.GetSwapChain()->Present(0, 0);
-    }
+		m_ImmediateContext->PSSetSamplers(0, 1, m_sampler.GetAddressOf());
 
-    void DirectX11_GraphicsMng::ClearRenderTargetView(float _clearColor[]) 
-    {
-        m_ImmediateContext->ClearRenderTargetView(m_SwapChain.GetRenderTargetView(), _clearColor);
+		return true;
+	}
 
-        ID3D11RenderTargetView* temp = m_SwapChain.GetRenderTargetView();
+	void DirectX11_GraphicsMng::Uninit()
+	{
+		if (m_ImmediateContext) 
+		{
+			m_ImmediateContext->ClearState();
+		}
 
-        m_ImmediateContext->OMSetRenderTargets(1, &temp, m_DepthStencil.GetStencilView());
-    }
+		if (m_SwapChain.GetSwapChain()) 
+		{
+			m_SwapChain.GetSwapChain()->SetFullscreenState(false, nullptr);
+		}
+	}
 
-    void DirectX11_GraphicsMng::ClearDepthStencilView()
-    {
-        m_ImmediateContext->ClearDepthStencilView(m_DepthStencil.GetStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-    }
+	void DirectX11_GraphicsMng::Swap()
+	{
+		m_SwapChain.GetSwapChain()->Present(0, 0);
+	}
 
-    void DirectX11_GraphicsMng::SetViewPort()
-    {
-        m_ViewPort.SetViewPort(m_ImmediateContext.Get());
-    }
+	void DirectX11_GraphicsMng::ClearRenderTargetView(float _clearColor[]) 
+	{
+		m_ImmediateContext->ClearRenderTargetView(m_SwapChain.GetRenderTargetView(), _clearColor);
 
-    void DirectX11_GraphicsMng::TurnOnZBuffer() 
-    {
-        ID3D11RenderTargetView* rtvtable[1];
+		ID3D11RenderTargetView* temp = m_SwapChain.GetRenderTargetView();
 
-        rtvtable[0] = m_SwapChain.GetRenderTargetView();
+		m_ImmediateContext->OMSetRenderTargets(1, &temp, m_DepthStencil.GetStencilView());
+	}
 
-        m_ImmediateContext->OMSetRenderTargets(
-            1,										// ターゲット
-            rtvtable,								// ビューテーブル
-            m_DepthStencil.GetStencilView()			// 深度バッファあり
-        );
-    }
+	void DirectX11_GraphicsMng::ClearDepthStencilView()
+	{
+		m_ImmediateContext->ClearDepthStencilView(m_DepthStencil.GetStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
 
-    void DirectX11_GraphicsMng::TurnOffZBuffer() 
-    {
-        ID3D11RenderTargetView* rtvtable[1];
+	void DirectX11_GraphicsMng::SetViewPort()
+	{
+		m_ViewPort.SetViewPort(m_ImmediateContext.Get());
+	}
 
-        rtvtable[0] = m_SwapChain.GetRenderTargetView();
+	void DirectX11_GraphicsMng::TurnOnZBuffer() 
+	{
+		ID3D11RenderTargetView* rtvtable[1];
 
-        m_ImmediateContext->OMSetRenderTargets(
-            1,										// ターゲット
-            rtvtable,								// ビューテーブル
-            nullptr									// 深度バッファなし
-        );
-    }
+		rtvtable[0] = m_SwapChain.GetRenderTargetView();
 
-    void DirectX11_GraphicsMng::TurnOnAlphaBlending() 
-    {
-        float blendFactor[4];
+		m_ImmediateContext->OMSetRenderTargets(
+			1,										// ターゲット
+			rtvtable,								// ビューテーブル
+			m_DepthStencil.GetStencilView()			// 深度バッファあり
+		);
+	}
 
-        blendFactor[0] = 0.0f;
-        blendFactor[1] = 0.0f;
-        blendFactor[2] = 0.0f;
-        blendFactor[3] = 0.0f;
+	void DirectX11_GraphicsMng::TurnOffZBuffer() 
+	{
+		ID3D11RenderTargetView* rtvtable[1];
 
-        //アルファブレンドをONにする
-        m_ImmediateContext->OMSetBlendState(m_alphaEnableBlendingState.Get(), blendFactor, 0xffffffff);
-        return;
-    }
+		rtvtable[0] = m_SwapChain.GetRenderTargetView();
 
-    void DirectX11_GraphicsMng::TurnOffAlphaBlending() 
-    {
-        float blendFactor[4];
+		m_ImmediateContext->OMSetRenderTargets(
+			1,										// ターゲット
+			rtvtable,								// ビューテーブル
+			nullptr									// 深度バッファなし
+		);
+	}
 
-        blendFactor[0] = 0.0f;
-        blendFactor[1] = 0.0f;
-        blendFactor[2] = 0.0f;
-        blendFactor[3] = 0.0f;
+	void DirectX11_GraphicsMng::TurnOnAlphaBlending() 
+	{
+		float blendFactor[4];
 
-        //アルファブレンドをOFFにする
-        m_ImmediateContext->OMSetBlendState(m_alphaDisableBlendingState.Get(), blendFactor, 0xffffffff);
-        return;
-    }
+		blendFactor[0] = 0.0f;
+		blendFactor[1] = 0.0f;
+		blendFactor[2] = 0.0f;
+		blendFactor[3] = 0.0f;
 
-    void BeforeRender(float _clearColor[]) 
-    {
-        DirectX11_GraphicsMng::GetInstance()->ClearRenderTargetView(_clearColor);
+		//アルファブレンドをONにする
+		m_ImmediateContext->OMSetBlendState(m_alphaEnableBlendingState.Get(), blendFactor, 0xffffffff);
+		return;
+	}
 
-        DirectX11_GraphicsMng::GetInstance()->ClearDepthStencilView();
+	void DirectX11_GraphicsMng::TurnOffAlphaBlending() 
+	{
+		float blendFactor[4];
 
-        DirectX11_GraphicsMng::GetInstance()->SetViewPort();
-    }
+		blendFactor[0] = 0.0f;
+		blendFactor[1] = 0.0f;
+		blendFactor[2] = 0.0f;
+		blendFactor[3] = 0.0f;
 
-    void AfterRender() 
-    {
-        DirectX11_GraphicsMng::GetInstance()->Swap();
-    }
+		//アルファブレンドをOFFにする
+		m_ImmediateContext->OMSetBlendState(m_alphaDisableBlendingState.Get(), blendFactor, 0xffffffff);
+		return;
+	}
 
-    void TurnOnZBuffer()
-    {
-        DirectX11_GraphicsMng::GetInstance()->TurnOnZBuffer();
-    }
+	void BeforeRender(float _clearColor[]) 
+	{
+		DirectX11_GraphicsMng::GetInstance()->ClearRenderTargetView(_clearColor);
 
-    void TurnOffZBuffer() 
-    {
-        DirectX11_GraphicsMng::GetInstance()->TurnOffZBuffer();
-    }
+		DirectX11_GraphicsMng::GetInstance()->ClearDepthStencilView();
 
-    void TurnOnAlphaBlend() 
-    {
-        DirectX11_GraphicsMng::GetInstance()->TurnOnAlphaBlending();
-    }
+		DirectX11_GraphicsMng::GetInstance()->SetViewPort();
+	}
 
-    void TurnOffAlphaBlend() 
-    {
-        DirectX11_GraphicsMng::GetInstance()->TurnOffAlphaBlending();
-    }
+	void AfterRender() 
+	{
+		DirectX11_GraphicsMng::GetInstance()->Swap();
+	}
+
+	void TurnOnZBuffer()
+	{
+		DirectX11_GraphicsMng::GetInstance()->TurnOnZBuffer();
+	}
+
+	void TurnOffZBuffer() 
+	{
+		DirectX11_GraphicsMng::GetInstance()->TurnOffZBuffer();
+	}
+
+	void TurnOnAlphaBlend() 
+	{
+		DirectX11_GraphicsMng::GetInstance()->TurnOnAlphaBlending();
+	}
+
+	void TurnOffAlphaBlend() 
+	{
+		DirectX11_GraphicsMng::GetInstance()->TurnOffAlphaBlending();
+	}
 }
