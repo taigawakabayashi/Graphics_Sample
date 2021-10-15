@@ -85,6 +85,12 @@
     <Filter Include="ヘッダー ファイル\Utirity">
       <UniqueIdentifier>{bff6fc41-49f4-433a-8cfc-df9fe0eb195d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Graphics">
+      <UniqueIdentifier>{07888718-2e97-44e4-b284-d6d5d2a70258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Graphics">
+      <UniqueIdentifier>{5ff7124c-89d8-460f-8555-a5b00d62968d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -144,6 +150,9 @@
     <ClCompile Include="Timer.cpp">
       <Filter>ソース ファイル\Utirity</Filter>
     </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>ソース ファイル\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -199,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル\Utirity</Filter>
+    </ClInclude>
+    <ClInclude Include="SwitchingAPI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>ヘッダー ファイル\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

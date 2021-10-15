@@ -9,6 +9,7 @@
 #ifndef APP_H
 #define APP_H
 #include "Window.h"
+#include "SwitchingAPI.h"
 #include "Game.h"
 
 class Application

@@ -1,6 +1,6 @@
 #include "Game.h"
 
-namespace Render 
+namespace Render
 {
 	Renderer* renderer = nullptr;
 
@@ -66,7 +66,6 @@ namespace Render
 		renderer->Uninit();
 
 		delete renderer;
-
 		renderer = nullptr;
 	}
 

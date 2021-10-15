@@ -45,7 +45,6 @@ protected:
 	Texture m_tex;
 };
 
-
 class DirectX11_Object : public Object
 {
 public:

@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="DirectX11\DirectX11_DepthStencil.cpp" />
     <ClCompile Include="DirectX11\DirectX11_GraphicsManager.cpp" />
     <ClCompile Include="DirectX11\DirectX11_Rasterizer.cpp" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="DirectX11\DirectX11_DepthStencil.h" />
     <ClInclude Include="DirectX11\DirectX11_GraphicsManager.h" />
     <ClInclude Include="DirectX11\DirectX11_Rasterizer.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SwitchingAPI.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Utility\Math.h" />

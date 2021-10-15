@@ -5,14 +5,7 @@
 #include <DirectX11/DirectX11_GraphicsManager.h>
 #include <DirectX12/DirectX12_GraphicsManager.h>
 #include "Object.h"
-
-enum class GraphicsAPI
-{
-	DIRECTX11,
-	DIRECTX12,
-	OPENGL,
-	VULKAN,
-};
+#include "SwitchingAPI.h"
 
 namespace Render 
 {
