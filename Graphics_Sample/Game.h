@@ -43,8 +43,8 @@ namespace Render
 
 		struct CameraMatrix
 		{
-			XMMATRIX view;
-			XMMATRIX projection;
+			Matrix4x4 view;
+			Matrix4x4 projection;
 		};
 	};
 

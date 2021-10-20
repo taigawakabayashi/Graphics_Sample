@@ -6,6 +6,10 @@
 #include <cmath>
 #include <functional>
 
+#pragma warning( disable : 4201 )
+
+#define PI_F (3.141592654f)
+
 using namespace DirectX;
 
 #pragma region Vector2Int
@@ -1210,25 +1214,826 @@ Vector4 operator/ (const Vector4& _v1, const Vector4& _v2);
 
 #pragma region Matrix4x4
 
-struct Matrix4x4 
+struct Matrix4x4
 {
 public:
 
-	union 
+	union
+    {
+        float m[4][4];
+
+        struct
+        {
+            float m_11, m_12, m_13, m_14;
+            float m_21, m_22, m_23, m_24;
+            float m_31, m_32, m_33, m_34;
+            float m_41, m_42, m_43, m_44;
+        };
+    };
+
+	Matrix4x4() = default;
+
+	Matrix4x4(const Matrix4x4&) = default;
+	Matrix4x4& operator=(const Matrix4x4&) = default;
+
+	Matrix4x4(Matrix4x4&&) = default;
+	Matrix4x4& operator=(Matrix4x4&&) = default;
+
+	Matrix4x4(const XMFLOAT4X4& _value)
 	{
-		struct
+		m_11 = _value._11;
+		m_12 = _value._12;
+		m_13 = _value._13;
+		m_14 = _value._14;
+
+		m_21 = _value._21;
+		m_22 = _value._22;
+		m_23 = _value._23;
+		m_24 = _value._24;
+
+		m_31 = _value._31;
+		m_32 = _value._32;
+		m_33 = _value._33;
+		m_34 = _value._34;
+
+		m_41 = _value._41;
+		m_42 = _value._42;
+		m_43 = _value._43;
+		m_44 = _value._44;
+	}
+	Matrix4x4& operator=(const XMFLOAT4X4 _value) 
+	{
+		m_11 = _value._11;
+		m_12 = _value._12;
+		m_13 = _value._13;
+		m_14 = _value._14;
+
+		m_21 = _value._21;
+		m_22 = _value._22;
+		m_23 = _value._23;
+		m_24 = _value._24;
+
+		m_31 = _value._31;
+		m_32 = _value._32;
+		m_33 = _value._33;
+		m_34 = _value._34;
+
+		m_41 = _value._41;
+		m_42 = _value._42;
+		m_43 = _value._43;
+		m_44 = _value._44;
+
+		return *this;
+	}
+
+	Matrix4x4(const XMMATRIX& _value)
+	{
+		m_11 = _value.r[0].m128_f32[0];
+		m_12 = _value.r[0].m128_f32[1];
+		m_13 = _value.r[0].m128_f32[2];
+		m_14 = _value.r[0].m128_f32[3];
+
+		m_21 = _value.r[1].m128_f32[0];
+		m_22 = _value.r[1].m128_f32[1];
+		m_23 = _value.r[1].m128_f32[2];
+		m_24 = _value.r[1].m128_f32[3];
+
+		m_31 = _value.r[2].m128_f32[0];
+		m_32 = _value.r[2].m128_f32[1];
+		m_33 = _value.r[2].m128_f32[2];
+		m_34 = _value.r[2].m128_f32[3];
+
+		m_41 = _value.r[3].m128_f32[0];
+		m_42 = _value.r[3].m128_f32[1];
+		m_43 = _value.r[3].m128_f32[2];
+		m_44 = _value.r[3].m128_f32[3];
+	}
+	Matrix4x4& operator=(const XMMATRIX _value)
+	{
+		m_11 = _value.r[0].m128_f32[0];
+		m_12 = _value.r[0].m128_f32[1];
+		m_13 = _value.r[0].m128_f32[2];
+		m_14 = _value.r[0].m128_f32[3];
+
+		m_21 = _value.r[1].m128_f32[0];
+		m_22 = _value.r[1].m128_f32[1];
+		m_23 = _value.r[1].m128_f32[2];
+		m_24 = _value.r[1].m128_f32[3];
+
+		m_31 = _value.r[2].m128_f32[0];
+		m_32 = _value.r[2].m128_f32[1];
+		m_33 = _value.r[2].m128_f32[2];
+		m_34 = _value.r[2].m128_f32[3];
+
+		m_41 = _value.r[3].m128_f32[0];
+		m_42 = _value.r[3].m128_f32[1];
+		m_43 = _value.r[3].m128_f32[2];
+		m_44 = _value.r[3].m128_f32[3];
+
+		return *this;
+	}
+
+	operator XMMATRIX() 
+	{
+		XMMATRIX temp(m_11, m_12, m_13, m_14,
+					  m_21, m_22, m_23, m_24,
+					  m_31, m_32, m_33, m_34,
+					  m_41, m_42, m_43, m_44);
+		return temp;
+	}
+
+	operator XMFLOAT4X4() 
+	{
+		XMFLOAT4X4 temp(m_11, m_12, m_13, m_14,
+						m_21, m_22, m_23, m_24,
+						m_31, m_32, m_33, m_34,
+						m_41, m_42, m_43, m_44);
+		return temp;
+	}
+
+	Matrix4x4& operator+=(const Matrix4x4 _m) 
+	{
+		this->m_11 += _m.m_11;
+		this->m_12 += _m.m_12;
+		this->m_13 += _m.m_13;
+		this->m_14 += _m.m_14;
+
+		this->m_21 += _m.m_21;
+		this->m_22 += _m.m_22;
+		this->m_23 += _m.m_23;
+		this->m_24 += _m.m_24;
+
+		this->m_31 += _m.m_31;
+		this->m_32 += _m.m_32;
+		this->m_33 += _m.m_33;
+		this->m_34 += _m.m_34;
+
+		this->m_41 += _m.m_41;
+		this->m_42 += _m.m_42;
+		this->m_43 += _m.m_43;
+		this->m_44 += _m.m_44;
+
+		return *this;
+	}
+
+	Matrix4x4& operator-=(const Matrix4x4 _m)
+	{
+		this->m_11 -= _m.m_11;
+		this->m_12 -= _m.m_12;
+		this->m_13 -= _m.m_13;
+		this->m_14 -= _m.m_14;
+
+		this->m_21 -= _m.m_21;
+		this->m_22 -= _m.m_22;
+		this->m_23 -= _m.m_23;
+		this->m_24 -= _m.m_24;
+
+		this->m_31 -= _m.m_31;
+		this->m_32 -= _m.m_32;
+		this->m_33 -= _m.m_33;
+		this->m_34 -= _m.m_34;
+
+		this->m_41 -= _m.m_41;
+		this->m_42 -= _m.m_42;
+		this->m_43 -= _m.m_43;
+		this->m_44 -= _m.m_44;
+
+		return *this;
+	}
+
+	Matrix4x4& operator*=(const Matrix4x4 _m)
+	{
+		this->m_11 = (this->m_11 * _m.m_11) + (this->m_12 * _m.m_21) + (this->m_13 * _m.m_31) + (this->m_14 * _m.m_41);
+		this->m_12 = (this->m_11 * _m.m_12) + (this->m_12 * _m.m_22) + (this->m_13 * _m.m_32) + (this->m_14 * _m.m_42);
+		this->m_13 = (this->m_11 * _m.m_13) + (this->m_12 * _m.m_23) + (this->m_13 * _m.m_33) + (this->m_14 * _m.m_43);
+		this->m_14 = (this->m_11 * _m.m_14) + (this->m_12 * _m.m_24) + (this->m_13 * _m.m_34) + (this->m_14 * _m.m_44);
+
+		this->m_21 = (this->m_21 * _m.m_11) + (this->m_22 * _m.m_21) + (this->m_23 * _m.m_31) + (this->m_24 * _m.m_41);
+		this->m_22 = (this->m_21 * _m.m_12) + (this->m_22 * _m.m_22) + (this->m_23 * _m.m_32) + (this->m_24 * _m.m_42);
+		this->m_23 = (this->m_21 * _m.m_13) + (this->m_22 * _m.m_23) + (this->m_23 * _m.m_33) + (this->m_24 * _m.m_43);
+		this->m_24 = (this->m_21 * _m.m_14) + (this->m_22 * _m.m_24) + (this->m_23 * _m.m_34) + (this->m_24 * _m.m_44);
+
+		this->m_31 = (this->m_31 * _m.m_11) + (this->m_32 * _m.m_21) + (this->m_33 * _m.m_31) + (this->m_34 * _m.m_41);
+		this->m_32 = (this->m_31 * _m.m_12) + (this->m_32 * _m.m_22) + (this->m_33 * _m.m_32) + (this->m_34 * _m.m_42);
+		this->m_33 = (this->m_31 * _m.m_13) + (this->m_32 * _m.m_23) + (this->m_33 * _m.m_33) + (this->m_34 * _m.m_43);
+		this->m_34 = (this->m_31 * _m.m_14) + (this->m_32 * _m.m_24) + (this->m_33 * _m.m_34) + (this->m_34 * _m.m_44);
+
+		this->m_41 = (this->m_41 * _m.m_11) + (this->m_42 * _m.m_21) + (this->m_43 * _m.m_31) + (this->m_44 * _m.m_41);
+		this->m_42 = (this->m_41 * _m.m_12) + (this->m_42 * _m.m_22) + (this->m_43 * _m.m_32) + (this->m_44 * _m.m_42);
+		this->m_43 = (this->m_41 * _m.m_13) + (this->m_42 * _m.m_23) + (this->m_43 * _m.m_33) + (this->m_44 * _m.m_43);
+		this->m_44 = (this->m_41 * _m.m_14) + (this->m_42 * _m.m_24) + (this->m_43 * _m.m_34) + (this->m_44 * _m.m_44);
+
+		return *this;
+	}
+
+	// íPà çsóÒ
+	static Matrix4x4 IdentityMatrix() 
+	{
+		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
+					   0.0f, 1.0f, 0.0f, 0.0f,
+					   0.0f, 0.0f, 1.0f, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return temp;
+	}
+
+	// ïΩçsà⁄ìÆçsóÒ
+	static Matrix4x4 TranslationMatrix(float _posX, float _posY, float _posZ)
+	{
+		Matrix4x4 temp(1.0f,  0.0f,  0.0f, 0.0f,
+					   0.0f,  1.0f,  0.0f, 0.0f,
+					   0.0f,  0.0f,  1.0f, 0.0f,
+					  _posX, _posY, _posZ, 1.0f);
+
+		return temp;
+	}
+
+	// ïΩçsà⁄ìÆçsóÒ
+	static Matrix4x4 TranslationMatrix(Vector3 _pos)
+	{
+		Matrix4x4 temp(1.0f,   0.0f,   0.0f, 0.0f,
+					   0.0f,   1.0f,   0.0f, 0.0f,
+					   0.0f,   0.0f,   1.0f, 0.0f,
+					 _pos.x, _pos.y, _pos.z, 1.0f);
+
+		return temp;
+	}
+
+	// ÉXÉPÅ[ÉãçsóÒ
+	static Matrix4x4 ScalingMatrix(float _scaleX, float _scaleY, float _scaleZ)
+	{
+		Matrix4x4 temp(_scaleX,    0.0f,    0.0f, 0.0f,
+						  0.0f, _scaleY,    0.0f, 0.0f,
+						  0.0f,    0.0f, _scaleZ, 0.0f,
+						  0.0f,    0.0f,    0.0f, 1.0f);
+
+		return temp;
+	}
+
+	// ÉXÉPÅ[ÉãçsóÒ
+	static Matrix4x4 ScalingMatrix(Vector3 _scale)
+	{
+		Matrix4x4 temp(_scale.x,     0.0f,     0.0f, 0.0f,
+						   0.0f, _scale.y,     0.0f, 0.0f,
+						   0.0f,     0.0f, _scale.z, 0.0f,
+						   0.0f,     0.0f,     0.0f, 1.0f);
+
+		return temp;
+	}
+
+	// âÒì]çsóÒ
+	static Matrix4x4 RotationXMatrix(float _angle)
+	{
+		float cosX = cosf((_angle) * (PI_F / 180.0f));
+		float sinX = sinf((_angle) * (PI_F / 180.0f));
+
+		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
+					   0.0f, cosX, sinX, 0.0f,
+					   0.0f, -sinX, cosX, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return temp;
+	}
+
+	// âÒì]çsóÒ
+	static Matrix4x4 RotationYMatrix(float _angle)
+	{
+		float cosY = cosf((_angle) * (PI_F / 180.0f));
+		float sinY = sinf((_angle) * (PI_F / 180.0f));
+
+		Matrix4x4 temp(cosY, 0.0f, -sinY, 0.0f,
+					   0.0f, 1.0f, 0.0f, 0.0f,
+					   sinY, 0.0f, cosY, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return temp;
+	}
+
+	// âÒì]çsóÒ
+	static Matrix4x4 RotationZMatrix(float _angle)
+	{
+		float cosZ = cosf((_angle) * (PI_F / 180.0f));
+		float sinZ = sinf((_angle) * (PI_F / 180.0f));
+
+		Matrix4x4 temp(cosZ, sinZ, 0.0f, 0.0f,
+					  -sinZ, cosZ, 0.0f, 0.0f,
+					   0.0f, 0.0f, 1.0f, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return temp;
+	}
+
+	// âÒì]çsóÒ
+	static Matrix4x4 RotationZXYMatrix(float _angleX, float _angleY, float _angleZ)
+	{
+		float cosX = cosf((_angleX) * (PI_F / 180.0f));
+		float sinX = sinf((_angleX) * (PI_F / 180.0f));
+		float cosY = cosf((_angleY) * (PI_F / 180.0f));
+		float sinY = sinf((_angleY) * (PI_F / 180.0f));
+		float cosZ = cosf((_angleZ) * (PI_F / 180.0f));
+		float sinZ = sinf((_angleZ) * (PI_F / 180.0f));
+
+		Matrix4x4 temp = Matrix4x4::IdentityMatrix();
+
+		temp.m_11 = (sinX * sinY * sinZ) + (cosY * cosZ);
+		temp.m_12 = cosX * sinZ;
+		temp.m_13 = (sinX * cosY * sinZ) + (-sinY * cosZ);
+
+		temp.m_21 = (sinX * sinY * cosZ) + (-sinZ * cosY);
+		temp.m_22 = cosX * cosZ;
+		temp.m_23 = (sinX * cosY * cosZ) + (-sinY * -sinZ);
+
+		temp.m_31 = cosX * sinY;
+		temp.m_32 = -sinX;
+		temp.m_33 = cosX * cosY;
+
+		return temp;
+	}
+
+	// âÒì]çsóÒ
+	static Matrix4x4 RotationZXYMatrix(Vector3 _angle)
+	{
+		float cosX = cosf((_angle.x) * (PI_F / 180.0f));
+		float sinX = sinf((_angle.x) * (PI_F / 180.0f));
+		float cosY = cosf((_angle.y) * (PI_F / 180.0f));
+		float sinY = sinf((_angle.y) * (PI_F / 180.0f));
+		float cosZ = cosf((_angle.z) * (PI_F / 180.0f));
+		float sinZ = sinf((_angle.z) * (PI_F / 180.0f));
+
+		Matrix4x4 temp = Matrix4x4::IdentityMatrix();
+
+		temp.m_11 = (sinX * sinY * sinZ) + (cosY * cosZ);
+		temp.m_12 = cosX * sinZ;
+		temp.m_13 = (sinX * cosY * sinZ) + (-sinY * cosZ);
+
+		temp.m_21 = (sinX * sinY * cosZ) + (-sinZ * cosY);
+		temp.m_22 = cosX * cosZ;
+		temp.m_23 = (sinX * cosY * cosZ) + (-sinY * -sinZ);
+
+		temp.m_31 = cosX * sinY;
+		temp.m_32 = -sinX;
+		temp.m_33 = cosX * cosY;
+
+		return temp;
+	}
+
+	// ÉrÉÖÅ[ïœä∑çsóÒ
+	static Matrix4x4& ViewMatrix(Vector3 _eye, Vector3 _lookat, Vector3 _up)
+	{
+		Vector3 axisX;
+		Vector3 axisY;
+		Vector3 axisZ, axisZ2;
+		Matrix4x4 temp;
+
+		axisZ2 = axisZ = _lookat - _eye;
+		axisZ.Normalize();
+
+		axisX = _up.Closs(axisZ);
+		axisX.Normalize();
+		axisY = axisZ.Closs(axisX);
+		axisY.Normalize();
+
+		temp.m_11 = axisX.x;
+		temp.m_21 = axisX.y;
+		temp.m_31 = axisX.z;
+
+		temp.m_12 = axisY.x;
+		temp.m_22 = axisY.y;
+		temp.m_32 = axisY.z;
+
+		temp.m_13 = axisZ.x;
+		temp.m_23 = axisZ.y;
+		temp.m_33 = axisZ.z;
+
+		temp.m_14 = 0.0f;
+		temp.m_24 = 0.0f;
+		temp.m_34 = 0.0f;
+		temp.m_44 = 1.0f;
+
+		temp.m_41 = -_eye.Dot(axisX);
+		temp.m_42 = -_eye.Dot(axisY);
+		temp.m_43 = -_eye.Dot(axisZ);
+
+		return temp;
+	}
+
+	// ìßéãìäâeçsóÒ
+	static Matrix4x4& PerspectiveMatrix(float _fov, float _aspectRatio, float _nearZ, float _farZ)
+	{
+		float tempAngle = (_fov * (PI_F / 180.0f)) / 2.0f;
+
+		float temp = 1.0f / (tanf(tempAngle));
+
+		Matrix4x4 tempMtx = Matrix4x4::IdentityMatrix();
+
+		tempMtx.m_11 = (temp / _aspectRatio);
+		tempMtx.m_22 = temp;
+		tempMtx.m_33 = (_farZ) / (_farZ - _nearZ);
+		tempMtx.m_43 = (-_nearZ * _farZ) / (_farZ - _nearZ);
+		tempMtx.m_34 = 1.0f;
+		tempMtx.m_44 = 0.0f;
+
+		return tempMtx;
+	}
+
+	// ïΩçsìäâeçsóÒ
+	static Matrix4x4& OrthoMatrix(float _height, float _width, float _nearZ, float _farZ)
+	{
+		Matrix4x4 tempMtx = Matrix4x4::IdentityMatrix();
+
+		tempMtx.m_11 = 2.0f / _height;
+		tempMtx.m_22 = 2.0f / _width;
+		tempMtx.m_33 = 1.0f / (_farZ - _nearZ);
+		tempMtx.m_43 = _nearZ / (_nearZ - _farZ);
+		tempMtx.m_34 = 0.0f;
+		tempMtx.m_44 = 1.0f;
+
+		return tempMtx;
+	}
+
+	// óÎçsóÒ
+	static Matrix4x4 ZeroMatrix() 
+	{
+		Matrix4x4 temp(0.0f, 0.0f, 0.0f, 0.0f,
+					   0.0f, 0.0f, 0.0f, 0.0f,
+					   0.0f, 0.0f, 0.0f, 0.0f,
+					   0.0f, 0.0f, 0.0f, 0.0f);
+
+		return temp;
+	}
+
+	// ïΩçsà⁄ìÆ
+	Matrix4x4& Translation(float _posX, float _posY, float _posZ) 
+	{
+		Matrix4x4 temp(1.0f,  0.0f,  0.0f,  0.0f,
+					   0.0f,  1.0f,  0.0f,  0.0f,
+					   0.0f,  0.0f,  1.0f,  0.0f,
+					  _posX, _posY, _posZ,  1.0f);
+
+		return *this = temp;
+	}
+
+	// ïΩçsà⁄ìÆ
+	Matrix4x4& Translation(Vector3 _pos)
+	{
+		Matrix4x4 temp(1.0f,   0.0f,   0.0f,  0.0f,
+					   0.0f,   1.0f,   0.0f,  0.0f,
+					   0.0f,   0.0f,   1.0f,  0.0f,
+					 _pos.x, _pos.y, _pos.z,  1.0f);
+
+		return *this = temp;
+	}
+
+	// ägëÂÅEèkè¨
+	Matrix4x4& Scaling(float _scaleX, float _scaleY, float _scaleZ) 
+	{
+		Matrix4x4 temp(_scaleX,	   0.0f,    0.0f, 0.0f,
+						  0.0f, _scaleY,    0.0f, 0.0f,
+						  0.0f,    0.0f, _scaleZ, 0.0f,
+						  0.0f,    0.0f,    0.0f, 1.0f);
+
+		return *this = temp;
+	}
+
+	// ägëÂÅEèkè¨
+	Matrix4x4& Scaling(Vector3 _scale)
+	{
+		Matrix4x4 temp(_scale.x,	 0.0f,	   0.0f, 0.0f,
+						   0.0f, _scale.y,	   0.0f, 0.0f,
+						   0.0f,	 0.0f, _scale.z, 0.0f,
+						   0.0f,	 0.0f,     0.0f, 1.0f);
+
+		return *this = temp;
+	}
+
+	// âÒì](Xé≤âÒÇË)
+	Matrix4x4& RotationX(float _angle) 
+	{
+		float cosX = cosf((_angle) * (PI_F / 180.0f));
+		float sinX = sinf((_angle) * (PI_F / 180.0f));
+
+		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
+					   0.0f, cosX, sinX, 0.0f,
+					   0.0f,-sinX, cosX, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return *this = temp;
+	}
+
+	// âÒì](Yé≤âÒÇË)
+	Matrix4x4& RotationY(float _angle)
+	{
+		float cosY = cosf((_angle) * (PI_F / 180.0f));
+		float sinY = sinf((_angle) * (PI_F / 180.0f));
+
+		Matrix4x4 temp(cosY, 0.0f,-sinY, 0.0f,
+					   0.0f, 1.0f, 0.0f, 0.0f,
+					   sinY, 0.0f, cosY, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return *this = temp;
+	}
+
+	// âÒì](Zé≤âÒÇË)
+	Matrix4x4& RotationZ(float _angle)
+	{
+		float cosZ = cosf((_angle) * (PI_F / 180.0f));
+		float sinZ = sinf((_angle) * (PI_F / 180.0f));
+
+		Matrix4x4 temp(cosZ, sinZ, 0.0f, 0.0f,
+					  -sinZ, cosZ, 0.0f, 0.0f,
+					   0.0f, 0.0f, 1.0f, 0.0f,
+					   0.0f, 0.0f, 0.0f, 1.0f);
+
+		return *this = temp;
+	}
+
+	// âÒì](Z->X->Y)
+	Matrix4x4& RotationZXY(float _angleX, float _angleY, float _angleZ) 
+	{
+		float cosX = cosf((_angleX) * (PI_F / 180.0f));
+		float sinX = sinf((_angleX) * (PI_F / 180.0f));
+		float cosY = cosf((_angleY) * (PI_F / 180.0f));
+		float sinY = sinf((_angleY) * (PI_F / 180.0f));
+		float cosZ = cosf((_angleZ) * (PI_F / 180.0f));
+		float sinZ = sinf((_angleZ) * (PI_F / 180.0f));
+
+		Matrix4x4 temp;
+
+		temp.m_11 = (sinX * sinY * sinZ) + (cosY * cosZ);
+		temp.m_12 = cosX * sinZ;
+		temp.m_13 = (sinX * cosY * sinZ) + (-sinY * cosZ);
+
+		temp.m_21 = (sinX * sinY * cosZ) + (-sinZ * cosY);
+		temp.m_22 = cosX * cosZ;
+		temp.m_23 = (sinX * cosY * cosZ) + (-sinY * -sinZ);
+
+		temp.m_31 = cosX * sinY;
+		temp.m_32 = -sinX;
+		temp.m_33 = cosX * cosY;
+
+		temp.m_44 = 1.0f;
+
+		return *this = temp;
+	}
+
+	// âÒì](Z->X->Y)
+	Matrix4x4& RotationZXY(Vector3 _angle)
+	{
+		float cosX = cosf((_angle.x) * (PI_F / 180.0f));
+		float sinX = sinf((_angle.x) * (PI_F / 180.0f));
+		float cosY = cosf((_angle.y) * (PI_F / 180.0f));
+		float sinY = sinf((_angle.y) * (PI_F / 180.0f));
+		float cosZ = cosf((_angle.z) * (PI_F / 180.0f));
+		float sinZ = sinf((_angle.z) * (PI_F / 180.0f));
+
+		Matrix4x4 temp = Matrix4x4::IdentityMatrix();
+
+		temp.m_11 = (sinX * sinY * sinZ) + (cosY * cosZ);
+		temp.m_12 = cosX * sinZ;
+		temp.m_13 = (sinX * cosY * sinZ) + (-sinY * cosZ);
+
+		temp.m_21 = (sinX * sinY * cosZ) + (-sinZ * cosY);
+		temp.m_22 = cosX * cosZ;
+		temp.m_23 = (sinX * cosY * cosZ) + (-sinY * -sinZ);
+
+		temp.m_31 = cosX * sinY;
+		temp.m_32 = -sinX;
+		temp.m_33 = cosX * cosY;
+
+		return *this = temp;
+	}
+
+	// Xé≤ÇéÊìæ
+	Vector3& GetAxisX() 
+	{
+		Vector3 temp;
+
+		temp.x = this->m_11;
+		temp.x = this->m_12;
+		temp.x = this->m_13;
+
+		return temp;
+	}
+
+	// Yé≤ÇéÊìæ
+	Vector3& GetAxisY()
+	{
+		Vector3 temp;
+
+		temp.x = this->m_21;
+		temp.x = this->m_22;
+		temp.x = this->m_23;
+
+		return temp;
+	}
+
+	// Zé≤ÇéÊìæ
+	Vector3& GetAxisZ()
+	{
+		Vector3 temp;
+
+		temp.x = this->m_31;
+		temp.x = this->m_32;
+		temp.x = this->m_33;
+
+		return temp;
+	}
+
+	// ÉrÉÖÅ[ïœä∑
+	Matrix4x4& View(Vector3 _eye, Vector3 _lookat, Vector3 _up) 
+	{
+		Vector3 axisX;
+		Vector3 axisY;
+		Vector3 axisZ, axisZ2;
+		Matrix4x4 temp;
+
+		axisZ2 = axisZ = _lookat - _eye;
+		axisZ.Normalize();
+
+		axisX = _up.Closs(axisZ);
+		axisX.Normalize();
+		axisY = axisZ.Closs(axisX);
+		axisY.Normalize();
+
+		temp.m_11 = axisX.x;
+		temp.m_21 = axisX.y;
+		temp.m_31 = axisX.z;
+
+		temp.m_12 = axisY.x;
+		temp.m_22 = axisY.y;
+		temp.m_32 = axisY.z;
+
+		temp.m_13 = axisZ.x;
+		temp.m_23 = axisZ.y;
+		temp.m_33 = axisZ.z;
+
+		temp.m_14 = 0.0f;
+		temp.m_24 = 0.0f;
+		temp.m_34 = 0.0f;
+		temp.m_44 = 1.0f;
+
+		temp.m_41 = -_eye.Dot(axisX);
+		temp.m_42 = -_eye.Dot(axisY);
+		temp.m_43 = -_eye.Dot(axisZ);
+
+		return *this = temp;
+	}
+
+	// ìßéãìäâeïœä∑
+	Matrix4x4& Perspective(float _fov, float _aspectRatio, float _nearZ, float _farZ)
+	{
+		float tempAngle = (_fov * (PI_F / 180.0f)) / 2.0f;
+
+		float temp = 1.0f / (tanf(tempAngle));
+
+		Matrix4x4 tempMtx = Matrix4x4::IdentityMatrix();
+
+		tempMtx.m_11 = (temp / _aspectRatio);
+		tempMtx.m_22 = temp;
+		tempMtx.m_33 = (_farZ) / (_farZ - _nearZ);
+		tempMtx.m_43 = (-_nearZ * _farZ) / (_farZ - _nearZ);
+		tempMtx.m_34 = 1.0f;
+		tempMtx.m_44 = 0.0f;
+
+		return *this = tempMtx;
+	}
+
+	// ïΩçsìäâeïœä∑
+	Matrix4x4& Ortho(float _height, float _width, float _nearZ, float _farZ)
+	{
+		Matrix4x4 tempMtx = Matrix4x4::IdentityMatrix();
+
+		tempMtx.m_11 = 2.0f / _height;
+		tempMtx.m_22 = 2.0f / _width;
+		tempMtx.m_33 = 1.0f / (_farZ - _nearZ);
+		tempMtx.m_43 = _nearZ / (_nearZ - _farZ);
+		tempMtx.m_34 = 0.0f;
+		tempMtx.m_44 = 1.0f;
+
+		return *this = tempMtx;
+	}
+
+	// ì]íu
+	Matrix4x4& Transpose() 
+	{
+		std::swap(this->m_12, this->m_21);
+		std::swap(this->m_13, this->m_31);
+		std::swap(this->m_14, this->m_41);
+
+		std::swap(this->m_23, this->m_32);
+		std::swap(this->m_24, this->m_42);
+		std::swap(this->m_34, this->m_43);
+
+		return *this;
+	}
+
+	// çsóÒéÆ
+	float Determinant() 
+	{
+		float temp = 0.0f;
+
+		float temp1 = m_11 * (m_22 * m_33 * m_44 + m_23 * m_34 * m_42 + m_24 * m_32 * m_43 - m_24 * m_33 * m_42 - m_23 * m_32 * m_44 - m_22 * m_34 * m_43);
+		float temp2 = m_21 * (m_12 * m_33 * m_44 + m_13 * m_34 * m_42 + m_14 * m_32 * m_43 - m_14 * m_33 * m_42 - m_13 * m_32 * m_44 - m_12 * m_34 * m_43);
+		float temp3 = m_31 * (m_12 * m_23 * m_44 + m_13 * m_24 * m_42 + m_14 * m_22 * m_43 - m_14 * m_23 * m_42 - m_13 * m_22 * m_44 - m_12 * m_24 * m_43);
+		float temp4 = m_41 * (m_12 * m_23 * m_34 + m_13 * m_24 * m_32 + m_14 * m_22 * m_33 - m_14 * m_23 * m_32 - m_13 * m_22 * m_34 - m_12 * m_24 * m_33);
+
+		temp = temp1 - temp2 + temp3 - temp4;
+
+		return temp;
+	}
+
+	// ãtçsóÒ
+	Matrix4x4& Inverse() 
+	{
+		Matrix4x4 temp = *this;
+
+		float determinant = temp.Determinant();
+
+		if (determinant != 0) 
 		{
-			float _11, _12, _13, _14;
-			float _21, _22, _23, _24;
-			float _31, _32, _33, _34;
-			float _41, _42, _43, _44;
+			temp.m_11 = (m_22 * m_33 * m_44 + m_23 * m_34 * m_42 + m_24 * m_32 * m_43 - m_24 * m_33 * m_42 - m_23 * m_32 * m_44 - m_22 * m_34 * m_43) / determinant;
+			temp.m_12 = (-m_12 * m_33 * m_44 - m_13 * m_34 * m_42 - m_14 * m_32 * m_43 + m_14 * m_33 * m_42 + m_13 * m_32 * m_44 + m_12 * m_34 * m_43) / determinant;
+			temp.m_13 = (m_12 * m_23 * m_44 + m_13 * m_24 * m_42 + m_14 * m_22 * m_43 - m_14 * m_23 * m_42 - m_13 * m_22 * m_44 - m_12 * m_24 * m_43) / determinant;
+			temp.m_14 = (-m_12 * m_23 * m_34 - m_13 * m_24 * m_32 - m_14 * m_22 * m_33 + m_14 * m_23 * m_32 + m_13 * m_22 * m_34 + m_12 * m_24 * m_33) / determinant;
 
-		}m[4][4];
-	};
+			temp.m_21 = (-m_21 * m_33 * m_44 - m_23 * m_34 * m_41 - m_24 * m_31 * m_43 + m_24 * m_33 * m_41 + m_23 * m_31 * m_44 + m_21 * m_34 * m_43) / determinant;
+			temp.m_22 = (m_11 * m_33 * m_44 + m_13 * m_34 * m_41 + m_14 * m_31 * m_43 - m_14 * m_33 * m_41 - m_13 * m_31 * m_44 - m_11 * m_34 * m_43) / determinant;
+			temp.m_23 = (-m_11 * m_23 * m_44 - m_13 * m_24 * m_41 - m_14 * m_21 * m_43 + m_14 * m_23 * m_41 + m_13 * m_21 * m_44 + m_11 * m_24 * m_43) / determinant;
+			temp.m_24 = (m_11 * m_23 * m_34 + m_13 * m_24 * m_31 + m_14 * m_21 * m_33 - m_14 * m_23 * m_31 - m_13 * m_21 * m_34 - m_11 * m_24 * m_33) / determinant;
 
+			temp.m_31 = (m_21 * m_32 * m_44 + m_22 * m_34 * m_41 + m_24 * m_31 * m_42 - m_24 * m_32 * m_41 - m_22 * m_31 * m_44 - m_21 * m_34 * m_42) / determinant;
+			temp.m_32 = (-m_11 * m_32 * m_44 - m_12 * m_34 * m_41 - m_14 * m_31 * m_42 + m_14 * m_32 * m_41 + m_12 * m_31 * m_44 + m_11 * m_34 * m_42) / determinant;
+			temp.m_33 = (m_11 * m_22 * m_44 + m_12 * m_24 * m_41 + m_14 * m_21 * m_42 - m_14 * m_22 * m_41 - m_12 * m_21 * m_44 - m_11 * m_24 * m_42) / determinant;
+			temp.m_34 = (-m_11 * m_22 * m_34 - m_12 * m_24 * m_31 - m_14 * m_21 * m_32 + m_14 * m_22 * m_31 + m_12 * m_21 * m_34 + m_11 * m_24 * m_32) / determinant;
 
+			temp.m_41 = (-m_21 * m_32 * m_43 - m_22 * m_33 * m_41 - m_23 * m_31 * m_42 + m_23 * m_32 * m_41 + m_22 * m_31 * m_43 + m_21 * m_33 * m_42) / determinant;
+			temp.m_42 = (m_11 * m_32 * m_43 + m_12 * m_33 * m_41 + m_13 * m_31 * m_42 - m_13 * m_32 * m_41 - m_12 * m_31 * m_43 - m_11 * m_33 * m_42) / determinant;
+			temp.m_43 = (-m_11 * m_22 * m_43 - m_12 * m_23 * m_41 - m_13 * m_21 * m_42 + m_13 * m_22 * m_41 + m_12 * m_21 * m_43 + m_11 * m_23 * m_42) / determinant;
+			temp.m_44 = (m_11 * m_22 * m_33 + m_12 * m_23 * m_31 + m_13 * m_21 * m_32 - m_13 * m_22 * m_31 - m_12 * m_21 * m_33 - m_11 * m_23 * m_32) / determinant;
+		}
+
+		return *this = temp;
+	}
+
+	constexpr Matrix4x4(float _m00, float _m01, float _m02, float _m03,
+						float _m10, float _m11, float _m12, float _m13,
+						float _m20, float _m21, float _m22, float _m23,
+						float _m30, float _m31, float _m32, float _m33)
+		:	m_11(_m00), m_12(_m01), m_13(_m02), m_14(_m03),
+			m_21(_m10), m_22(_m11), m_23(_m12), m_24(_m13),
+			m_31(_m20), m_32(_m21), m_33(_m22), m_34(_m23),
+			m_41(_m30), m_42(_m31), m_43(_m32), m_44(_m33) {}
+
+	explicit Matrix4x4(_In_reads_(16) const float* _pArray) 
+	{
+		assert(_pArray != nullptr);
+
+		m[0][0] = _pArray[0];
+		m[0][1] = _pArray[1];
+		m[0][2] = _pArray[2];
+		m[0][3] = _pArray[3];
+
+		m[1][0] = _pArray[4];
+		m[1][1] = _pArray[5];
+		m[1][2] = _pArray[6];
+		m[1][3] = _pArray[7];
+
+		m[2][0] = _pArray[8];
+		m[2][1] = _pArray[9];
+		m[2][2] = _pArray[10];
+		m[2][3] = _pArray[11];
+		
+		m[3][0] = _pArray[12];
+		m[3][1] = _pArray[13];
+		m[3][2] = _pArray[14];
+		m[3][3] = _pArray[15];
+	}
+
+	float       operator() (size_t Row, size_t Column) const { return m[Row][Column]; }
+	float&		operator() (size_t Row, size_t Column) { return m[Row][Column]; }
 };
 
+Matrix4x4 operator+ (const XMMATRIX& _x, const Matrix4x4& _m);
+Matrix4x4 operator+ (const Matrix4x4& _m, const XMMATRIX& _x);
+Matrix4x4 operator+ (const XMFLOAT4X4& _f, const Matrix4x4& _m);
+Matrix4x4 operator+ (const Matrix4x4& _m, const XMFLOAT4X4& _f);
+Matrix4x4 operator+ (const Matrix4x4& _m1, const Matrix4x4& _m2);
+
+Matrix4x4 operator- (const XMMATRIX& _x, const Matrix4x4& _m);
+Matrix4x4 operator- (const Matrix4x4& _m, const XMMATRIX& _x);
+Matrix4x4 operator- (const XMFLOAT4X4& _f, const Matrix4x4& _m);
+Matrix4x4 operator- (const Matrix4x4& _m, const XMFLOAT4X4& _f);
+Matrix4x4 operator- (const Matrix4x4& _m1, const Matrix4x4& _m2);
+
+Matrix4x4 operator* (const XMMATRIX& _x, const Matrix4x4& _m);
+Matrix4x4 operator* (const Matrix4x4& _m, const XMMATRIX& _x);
+Matrix4x4 operator* (const XMFLOAT4X4& _f, const Matrix4x4& _m);
+Matrix4x4 operator* (const Matrix4x4& _m, const XMFLOAT4X4& _f);
+Matrix4x4 operator* (const Matrix4x4& _m1, const Matrix4x4& _m2);
+
+Vector4 operator* (const Matrix4x4& _m, const Vector4& _v);
+Vector4 operator* (const Vector4& _v, const Matrix4x4& _m);
 #pragma endregion
 
 template <class T>  class Property {

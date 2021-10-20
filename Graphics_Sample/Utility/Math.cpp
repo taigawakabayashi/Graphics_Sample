@@ -945,3 +945,452 @@ Vector4 operator/ (const Vector4& _v1, const Vector4& _v2) {
 	return temp;
 }
 #pragma endregion
+
+#pragma region Matrix4x4
+
+// XMMATRIX + Matrix4x4
+Matrix4x4 operator+(const XMMATRIX& _x, const Matrix4x4& _m)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _x.r[0].m128_f32[0] + _m.m_11;
+	temp.m_12 = _x.r[0].m128_f32[1] + _m.m_12;
+	temp.m_13 = _x.r[0].m128_f32[2] + _m.m_13;
+	temp.m_14 = _x.r[0].m128_f32[3] + _m.m_14;
+
+	temp.m_21 = _x.r[1].m128_f32[0] + _m.m_21;
+	temp.m_22 = _x.r[1].m128_f32[1] + _m.m_22;
+	temp.m_23 = _x.r[1].m128_f32[2] + _m.m_23;
+	temp.m_24 = _x.r[1].m128_f32[3] + _m.m_24;
+	
+	temp.m_31 = _x.r[2].m128_f32[0] + _m.m_31;
+	temp.m_32 = _x.r[2].m128_f32[1] + _m.m_32;
+	temp.m_33 = _x.r[2].m128_f32[2] + _m.m_33;
+	temp.m_34 = _x.r[2].m128_f32[3] + _m.m_34;
+	
+	temp.m_41 = _x.r[3].m128_f32[0] + _m.m_41;
+	temp.m_42 = _x.r[3].m128_f32[1] + _m.m_42;
+	temp.m_43 = _x.r[3].m128_f32[2] + _m.m_43;
+	temp.m_44 = _x.r[3].m128_f32[3] + _m.m_44;
+
+	return temp;
+}
+
+// Matrix4x4 + XMMATRIX
+Matrix4x4 operator+(const Matrix4x4& _m, const XMMATRIX& _x)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _m.m_11 + _x.r[0].m128_f32[0];
+	temp.m_12 = _m.m_12 + _x.r[0].m128_f32[1];
+	temp.m_13 = _m.m_13 + _x.r[0].m128_f32[2];
+	temp.m_14 = _m.m_14 + _x.r[0].m128_f32[3];
+
+	temp.m_21 = _m.m_21 + _x.r[1].m128_f32[0];
+	temp.m_22 = _m.m_22 + _x.r[1].m128_f32[1];
+	temp.m_23 = _m.m_23 + _x.r[1].m128_f32[2];
+	temp.m_24 = _m.m_24 + _x.r[1].m128_f32[3];
+
+	temp.m_31 = _m.m_31 + _x.r[2].m128_f32[0];
+	temp.m_32 = _m.m_32 + _x.r[2].m128_f32[1];
+	temp.m_33 = _m.m_33 + _x.r[2].m128_f32[2];
+	temp.m_34 = _m.m_34 + _x.r[2].m128_f32[3];
+
+	temp.m_41 = _m.m_41 + _x.r[3].m128_f32[0];
+	temp.m_42 = _m.m_42 + _x.r[3].m128_f32[1];
+	temp.m_43 = _m.m_43 + _x.r[3].m128_f32[2];
+	temp.m_44 = _m.m_44 + _x.r[3].m128_f32[3];
+
+	return temp;
+}
+
+// XMFLOAT4X4 + Matrix4x4
+Matrix4x4 operator+(const XMFLOAT4X4& _f, const Matrix4x4& _m)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _f._11 + _m.m_11;
+	temp.m_12 = _f._12 + _m.m_12;
+	temp.m_13 = _f._13 + _m.m_13;
+	temp.m_14 = _f._14 + _m.m_14;
+				 
+	temp.m_21 = _f._21 + _m.m_21;
+	temp.m_22 = _f._22 + _m.m_22;
+	temp.m_23 = _f._23 + _m.m_23;
+	temp.m_24 = _f._24 + _m.m_24;
+				 
+	temp.m_31 = _f._31 + _m.m_31;
+	temp.m_32 = _f._32 + _m.m_32;
+	temp.m_33 = _f._33 + _m.m_33;
+	temp.m_34 = _f._34 + _m.m_34;
+				 
+	temp.m_41 = _f._41 + _m.m_41;
+	temp.m_42 = _f._42 + _m.m_42;
+	temp.m_43 = _f._43 + _m.m_43;
+	temp.m_44 = _f._44 + _m.m_44;
+
+	return temp;
+}
+
+// Matrix4x4 + XMFLOAT4X4
+Matrix4x4 operator+(const Matrix4x4& _m, const XMFLOAT4X4& _f)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _m.m_11 + _f._11;
+	temp.m_12 = _m.m_12 + _f._12;
+	temp.m_13 = _m.m_13 + _f._13;
+	temp.m_14 = _m.m_14 + _f._14;
+
+	temp.m_21 = _m.m_21 + _f._21;
+	temp.m_22 = _m.m_22 + _f._22;
+	temp.m_23 = _m.m_23 + _f._23;
+	temp.m_24 = _m.m_24 + _f._24;
+
+	temp.m_31 = _m.m_31 + _f._31;
+	temp.m_32 = _m.m_32 + _f._32;
+	temp.m_33 = _m.m_33 + _f._33;
+	temp.m_34 = _m.m_34 + _f._34;
+
+	temp.m_41 = _m.m_41 + _f._41;
+	temp.m_42 = _m.m_42 + _f._42;
+	temp.m_43 = _m.m_43 + _f._43;
+	temp.m_44 = _m.m_44 + _f._44;
+
+	return temp;
+}
+
+// Matrix4x4 + Matrix4x4
+Matrix4x4 operator+(const Matrix4x4& _m1, const Matrix4x4& _m2)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _m1.m_11 + _m2.m_11;
+	temp.m_12 = _m1.m_12 + _m2.m_12;
+	temp.m_13 = _m1.m_13 + _m2.m_13;
+	temp.m_14 = _m1.m_14 + _m2.m_14;
+
+	temp.m_21 = _m1.m_21 + _m2.m_21;
+	temp.m_22 = _m1.m_22 + _m2.m_22;
+	temp.m_23 = _m1.m_23 + _m2.m_23;
+	temp.m_24 = _m1.m_24 + _m2.m_24;
+
+	temp.m_31 = _m1.m_31 + _m2.m_31;
+	temp.m_32 = _m1.m_32 + _m2.m_32;
+	temp.m_33 = _m1.m_33 + _m2.m_33;
+	temp.m_34 = _m1.m_34 + _m2.m_34;
+
+	temp.m_41 = _m1.m_41 + _m2.m_41;
+	temp.m_42 = _m1.m_42 + _m2.m_42;
+	temp.m_43 = _m1.m_43 + _m2.m_43;
+	temp.m_44 = _m1.m_44 + _m2.m_44;
+
+	return temp;
+}
+
+// XMMATRIX - Matrix4x4
+Matrix4x4 operator-(const XMMATRIX& _x, const Matrix4x4& _m)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _x.r[0].m128_f32[0] - _m.m_11;
+	temp.m_12 = _x.r[0].m128_f32[1] - _m.m_12;
+	temp.m_13 = _x.r[0].m128_f32[2] - _m.m_13;
+	temp.m_14 = _x.r[0].m128_f32[3] - _m.m_14;
+
+	temp.m_21 = _x.r[1].m128_f32[0] - _m.m_21;
+	temp.m_22 = _x.r[1].m128_f32[1] - _m.m_22;
+	temp.m_23 = _x.r[1].m128_f32[2] - _m.m_23;
+	temp.m_24 = _x.r[1].m128_f32[3] - _m.m_24;
+
+	temp.m_31 = _x.r[2].m128_f32[0] - _m.m_31;
+	temp.m_32 = _x.r[2].m128_f32[1] - _m.m_32;
+	temp.m_33 = _x.r[2].m128_f32[2] - _m.m_33;
+	temp.m_34 = _x.r[2].m128_f32[3] - _m.m_34;
+
+	temp.m_41 = _x.r[3].m128_f32[0] - _m.m_41;
+	temp.m_42 = _x.r[3].m128_f32[1] - _m.m_42;
+	temp.m_43 = _x.r[3].m128_f32[2] - _m.m_43;
+	temp.m_44 = _x.r[3].m128_f32[3] - _m.m_44;
+
+	return temp;
+}
+
+// Matrix4x4 - XMMATRIX
+Matrix4x4 operator-(const Matrix4x4& _m, const XMMATRIX& _x)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _m.m_11 - _x.r[0].m128_f32[0];
+	temp.m_12 = _m.m_12 - _x.r[0].m128_f32[1];
+	temp.m_13 = _m.m_13 - _x.r[0].m128_f32[2];
+	temp.m_14 = _m.m_14 - _x.r[0].m128_f32[3];
+
+	temp.m_21 = _m.m_21 - _x.r[1].m128_f32[0];
+	temp.m_22 = _m.m_22 - _x.r[1].m128_f32[1];
+	temp.m_23 = _m.m_23 - _x.r[1].m128_f32[2];
+	temp.m_24 = _m.m_24 - _x.r[1].m128_f32[3];
+
+	temp.m_31 = _m.m_31 - _x.r[2].m128_f32[0];
+	temp.m_32 = _m.m_32 - _x.r[2].m128_f32[1];
+	temp.m_33 = _m.m_33 - _x.r[2].m128_f32[2];
+	temp.m_34 = _m.m_34 - _x.r[2].m128_f32[3];
+
+	temp.m_41 = _m.m_41 - _x.r[3].m128_f32[0];
+	temp.m_42 = _m.m_42 - _x.r[3].m128_f32[1];
+	temp.m_43 = _m.m_43 - _x.r[3].m128_f32[2];
+	temp.m_44 = _m.m_44 - _x.r[3].m128_f32[3];
+
+	return temp;
+}
+
+// XMFLOAT4X4 - Matrix4x4
+Matrix4x4 operator-(const XMFLOAT4X4& _f, const Matrix4x4& _m)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _f._11 - _m.m_11;
+	temp.m_12 = _f._12 - _m.m_12;
+	temp.m_13 = _f._13 - _m.m_13;
+	temp.m_14 = _f._14 - _m.m_14;
+
+	temp.m_21 = _f._21 - _m.m_21;
+	temp.m_22 = _f._22 - _m.m_22;
+	temp.m_23 = _f._23 - _m.m_23;
+	temp.m_24 = _f._24 - _m.m_24;
+
+	temp.m_31 = _f._31 - _m.m_31;
+	temp.m_32 = _f._32 - _m.m_32;
+	temp.m_33 = _f._33 - _m.m_33;
+	temp.m_34 = _f._34 - _m.m_34;
+
+	temp.m_41 = _f._41 - _m.m_41;
+	temp.m_42 = _f._42 - _m.m_42;
+	temp.m_43 = _f._43 - _m.m_43;
+	temp.m_44 = _f._44 - _m.m_44;
+
+	return temp;
+}
+
+// Matrix4x4 - XMFLOAT4X4
+Matrix4x4 operator-(const Matrix4x4& _m, const XMFLOAT4X4& _f)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _m.m_11 - _f._11;
+	temp.m_12 = _m.m_12 - _f._12;
+	temp.m_13 = _m.m_13 - _f._13;
+	temp.m_14 = _m.m_14 - _f._14;
+
+	temp.m_21 = _m.m_21 - _f._21;
+	temp.m_22 = _m.m_22 - _f._22;
+	temp.m_23 = _m.m_23 - _f._23;
+	temp.m_24 = _m.m_24 - _f._24;
+
+	temp.m_31 = _m.m_31 - _f._31;
+	temp.m_32 = _m.m_32 - _f._32;
+	temp.m_33 = _m.m_33 - _f._33;
+	temp.m_34 = _m.m_34 - _f._34;
+
+	temp.m_41 = _m.m_41 - _f._41;
+	temp.m_42 = _m.m_42 - _f._42;
+	temp.m_43 = _m.m_43 - _f._43;
+	temp.m_44 = _m.m_44 - _f._44;
+
+	return temp;
+}
+
+// Matrix4x4 - Matrix4x4
+Matrix4x4 operator-(const Matrix4x4& _m1, const Matrix4x4& _m2)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = _m1.m_11 - _m2.m_11;
+	temp.m_12 = _m1.m_12 - _m2.m_12;
+	temp.m_13 = _m1.m_13 - _m2.m_13;
+	temp.m_14 = _m1.m_14 - _m2.m_14;
+
+	temp.m_21 = _m1.m_21 - _m2.m_21;
+	temp.m_22 = _m1.m_22 - _m2.m_22;
+	temp.m_23 = _m1.m_23 - _m2.m_23;
+	temp.m_24 = _m1.m_24 - _m2.m_24;
+
+	temp.m_31 = _m1.m_31 - _m2.m_31;
+	temp.m_32 = _m1.m_32 - _m2.m_32;
+	temp.m_33 = _m1.m_33 - _m2.m_33;
+	temp.m_34 = _m1.m_34 - _m2.m_34;
+
+	temp.m_41 = _m1.m_41 - _m2.m_41;
+	temp.m_42 = _m1.m_42 - _m2.m_42;
+	temp.m_43 = _m1.m_43 - _m2.m_43;
+	temp.m_44 = _m1.m_44 - _m2.m_44;
+
+	return temp;
+}
+
+// XMMATRIX * Matrix4x4
+Matrix4x4 operator*(const XMMATRIX& _x, const Matrix4x4& _m)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = (_x.r[0].m128_f32[0] * _m.m_11) + (_x.r[0].m128_f32[1] * _m.m_21) + (_x.r[0].m128_f32[2] * _m.m_31) + (_x.r[0].m128_f32[3] * _m.m_41);
+	temp.m_12 = (_x.r[0].m128_f32[0] * _m.m_12) + (_x.r[0].m128_f32[1] * _m.m_22) + (_x.r[0].m128_f32[2] * _m.m_32) + (_x.r[0].m128_f32[3] * _m.m_42);
+	temp.m_13 = (_x.r[0].m128_f32[0] * _m.m_13) + (_x.r[0].m128_f32[1] * _m.m_23) + (_x.r[0].m128_f32[2] * _m.m_33) + (_x.r[0].m128_f32[3] * _m.m_43);
+	temp.m_14 = (_x.r[0].m128_f32[0] * _m.m_14) + (_x.r[0].m128_f32[1] * _m.m_24) + (_x.r[0].m128_f32[2] * _m.m_34) + (_x.r[0].m128_f32[3] * _m.m_44);
+
+	temp.m_21 = (_x.r[1].m128_f32[0] * _m.m_11) + (_x.r[1].m128_f32[1] * _m.m_21) + (_x.r[1].m128_f32[2] * _m.m_31) + (_x.r[1].m128_f32[3] * _m.m_41);
+	temp.m_22 = (_x.r[1].m128_f32[0] * _m.m_12) + (_x.r[1].m128_f32[1] * _m.m_22) + (_x.r[1].m128_f32[2] * _m.m_32) + (_x.r[1].m128_f32[3] * _m.m_42);
+	temp.m_23 = (_x.r[1].m128_f32[0] * _m.m_13) + (_x.r[1].m128_f32[1] * _m.m_23) + (_x.r[1].m128_f32[2] * _m.m_33) + (_x.r[1].m128_f32[3] * _m.m_43);
+	temp.m_24 = (_x.r[1].m128_f32[0] * _m.m_14) + (_x.r[1].m128_f32[1] * _m.m_24) + (_x.r[1].m128_f32[2] * _m.m_34) + (_x.r[1].m128_f32[3] * _m.m_44);
+
+	temp.m_31 = (_x.r[2].m128_f32[0] * _m.m_11) + (_x.r[2].m128_f32[1] * _m.m_21) + (_x.r[2].m128_f32[2] * _m.m_31) + (_x.r[2].m128_f32[3] * _m.m_41);
+	temp.m_32 = (_x.r[2].m128_f32[0] * _m.m_12) + (_x.r[2].m128_f32[1] * _m.m_22) + (_x.r[2].m128_f32[2] * _m.m_32) + (_x.r[2].m128_f32[3] * _m.m_42);
+	temp.m_33 = (_x.r[2].m128_f32[0] * _m.m_13) + (_x.r[2].m128_f32[1] * _m.m_23) + (_x.r[2].m128_f32[2] * _m.m_33) + (_x.r[2].m128_f32[3] * _m.m_43);
+	temp.m_34 = (_x.r[2].m128_f32[0] * _m.m_14) + (_x.r[2].m128_f32[1] * _m.m_24) + (_x.r[2].m128_f32[2] * _m.m_34) + (_x.r[2].m128_f32[3] * _m.m_44);
+
+	temp.m_41 = (_x.r[3].m128_f32[0] * _m.m_11) + (_x.r[3].m128_f32[1] * _m.m_21) + (_x.r[3].m128_f32[2] * _m.m_31) + (_x.r[3].m128_f32[3] * _m.m_41);
+	temp.m_42 = (_x.r[3].m128_f32[0] * _m.m_12) + (_x.r[3].m128_f32[1] * _m.m_22) + (_x.r[3].m128_f32[2] * _m.m_32) + (_x.r[3].m128_f32[3] * _m.m_42);
+	temp.m_43 = (_x.r[3].m128_f32[0] * _m.m_13) + (_x.r[3].m128_f32[1] * _m.m_23) + (_x.r[3].m128_f32[2] * _m.m_33) + (_x.r[3].m128_f32[3] * _m.m_43);
+	temp.m_44 = (_x.r[3].m128_f32[0] * _m.m_14) + (_x.r[3].m128_f32[1] * _m.m_24) + (_x.r[3].m128_f32[2] * _m.m_34) + (_x.r[3].m128_f32[3] * _m.m_44);
+
+	return temp;
+}
+
+// Matrix4x4 * XMMATRIX
+Matrix4x4 operator*(const Matrix4x4& _m, const XMMATRIX& _x)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = (_m.m_11 * _x.r[0].m128_f32[0]) + (_m.m_12 * _x.r[1].m128_f32[0]) + (_m.m_13 * _x.r[2].m128_f32[0]) + (_m.m_14 * _x.r[3].m128_f32[0]);
+	temp.m_12 = (_m.m_11 * _x.r[0].m128_f32[1]) + (_m.m_12 * _x.r[1].m128_f32[1]) + (_m.m_13 * _x.r[2].m128_f32[0]) + (_m.m_14 * _x.r[3].m128_f32[0]);
+	temp.m_13 = (_m.m_11 * _x.r[0].m128_f32[2]) + (_m.m_12 * _x.r[1].m128_f32[2]) + (_m.m_13 * _x.r[2].m128_f32[2]) + (_m.m_14 * _x.r[3].m128_f32[2]);
+	temp.m_14 = (_m.m_11 * _x.r[0].m128_f32[3]) + (_m.m_12 * _x.r[1].m128_f32[3]) + (_m.m_13 * _x.r[2].m128_f32[3]) + (_m.m_14 * _x.r[3].m128_f32[3]);
+
+	temp.m_21 = (_m.m_21 * _x.r[0].m128_f32[0]) + (_m.m_22 * _x.r[1].m128_f32[0]) + (_m.m_23 * _x.r[2].m128_f32[0]) + (_m.m_24 * _x.r[3].m128_f32[0]);
+	temp.m_22 = (_m.m_21 * _x.r[0].m128_f32[1]) + (_m.m_22 * _x.r[1].m128_f32[1]) + (_m.m_23 * _x.r[2].m128_f32[1]) + (_m.m_24 * _x.r[3].m128_f32[1]);
+	temp.m_23 = (_m.m_21 * _x.r[0].m128_f32[2]) + (_m.m_22 * _x.r[1].m128_f32[2]) + (_m.m_23 * _x.r[2].m128_f32[2]) + (_m.m_24 * _x.r[3].m128_f32[2]);
+	temp.m_24 = (_m.m_21 * _x.r[0].m128_f32[3]) + (_m.m_22 * _x.r[1].m128_f32[3]) + (_m.m_23 * _x.r[2].m128_f32[3]) + (_m.m_24 * _x.r[3].m128_f32[3]);
+
+	temp.m_31 = (_m.m_31 * _x.r[0].m128_f32[0]) + (_m.m_32 * _x.r[1].m128_f32[0]) + (_m.m_33 * _x.r[2].m128_f32[0]) + (_m.m_34 * _x.r[3].m128_f32[0]);
+	temp.m_32 = (_m.m_31 * _x.r[0].m128_f32[1]) + (_m.m_32 * _x.r[1].m128_f32[1]) + (_m.m_33 * _x.r[2].m128_f32[1]) + (_m.m_34 * _x.r[3].m128_f32[1]);
+	temp.m_33 = (_m.m_31 * _x.r[0].m128_f32[2]) + (_m.m_32 * _x.r[1].m128_f32[2]) + (_m.m_33 * _x.r[2].m128_f32[2]) + (_m.m_34 * _x.r[3].m128_f32[2]);
+	temp.m_34 = (_m.m_31 * _x.r[0].m128_f32[3]) + (_m.m_32 * _x.r[1].m128_f32[3]) + (_m.m_33 * _x.r[2].m128_f32[3]) + (_m.m_34 * _x.r[3].m128_f32[3]);
+
+	temp.m_41 = (_m.m_41 * _x.r[0].m128_f32[0]) + (_m.m_42 * _x.r[1].m128_f32[0]) + (_m.m_43 * _x.r[2].m128_f32[0]) + (_m.m_44 * _x.r[3].m128_f32[0]);
+	temp.m_42 = (_m.m_41 * _x.r[0].m128_f32[1]) + (_m.m_42 * _x.r[1].m128_f32[1]) + (_m.m_43 * _x.r[2].m128_f32[1]) + (_m.m_44 * _x.r[3].m128_f32[1]);
+	temp.m_43 = (_m.m_41 * _x.r[0].m128_f32[2]) + (_m.m_42 * _x.r[1].m128_f32[2]) + (_m.m_43 * _x.r[2].m128_f32[2]) + (_m.m_44 * _x.r[3].m128_f32[2]);
+	temp.m_44 = (_m.m_41 * _x.r[0].m128_f32[3]) + (_m.m_42 * _x.r[1].m128_f32[3]) + (_m.m_43 * _x.r[2].m128_f32[3]) + (_m.m_44 * _x.r[3].m128_f32[3]);
+
+	return temp;
+}
+
+// XMFLOAT4X4 * Matrix4x4
+Matrix4x4 operator*(const XMFLOAT4X4& _f, const Matrix4x4& _m)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = (_f._11 * _m.m_11) + (_f._12 * _m.m_21) + (_f._13 * _m.m_31) + (_f._14 * _m.m_41);
+	temp.m_12 = (_f._11 * _m.m_12) + (_f._12 * _m.m_22) + (_f._13 * _m.m_32) + (_f._14 * _m.m_42);
+	temp.m_13 = (_f._11 * _m.m_13) + (_f._12 * _m.m_23) + (_f._13 * _m.m_33) + (_f._14 * _m.m_43);
+	temp.m_14 = (_f._11 * _m.m_14) + (_f._12 * _m.m_24) + (_f._13 * _m.m_34) + (_f._14 * _m.m_44);
+
+	temp.m_21 = (_f._21 * _m.m_11) + (_f._22 * _m.m_21) + (_f._23 * _m.m_31) + (_f._24 * _m.m_41);
+	temp.m_22 = (_f._21 * _m.m_12) + (_f._22 * _m.m_22) + (_f._23 * _m.m_32) + (_f._24 * _m.m_42);
+	temp.m_23 = (_f._21 * _m.m_13) + (_f._22 * _m.m_23) + (_f._23 * _m.m_33) + (_f._24 * _m.m_43);
+	temp.m_24 = (_f._21 * _m.m_14) + (_f._22 * _m.m_24) + (_f._23 * _m.m_34) + (_f._24 * _m.m_44);
+
+	temp.m_31 = (_f._31 * _m.m_11) + (_f._32 * _m.m_21) + (_f._33 * _m.m_31) + (_f._34 * _m.m_41);
+	temp.m_32 = (_f._31 * _m.m_12) + (_f._32 * _m.m_22) + (_f._33 * _m.m_32) + (_f._34 * _m.m_42);
+	temp.m_33 = (_f._31 * _m.m_13) + (_f._32 * _m.m_23) + (_f._33 * _m.m_33) + (_f._34 * _m.m_43);
+	temp.m_34 = (_f._31 * _m.m_14) + (_f._32 * _m.m_24) + (_f._33 * _m.m_34) + (_f._34 * _m.m_44);
+
+	temp.m_41 = (_f._41 * _m.m_11) + (_f._42 * _m.m_21) + (_f._43 * _m.m_31) + (_f._44 * _m.m_41);
+	temp.m_42 = (_f._41 * _m.m_12) + (_f._42 * _m.m_22) + (_f._43 * _m.m_32) + (_f._44 * _m.m_42);
+	temp.m_43 = (_f._41 * _m.m_13) + (_f._42 * _m.m_23) + (_f._43 * _m.m_33) + (_f._44 * _m.m_43);
+	temp.m_44 = (_f._41 * _m.m_14) + (_f._42 * _m.m_24) + (_f._43 * _m.m_34) + (_f._44 * _m.m_44);
+
+	return temp;
+}
+
+// Matrix4x4 * XMFLOAT4X4
+Matrix4x4 operator*(const Matrix4x4& _m, const XMFLOAT4X4& _f)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = (_m.m_11 * _f._11) + (_m.m_12 * _f._21) + (_m.m_13 * _f._31) + (_m.m_14 * _f._41);
+	temp.m_12 = (_m.m_11 * _f._12) + (_m.m_12 * _f._22) + (_m.m_13 * _f._32) + (_m.m_14 * _f._42);
+	temp.m_13 = (_m.m_11 * _f._13) + (_m.m_12 * _f._23) + (_m.m_13 * _f._33) + (_m.m_14 * _f._43);
+	temp.m_14 = (_m.m_11 * _f._14) + (_m.m_12 * _f._24) + (_m.m_13 * _f._34) + (_m.m_14 * _f._44);
+
+	temp.m_21 = (_m.m_21 * _f._11) + (_m.m_22 * _f._21) + (_m.m_23 * _f._31) + (_m.m_24 * _f._41);
+	temp.m_22 = (_m.m_21 * _f._12) + (_m.m_22 * _f._22) + (_m.m_23 * _f._32) + (_m.m_24 * _f._42);
+	temp.m_23 = (_m.m_21 * _f._13) + (_m.m_22 * _f._23) + (_m.m_23 * _f._33) + (_m.m_24 * _f._43);
+	temp.m_24 = (_m.m_21 * _f._14) + (_m.m_22 * _f._24) + (_m.m_23 * _f._34) + (_m.m_24 * _f._44);
+
+	temp.m_31 = (_m.m_31 * _f._11) + (_m.m_32 * _f._21) + (_m.m_33 * _f._31) + (_m.m_34 * _f._41);
+	temp.m_32 = (_m.m_31 * _f._12) + (_m.m_32 * _f._22) + (_m.m_33 * _f._32) + (_m.m_34 * _f._42);
+	temp.m_33 = (_m.m_31 * _f._13) + (_m.m_32 * _f._23) + (_m.m_33 * _f._33) + (_m.m_34 * _f._43);
+	temp.m_34 = (_m.m_31 * _f._14) + (_m.m_32 * _f._24) + (_m.m_33 * _f._34) + (_m.m_34 * _f._44);
+
+	temp.m_41 = (_m.m_41 * _f._11) + (_m.m_42 * _f._21) + (_m.m_43 * _f._31) + (_m.m_44 * _f._41);
+	temp.m_42 = (_m.m_41 * _f._12) + (_m.m_42 * _f._22) + (_m.m_43 * _f._32) + (_m.m_44 * _f._42);
+	temp.m_43 = (_m.m_41 * _f._13) + (_m.m_42 * _f._23) + (_m.m_43 * _f._33) + (_m.m_44 * _f._43);
+	temp.m_44 = (_m.m_41 * _f._14) + (_m.m_42 * _f._24) + (_m.m_43 * _f._34) + (_m.m_44 * _f._44);
+
+	return temp;
+}
+
+// Matrix4x4 * Matrix4x4
+Matrix4x4 operator*(const Matrix4x4& _m1, const Matrix4x4& _m2)
+{
+	Matrix4x4 temp;
+
+	temp.m_11 = (_m1.m_11 * _m2.m_11) + (_m1.m_12 * _m2.m_21) + (_m1.m_13 * _m2.m_31) + (_m1.m_14 * _m2.m_41);
+	temp.m_12 = (_m1.m_11 * _m2.m_12) + (_m1.m_12 * _m2.m_22) + (_m1.m_13 * _m2.m_32) + (_m1.m_14 * _m2.m_42);
+	temp.m_13 = (_m1.m_11 * _m2.m_13) + (_m1.m_12 * _m2.m_23) + (_m1.m_13 * _m2.m_33) + (_m1.m_14 * _m2.m_43);
+	temp.m_14 = (_m1.m_11 * _m2.m_14) + (_m1.m_12 * _m2.m_24) + (_m1.m_13 * _m2.m_34) + (_m1.m_14 * _m2.m_44);
+																							   			  
+	temp.m_21 = (_m1.m_21 * _m2.m_11) + (_m1.m_22 * _m2.m_21) + (_m1.m_23 * _m2.m_31) + (_m1.m_24 * _m2.m_41);
+	temp.m_22 = (_m1.m_21 * _m2.m_12) + (_m1.m_22 * _m2.m_22) + (_m1.m_23 * _m2.m_32) + (_m1.m_24 * _m2.m_42);
+	temp.m_23 = (_m1.m_21 * _m2.m_13) + (_m1.m_22 * _m2.m_23) + (_m1.m_23 * _m2.m_33) + (_m1.m_24 * _m2.m_43);
+	temp.m_24 = (_m1.m_21 * _m2.m_14) + (_m1.m_22 * _m2.m_24) + (_m1.m_23 * _m2.m_34) + (_m1.m_24 * _m2.m_44);
+																							   			  
+	temp.m_31 = (_m1.m_31 * _m2.m_11) + (_m1.m_32 * _m2.m_21) + (_m1.m_33 * _m2.m_31) + (_m1.m_34 * _m2.m_41);
+	temp.m_32 = (_m1.m_31 * _m2.m_12) + (_m1.m_32 * _m2.m_22) + (_m1.m_33 * _m2.m_32) + (_m1.m_34 * _m2.m_42);
+	temp.m_33 = (_m1.m_31 * _m2.m_13) + (_m1.m_32 * _m2.m_23) + (_m1.m_33 * _m2.m_33) + (_m1.m_34 * _m2.m_43);
+	temp.m_34 = (_m1.m_31 * _m2.m_14) + (_m1.m_32 * _m2.m_24) + (_m1.m_33 * _m2.m_34) + (_m1.m_34 * _m2.m_44);
+																							   			  
+	temp.m_41 = (_m1.m_41 * _m2.m_11) + (_m1.m_42 * _m2.m_21) + (_m1.m_43 * _m2.m_31) + (_m1.m_44 * _m2.m_41);
+	temp.m_42 = (_m1.m_41 * _m2.m_12) + (_m1.m_42 * _m2.m_22) + (_m1.m_43 * _m2.m_32) + (_m1.m_44 * _m2.m_42);
+	temp.m_43 = (_m1.m_41 * _m2.m_13) + (_m1.m_42 * _m2.m_23) + (_m1.m_43 * _m2.m_33) + (_m1.m_44 * _m2.m_43);
+	temp.m_44 = (_m1.m_41 * _m2.m_14) + (_m1.m_42 * _m2.m_24) + (_m1.m_43 * _m2.m_34) + (_m1.m_44 * _m2.m_44);
+
+	return temp;
+}
+
+// Matrix4x4 * Vector4
+Vector4 operator*(const Matrix4x4& _m, const Vector4& _v)
+{
+	Vector4 temp;
+
+	temp.x = _m.m_11 * _v.x + _m.m_12 * _v.y + _m.m_13 * _v.z + _m.m_14 * _v.w;
+	temp.y = _m.m_21 * _v.x + _m.m_22 * _v.y + _m.m_23 * _v.z + _m.m_24 * _v.w;
+	temp.z = _m.m_31 * _v.x + _m.m_32 * _v.y + _m.m_33 * _v.z + _m.m_34 * _v.w;
+	temp.w = _m.m_41 * _v.x + _m.m_42 * _v.y + _m.m_43 * _v.z + _m.m_44 * _v.w;
+
+	return temp;
+}
+
+// Vector4 * Matrix4x4
+Vector4 operator*(const Vector4& _v, const Matrix4x4& _m)
+{
+	Vector4 temp;
+
+	temp.x = _m.m_11 * _v.x + _m.m_12 * _v.y + _m.m_13 * _v.z + _m.m_14 * _v.w;
+	temp.y = _m.m_21 * _v.x + _m.m_22 * _v.y + _m.m_23 * _v.z + _m.m_24 * _v.w;
+	temp.z = _m.m_31 * _v.x + _m.m_32 * _v.y + _m.m_33 * _v.z + _m.m_34 * _v.w;
+	temp.w = _m.m_41 * _v.x + _m.m_42 * _v.y + _m.m_43 * _v.z + _m.m_44 * _v.w;
+
+	return temp;
+}
+#pragma endregion

@@ -52,7 +52,7 @@ namespace DirectX11
 								   numFetureLevels,
 								   D3D11_SDK_VERSION,
 								   &m_Device,
-								   &m_FeatureLevel,
+								   nullptr,
 								   &m_ImmediateContext);
 
 			if(SUCCEEDED(hr))

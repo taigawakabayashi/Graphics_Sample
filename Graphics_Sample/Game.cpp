@@ -107,13 +107,10 @@ namespace Render
 	{
 		if (_deltaTime >= 0) {
 
-			CameraMatrix cMatrix;
+			CameraMatrix cMatrix{};
 
-			cMatrix.view = XMMatrixLookAtLH(m_eye, m_lookat, m_up);
-			cMatrix.projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 960.0f / 540.0f, 0.1f, 1000.0f);
-
-			cMatrix.view = XMMatrixTranspose(cMatrix.view);
-			cMatrix.projection = XMMatrixTranspose(cMatrix.projection);
+			cMatrix.view.View(m_eye, m_lookat, m_up).Transpose();
+			cMatrix.projection.Perspective(45.0f, 960.0f / 540.0f, 0.1f, 1000.0f).Transpose();
 
 			ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
@@ -215,11 +212,8 @@ namespace Render
 
 			hr = m_cameraBuffer->Map(0, nullptr, reinterpret_cast<void**>(&data));
 
-			data->view = XMMatrixLookAtLH(m_eye, m_lookat, m_up);
-			data->projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 960.0f / 540.0f, 0.1f, 1000.0f);
-
-			data->view = XMMatrixTranspose(data->view);
-			data->projection = XMMatrixTranspose(data->projection);
+			data->view.View(m_eye, m_lookat, m_up).Transpose();
+			data->projection.Perspective(45.0f, 960.0f / 540.0f, 0.1f, 1000.0f).Transpose();
 
 			m_cameraBuffer->Unmap(0, nullptr);
 

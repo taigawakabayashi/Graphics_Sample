@@ -73,7 +73,7 @@ bool DirectX11_Object::Init()
 	constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	constantBufferDesc.ByteWidth = sizeof(XMMATRIX);
+	constantBufferDesc.ByteWidth = sizeof(Matrix4x4);
 
 	hr = device->CreateBuffer(&constantBufferDesc, nullptr, &m_constantBuffer);
 
@@ -135,24 +135,20 @@ bool DirectX11_Object::Init()
 
 void DirectX11_Object::Update(uint64_t)
 {
-	m_angle.y += 0.05f;
+	m_angle.y += 2.0f;
 	//m_angle.x += 0.05f;
 
 	ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
 	HRESULT hr = S_OK;
 
-	XMMATRIX mtxTransration = XMMatrixIdentity();
-	XMMATRIX mtxRotation = XMMatrixIdentity();
-	XMMATRIX mtxScale = XMMatrixIdentity();
+	Matrix4x4 mtxTransration = Matrix4x4::TranslationMatrix(m_pos);
+	Matrix4x4 mtxRotation = Matrix4x4::RotationZXYMatrix(m_angle);
+	Matrix4x4 mtxScale = Matrix4x4::ScalingMatrix(m_scale);
 
-	mtxTransration = XMMatrixTranslationFromVector(m_pos);
+	m_worldMtx = mtxScale * mtxRotation * mtxTransration;
 
-	mtxRotation = XMMatrixRotationRollPitchYawFromVector(m_angle);
-
-	mtxScale = XMMatrixScalingFromVector(m_scale);
-
-	m_worldMtx = XMMatrixTranspose(mtxScale * mtxRotation * mtxTransration);
+	m_worldMtx.Transpose();
 
 	D3D11_MAPPED_SUBRESOURCE data;
 
@@ -160,7 +156,7 @@ void DirectX11_Object::Update(uint64_t)
 
 	if (SUCCEEDED(hr)) 
 	{
-		memcpy_s(data.pData, data.RowPitch, &m_worldMtx, sizeof(XMMATRIX));
+		memcpy_s(data.pData, data.RowPitch, &m_worldMtx, sizeof(Matrix4x4));
 	}
 
 	devcontext->Unmap(m_constantBuffer.Get(), 0);
@@ -346,9 +342,9 @@ bool DirectX12_Object::Init()
 			return false;
 
 		// 初期値を代入
-		*m_constantBufferMatrix[0] = XMMatrixIdentity();
+		*m_constantBufferMatrix[0] = Matrix4x4::IdentityMatrix();
 		 
-		*m_constantBufferMatrix[1] = XMMatrixIdentity();
+		*m_constantBufferMatrix[1] = Matrix4x4::IdentityMatrix();
 	}
 
 	if (FAILED(hr))
@@ -434,22 +430,16 @@ bool DirectX12_Object::Init()
 
 void DirectX12_Object::Update(uint64_t)
 {
-	m_angle.y += 0.05f;
+	m_angle.y += 2.0f;
 	//m_angle.x += 0.05f;
 
-	XMMATRIX mtxTransration = XMMatrixIdentity();
-	XMMATRIX mtxRotation = XMMatrixIdentity();
-	XMMATRIX mtxScale = XMMatrixIdentity();
+	Matrix4x4 mtxTransration = Matrix4x4::TranslationMatrix(m_pos);
+	Matrix4x4 mtxRotation = Matrix4x4::RotationZXYMatrix(m_angle);
+	Matrix4x4 mtxScale = Matrix4x4::ScalingMatrix(m_scale);
 
-	mtxTransration = XMMatrixTranslationFromVector(m_pos);
+	m_worldMtx = mtxScale * mtxRotation * mtxTransration;
 
-	mtxRotation = XMMatrixRotationRollPitchYawFromVector(m_angle);
-
-	mtxScale = XMMatrixScalingFromVector(m_scale);
-
-	m_worldMtx = (mtxScale * mtxRotation * mtxTransration);
-
-	m_worldMtx = XMMatrixTranspose(m_worldMtx);
+	m_worldMtx.Transpose();
 
 	// 定数バッファ内を更新
 	*m_constantBufferMatrix[m_constantBufferIndex] = m_worldMtx;

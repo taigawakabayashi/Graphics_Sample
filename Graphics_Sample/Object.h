@@ -40,7 +40,7 @@ protected:
 	uint32_t m_numVertex = 0;
 	uint32_t m_numIndex = 0;
 
-	XMMATRIX m_worldMtx = XMMatrixIdentity();
+	Matrix4x4 m_worldMtx = Matrix4x4::IdentityMatrix();
 
 	Texture m_tex;
 };
@@ -78,7 +78,7 @@ private:
 
 	uint32_t m_constantBufferIndex = 0;
 
-	XMMATRIX* m_constantBufferMatrix[2] = { nullptr, nullptr };
+	Matrix4x4* m_constantBufferMatrix[2] = { nullptr, nullptr };
 
 	ComPtr<ID3D12Resource>              m_constantBuffer[2] = { nullptr, nullptr };
 	ComPtr<ID3D12Resource>              m_vertexBuffer = nullptr;

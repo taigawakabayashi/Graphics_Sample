@@ -143,7 +143,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="DirectX11\DirectX11_DepthStencil.cpp" />
     <ClCompile Include="DirectX11\DirectX11_GraphicsManager.cpp" />
     <ClCompile Include="DirectX11\DirectX11_Rasterizer.cpp" />
@@ -155,6 +154,11 @@
     <ClCompile Include="DirectX12\DirectX12_ViewPort.cpp" />
     <ClCompile Include="DirectX12_Resources.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GHI\Buffer.cpp" />
+    <ClCompile Include="GHI\CommonState.cpp" />
+    <ClCompile Include="GHI\Context.cpp" />
+    <ClCompile Include="GHI\Device.cpp" />
+    <ClCompile Include="GHI\GHI_Renderer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -165,7 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Buffer.h" />
     <ClInclude Include="DirectX11\DirectX11_DepthStencil.h" />
     <ClInclude Include="DirectX11\DirectX11_GraphicsManager.h" />
     <ClInclude Include="DirectX11\DirectX11_Rasterizer.h" />
@@ -176,7 +179,11 @@
     <ClInclude Include="DirectX12\DirectX12_SwapChain.h" />
     <ClInclude Include="DirectX12\DirectX12_ViewPort.h" />
     <ClInclude Include="DirectX12_Resources.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="GHI\GHI_Buffer.h" />
+    <ClInclude Include="GHI\GHI_CommonState.h" />
+    <ClInclude Include="GHI\GHI_Context.h" />
+    <ClInclude Include="GHI\GHI_Device.h" />
+    <ClInclude Include="GHI\GHI_Renderer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SwitchingAPI.h" />

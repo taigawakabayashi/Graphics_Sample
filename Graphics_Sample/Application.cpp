@@ -5,6 +5,7 @@
 #include <thread>
 #include "Application.h"
 #include "Timer.h"
+#include "GHI/GHI_Renderer.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -12,7 +13,7 @@ bool Application::Init(HINSTANCE _hInstance, int32_t _winMode)
 {
 	bool sts = false;
 
-	m_useAPI = GraphicsAPI::DIRECTX12;
+	m_useAPI = GraphicsAPI::DIRECTX11;
 
 	wchar_t* Title = nullptr;
 
@@ -99,6 +100,10 @@ int32_t Application::MainLoop()
 
 	Timer timer(60);
 	timer.SetStart();
+
+	GHI_Renderer r;
+
+	r.Init(m_handle, Vector2(960.0f, 540.0f));
 
 	// èâä˙âª
 	Render::Init(m_handle, Vector2Int(960, 540), m_useAPI);
