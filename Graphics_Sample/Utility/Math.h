@@ -14,8 +14,8 @@ using namespace DirectX;
 
 #pragma region Vector2Int
 
-struct Vector2Int {
-
+struct Vector2Int 
+{
 public:
 
 	int32_t x;
@@ -189,8 +189,8 @@ Vector2Int operator/ (const Vector2Int& _v1, const Vector2Int& _v2);
 
 #pragma region Vector3Int
 
-struct Vector3Int {
-
+struct Vector3Int 
+{
 public:
 
 	int32_t x;
@@ -383,8 +383,8 @@ Vector3Int operator/ (const Vector3Int& _v1, const Vector3Int& _v2);
 
 #pragma region Vector2
 
-struct Vector2 {
-
+struct Vector2 
+{
 public:
 
 	float x;
@@ -636,8 +636,8 @@ Vector2 operator/ (const Vector2& _v1, const Vector2& _v2);
 
 #pragma region Vector3
 
-struct Vector3 {
-
+struct Vector3 
+{
 public:
 
 	float x;
@@ -951,8 +951,8 @@ Vector3 operator/ (const Vector3& _v1, const Vector3& _v2);
 
 #pragma region Vector4
 
-struct Vector4 {
-
+struct Vector4 
+{
 public:
 
 	float x;
@@ -1219,17 +1219,17 @@ struct Matrix4x4
 public:
 
 	union
-    {
-        float m[4][4];
+	{
+		float m[4][4];
 
-        struct
-        {
-            float m_11, m_12, m_13, m_14;
-            float m_21, m_22, m_23, m_24;
-            float m_31, m_32, m_33, m_34;
-            float m_41, m_42, m_43, m_44;
-        };
-    };
+		struct
+		{
+			float m_11, m_12, m_13, m_14;
+			float m_21, m_22, m_23, m_24;
+			float m_31, m_32, m_33, m_34;
+			float m_41, m_42, m_43, m_44;
+		};
+	};
 
 	Matrix4x4() = default;
 
@@ -1261,7 +1261,7 @@ public:
 		m_43 = _value._43;
 		m_44 = _value._44;
 	}
-	Matrix4x4& operator=(const XMFLOAT4X4 _value) 
+	Matrix4x4& operator=(const XMFLOAT4X4 _value)
 	{
 		m_11 = _value._11;
 		m_12 = _value._12;
@@ -1333,25 +1333,25 @@ public:
 		return *this;
 	}
 
-	operator XMMATRIX() 
+	operator XMMATRIX()
 	{
 		XMMATRIX temp(m_11, m_12, m_13, m_14,
-					  m_21, m_22, m_23, m_24,
-					  m_31, m_32, m_33, m_34,
-					  m_41, m_42, m_43, m_44);
+			m_21, m_22, m_23, m_24,
+			m_31, m_32, m_33, m_34,
+			m_41, m_42, m_43, m_44);
 		return temp;
 	}
 
-	operator XMFLOAT4X4() 
+	operator XMFLOAT4X4()
 	{
 		XMFLOAT4X4 temp(m_11, m_12, m_13, m_14,
-						m_21, m_22, m_23, m_24,
-						m_31, m_32, m_33, m_34,
-						m_41, m_42, m_43, m_44);
+			m_21, m_22, m_23, m_24,
+			m_31, m_32, m_33, m_34,
+			m_41, m_42, m_43, m_44);
 		return temp;
 	}
 
-	Matrix4x4& operator+=(const Matrix4x4 _m) 
+	Matrix4x4& operator+=(const Matrix4x4 _m)
 	{
 		this->m_11 += _m.m_11;
 		this->m_12 += _m.m_12;
@@ -1403,36 +1403,38 @@ public:
 
 	Matrix4x4& operator*=(const Matrix4x4 _m)
 	{
-		this->m_11 = (this->m_11 * _m.m_11) + (this->m_12 * _m.m_21) + (this->m_13 * _m.m_31) + (this->m_14 * _m.m_41);
-		this->m_12 = (this->m_11 * _m.m_12) + (this->m_12 * _m.m_22) + (this->m_13 * _m.m_32) + (this->m_14 * _m.m_42);
-		this->m_13 = (this->m_11 * _m.m_13) + (this->m_12 * _m.m_23) + (this->m_13 * _m.m_33) + (this->m_14 * _m.m_43);
-		this->m_14 = (this->m_11 * _m.m_14) + (this->m_12 * _m.m_24) + (this->m_13 * _m.m_34) + (this->m_14 * _m.m_44);
+		Matrix4x4 temp;
 
-		this->m_21 = (this->m_21 * _m.m_11) + (this->m_22 * _m.m_21) + (this->m_23 * _m.m_31) + (this->m_24 * _m.m_41);
-		this->m_22 = (this->m_21 * _m.m_12) + (this->m_22 * _m.m_22) + (this->m_23 * _m.m_32) + (this->m_24 * _m.m_42);
-		this->m_23 = (this->m_21 * _m.m_13) + (this->m_22 * _m.m_23) + (this->m_23 * _m.m_33) + (this->m_24 * _m.m_43);
-		this->m_24 = (this->m_21 * _m.m_14) + (this->m_22 * _m.m_24) + (this->m_23 * _m.m_34) + (this->m_24 * _m.m_44);
+		temp.m_11 = (this->m_11 * _m.m_11) + (this->m_12 * _m.m_21) + (this->m_13 * _m.m_31) + (this->m_14 * _m.m_41);
+		temp.m_12 = (this->m_11 * _m.m_12) + (this->m_12 * _m.m_22) + (this->m_13 * _m.m_32) + (this->m_14 * _m.m_42);
+		temp.m_13 = (this->m_11 * _m.m_13) + (this->m_12 * _m.m_23) + (this->m_13 * _m.m_33) + (this->m_14 * _m.m_43);
+		temp.m_14 = (this->m_11 * _m.m_14) + (this->m_12 * _m.m_24) + (this->m_13 * _m.m_34) + (this->m_14 * _m.m_44);
 
-		this->m_31 = (this->m_31 * _m.m_11) + (this->m_32 * _m.m_21) + (this->m_33 * _m.m_31) + (this->m_34 * _m.m_41);
-		this->m_32 = (this->m_31 * _m.m_12) + (this->m_32 * _m.m_22) + (this->m_33 * _m.m_32) + (this->m_34 * _m.m_42);
-		this->m_33 = (this->m_31 * _m.m_13) + (this->m_32 * _m.m_23) + (this->m_33 * _m.m_33) + (this->m_34 * _m.m_43);
-		this->m_34 = (this->m_31 * _m.m_14) + (this->m_32 * _m.m_24) + (this->m_33 * _m.m_34) + (this->m_34 * _m.m_44);
+		temp.m_21 = (this->m_21 * _m.m_11) + (this->m_22 * _m.m_21) + (this->m_23 * _m.m_31) + (this->m_24 * _m.m_41);
+		temp.m_22 = (this->m_21 * _m.m_12) + (this->m_22 * _m.m_22) + (this->m_23 * _m.m_32) + (this->m_24 * _m.m_42);
+		temp.m_23 = (this->m_21 * _m.m_13) + (this->m_22 * _m.m_23) + (this->m_23 * _m.m_33) + (this->m_24 * _m.m_43);
+		temp.m_24 = (this->m_21 * _m.m_14) + (this->m_22 * _m.m_24) + (this->m_23 * _m.m_34) + (this->m_24 * _m.m_44);
 
-		this->m_41 = (this->m_41 * _m.m_11) + (this->m_42 * _m.m_21) + (this->m_43 * _m.m_31) + (this->m_44 * _m.m_41);
-		this->m_42 = (this->m_41 * _m.m_12) + (this->m_42 * _m.m_22) + (this->m_43 * _m.m_32) + (this->m_44 * _m.m_42);
-		this->m_43 = (this->m_41 * _m.m_13) + (this->m_42 * _m.m_23) + (this->m_43 * _m.m_33) + (this->m_44 * _m.m_43);
-		this->m_44 = (this->m_41 * _m.m_14) + (this->m_42 * _m.m_24) + (this->m_43 * _m.m_34) + (this->m_44 * _m.m_44);
+		temp.m_31 = (this->m_31 * _m.m_11) + (this->m_32 * _m.m_21) + (this->m_33 * _m.m_31) + (this->m_34 * _m.m_41);
+		temp.m_32 = (this->m_31 * _m.m_12) + (this->m_32 * _m.m_22) + (this->m_33 * _m.m_32) + (this->m_34 * _m.m_42);
+		temp.m_33 = (this->m_31 * _m.m_13) + (this->m_32 * _m.m_23) + (this->m_33 * _m.m_33) + (this->m_34 * _m.m_43);
+		temp.m_34 = (this->m_31 * _m.m_14) + (this->m_32 * _m.m_24) + (this->m_33 * _m.m_34) + (this->m_34 * _m.m_44);
 
-		return *this;
+		temp.m_41 = (this->m_41 * _m.m_11) + (this->m_42 * _m.m_21) + (this->m_43 * _m.m_31) + (this->m_44 * _m.m_41);
+		temp.m_42 = (this->m_41 * _m.m_12) + (this->m_42 * _m.m_22) + (this->m_43 * _m.m_32) + (this->m_44 * _m.m_42);
+		temp.m_43 = (this->m_41 * _m.m_13) + (this->m_42 * _m.m_23) + (this->m_43 * _m.m_33) + (this->m_44 * _m.m_43);
+		temp.m_44 = (this->m_41 * _m.m_14) + (this->m_42 * _m.m_24) + (this->m_43 * _m.m_34) + (this->m_44 * _m.m_44);
+
+		return *this = temp;
 	}
 
 	// ’PˆÊs—ñ
-	static Matrix4x4 IdentityMatrix() 
+	static Matrix4x4 IdentityMatrix()
 	{
 		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
-					   0.0f, 1.0f, 0.0f, 0.0f,
-					   0.0f, 0.0f, 1.0f, 0.0f,
-					   0.0f, 0.0f, 0.0f, 1.0f);
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 
 		return temp;
 	}
@@ -1440,10 +1442,10 @@ public:
 	// •½sˆÚ“®s—ñ
 	static Matrix4x4 TranslationMatrix(float _posX, float _posY, float _posZ)
 	{
-		Matrix4x4 temp(1.0f,  0.0f,  0.0f, 0.0f,
-					   0.0f,  1.0f,  0.0f, 0.0f,
-					   0.0f,  0.0f,  1.0f, 0.0f,
-					  _posX, _posY, _posZ, 1.0f);
+		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			_posX, _posY, _posZ, 1.0f);
 
 		return temp;
 	}
@@ -1451,10 +1453,10 @@ public:
 	// •½sˆÚ“®s—ñ
 	static Matrix4x4 TranslationMatrix(Vector3 _pos)
 	{
-		Matrix4x4 temp(1.0f,   0.0f,   0.0f, 0.0f,
-					   0.0f,   1.0f,   0.0f, 0.0f,
-					   0.0f,   0.0f,   1.0f, 0.0f,
-					 _pos.x, _pos.y, _pos.z, 1.0f);
+		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			_pos.x, _pos.y, _pos.z, 1.0f);
 
 		return temp;
 	}
@@ -1462,10 +1464,10 @@ public:
 	// ƒXƒP[ƒ‹s—ñ
 	static Matrix4x4 ScalingMatrix(float _scaleX, float _scaleY, float _scaleZ)
 	{
-		Matrix4x4 temp(_scaleX,    0.0f,    0.0f, 0.0f,
-						  0.0f, _scaleY,    0.0f, 0.0f,
-						  0.0f,    0.0f, _scaleZ, 0.0f,
-						  0.0f,    0.0f,    0.0f, 1.0f);
+		Matrix4x4 temp(_scaleX, 0.0f, 0.0f, 0.0f,
+			0.0f, _scaleY, 0.0f, 0.0f,
+			0.0f, 0.0f, _scaleZ, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 
 		return temp;
 	}
@@ -1473,57 +1475,57 @@ public:
 	// ƒXƒP[ƒ‹s—ñ
 	static Matrix4x4 ScalingMatrix(Vector3 _scale)
 	{
-		Matrix4x4 temp(_scale.x,     0.0f,     0.0f, 0.0f,
-						   0.0f, _scale.y,     0.0f, 0.0f,
-						   0.0f,     0.0f, _scale.z, 0.0f,
-						   0.0f,     0.0f,     0.0f, 1.0f);
+		Matrix4x4 temp(_scale.x, 0.0f, 0.0f, 0.0f,
+			0.0f, _scale.y, 0.0f, 0.0f,
+			0.0f, 0.0f, _scale.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 
 		return temp;
 	}
 
-	// ‰ñ“]s—ñ
+	// ‰ñ“]s—ñ(XŽ²)
 	static Matrix4x4 RotationXMatrix(float _angle)
 	{
 		float cosX = cosf((_angle) * (PI_F / 180.0f));
 		float sinX = sinf((_angle) * (PI_F / 180.0f));
 
 		Matrix4x4 temp(1.0f, 0.0f, 0.0f, 0.0f,
-					   0.0f, cosX, sinX, 0.0f,
-					   0.0f, -sinX, cosX, 0.0f,
-					   0.0f, 0.0f, 0.0f, 1.0f);
+			0.0f, cosX, sinX, 0.0f,
+			0.0f, -sinX, cosX, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 
 		return temp;
 	}
 
-	// ‰ñ“]s—ñ
+	// ‰ñ“]s—ñ(YŽ²)
 	static Matrix4x4 RotationYMatrix(float _angle)
 	{
 		float cosY = cosf((_angle) * (PI_F / 180.0f));
 		float sinY = sinf((_angle) * (PI_F / 180.0f));
 
 		Matrix4x4 temp(cosY, 0.0f, -sinY, 0.0f,
-					   0.0f, 1.0f, 0.0f, 0.0f,
-					   sinY, 0.0f, cosY, 0.0f,
-					   0.0f, 0.0f, 0.0f, 1.0f);
+			0.0f, 1.0f, 0.0f, 0.0f,
+			sinY, 0.0f, cosY, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 
 		return temp;
 	}
 
-	// ‰ñ“]s—ñ
+	// ‰ñ“]s—ñ(ZŽ²)
 	static Matrix4x4 RotationZMatrix(float _angle)
 	{
 		float cosZ = cosf((_angle) * (PI_F / 180.0f));
 		float sinZ = sinf((_angle) * (PI_F / 180.0f));
 
 		Matrix4x4 temp(cosZ, sinZ, 0.0f, 0.0f,
-					  -sinZ, cosZ, 0.0f, 0.0f,
-					   0.0f, 0.0f, 1.0f, 0.0f,
-					   0.0f, 0.0f, 0.0f, 1.0f);
+			-sinZ, cosZ, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
 
 		return temp;
 	}
 
-	// ‰ñ“]s—ñ
+	// ‰ñ“]s—ñ(Z->X->Y)
 	static Matrix4x4 RotationZXYMatrix(float _angleX, float _angleY, float _angleZ)
 	{
 		float cosX = cosf((_angleX) * (PI_F / 180.0f));
@@ -1550,7 +1552,7 @@ public:
 		return temp;
 	}
 
-	// ‰ñ“]s—ñ
+	// ‰ñ“]s—ñ(Z->X->Y)
 	static Matrix4x4 RotationZXYMatrix(Vector3 _angle)
 	{
 		float cosX = cosf((_angle.x) * (PI_F / 180.0f));
@@ -1573,6 +1575,137 @@ public:
 		temp.m_31 = cosX * sinY;
 		temp.m_32 = -sinX;
 		temp.m_33 = cosX * cosY;
+
+		return temp;
+	}
+
+	// ‰ñ“](”CˆÓŽ²)
+	static Matrix4x4 RotationAxisMatrix(Vector3 _axis, float _angle)
+	{
+		float tempSin = sinf(_angle * (PI_F / 180.0f));
+		float tempCos = cosf(_angle * (PI_F / 180.0f));
+
+		Matrix4x4 temp;
+
+		temp.m_11 = tempCos + _axis.x * _axis.x * (1.0f - tempCos);
+		temp.m_12 = _axis.x * _axis.y * (1.0f - tempCos) + _axis.z * tempSin;
+		temp.m_13 = _axis.x * _axis.z * (1.0f - tempCos) - _axis.y * tempSin;
+		temp.m_14 = 0.0f;
+
+		temp.m_21 = _axis.x * _axis.y * (1.0f - tempCos) - _axis.z * tempSin;;
+		temp.m_22 = tempCos + _axis.y * _axis.y * (1.0f - tempCos);
+		temp.m_23 = _axis.y * _axis.z * (1.0f - tempCos) + _axis.x * tempSin;
+		temp.m_24 = 0.0f;
+
+		temp.m_31 = _axis.x * _axis.z * (1.0f - tempCos) + _axis.y * tempSin;
+		temp.m_32 = _axis.y * _axis.z * (1.0f - tempCos) - _axis.x * tempSin;
+		temp.m_33 = tempCos + _axis.z * _axis.z * (1.0f - tempCos);
+		temp.m_34 = 0.0f;
+
+		temp.m_41 = 0.0f;
+		temp.m_42 = 0.0f;
+		temp.m_43 = 0.0f;
+		temp.m_44 = 1.0f;
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhXŽ²‰ñ‚è)
+	static Matrix4x4 RotationXWorldMatrix(float _angle)
+	{
+		Matrix4x4 temp = Matrix4x4::RotationAxisMatrix(Vector3(1.0f, 0.0f, 0.0f), _angle);
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhYŽ²‰ñ‚è)
+	static Matrix4x4 RotationYWorldMatrix(float _angle)
+	{
+		Matrix4x4 temp = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 1.0f, 0.0f), _angle);
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhZŽ²‰ñ‚è)
+	static Matrix4x4 RotationZWorldMatrix(float _angle)
+	{
+		Matrix4x4 temp = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 0.0f, 1.0f), _angle);
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhŽ²‰ñ‚è)
+	static Matrix4x4 RotationWorldMatrix(float _angleX, float _angleY, float _angleZ)
+	{
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(Vector3(1.0f, 0.0f, 0.0f), _angleX);
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 1.0f, 0.0f), _angleY);
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 0.0f, 1.0f), _angleZ);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhŽ²‰ñ‚è)
+	static Matrix4x4 RotationWorldMatrix(Vector3 _angle)
+	{
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(Vector3(1.0f, 0.0f, 0.0f), _angle.x);
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 1.0f, 0.0f), _angle.y);
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 0.0f, 1.0f), _angle.z);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒJƒ‹Ž²‰ñ‚è)
+	static Matrix4x4 RotationLocalMatrix(Matrix4x4 _mtx, float _angleX, float _angleY, float _angleZ)
+	{
+		Vector3 axisZ = _mtx.GetAxisZ();
+
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(axisZ, _angleZ);
+
+		Vector3 axisX = _mtx.GetAxisX();
+
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(axisX, _angleX);
+
+		Vector3 axisY = _mtx.GetAxisY();
+
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(axisY, _angleY);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return temp;
+	}
+
+	// ‰ñ“](ƒ[ƒJƒ‹Ž²‰ñ‚è)
+	static Matrix4x4 RotationLocalMatirx(Matrix4x4 _mtx, Vector3 _angle)
+	{
+		Vector3 axisZ = _mtx.GetAxisZ();
+
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(axisZ, _angle.z);
+
+		Vector3 axisX = _mtx.GetAxisX();
+
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(axisX, _angle.x);
+
+		Vector3 axisY = _mtx.GetAxisY();
+
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(axisY, _angle.y);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
 
 		return temp;
 	}
@@ -1804,38 +1937,175 @@ public:
 		return *this = temp;
 	}
 
+	// ‰ñ“](”CˆÓŽ²)
+	Matrix4x4& RotationAxis(Vector3 _axis, float _angle) 
+	{
+		float tempSin = sinf(_angle * (PI_F / 180.0f));
+		float tempCos = cosf(_angle * (PI_F / 180.0f));
+
+		Matrix4x4 temp;
+
+		temp.m_11 = tempCos + _axis.x * _axis.x * (1 - tempCos);
+		temp.m_12 = _axis.x * _axis.y * (1 - tempCos) + _axis.z * tempSin;
+		temp.m_13 = _axis.x * _axis.z * (1 - tempCos) - _axis.y * tempSin;
+		temp.m_14 = 0.0f;
+
+		temp.m_21 = _axis.x * _axis.y * (1 - tempCos) - _axis.z * tempSin;
+		temp.m_22 = tempCos + _axis.y * _axis.y * (1 - tempCos);
+		temp.m_23 = _axis.y * _axis.z * (1 - tempCos) + _axis.x * tempSin;
+		temp.m_24 = 0.0f;
+
+		temp.m_31 = _axis.x * _axis.z * (1 - tempCos) + _axis.y * tempSin;
+		temp.m_32 = _axis.y * _axis.z * (1 - tempCos) - _axis.x * tempSin;
+		temp.m_33 = tempCos + _axis.z * _axis.z * (1 - tempCos);
+		temp.m_34 = 0.0f;
+
+		temp.m_41 = 0.0f;
+		temp.m_42 = 0.0f;
+		temp.m_43 = 0.0f;
+		temp.m_44 = 1.0f;
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhXŽ²‰ñ‚è)
+	Matrix4x4& RotationXWorld(float _angle)
+	{
+		Matrix4x4 temp = Matrix4x4::RotationAxisMatrix(Vector3(1.0f, 0.0f, 0.0f), _angle);
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhYŽ²‰ñ‚è)
+	Matrix4x4& RotationYWorld(float _angle)
+	{
+		Matrix4x4 temp = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 1.0f, 0.0f), _angle);
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhZŽ²‰ñ‚è)
+	Matrix4x4& RotationZWorld(float _angle)
+	{
+		Matrix4x4 temp = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 0.0f, 1.0f), _angle);
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhŽ²‰ñ‚è)
+	Matrix4x4& RotationWorld(float _angleX, float _angleY, float _angleZ) 
+	{
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(Vector3(1.0f, 0.0f, 0.0f), _angleX);
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 1.0f, 0.0f), _angleY);
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 0.0f, 1.0f), _angleZ);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒ‹ƒhŽ²‰ñ‚è)
+	Matrix4x4& RotationWorld(Vector3 _angle)
+	{
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(Vector3(1.0f, 0.0f, 0.0f), _angle.x);
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 1.0f, 0.0f), _angle.y);
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(Vector3(0.0f, 0.0f, 1.0f), _angle.z);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒJƒ‹Ž²‰ñ‚è)
+	Matrix4x4& RotationLocal(float _angleX, float _angleY, float _angleZ)
+	{
+		Vector3 axisZ = this->GetAxisZ();
+		axisZ.Normalize();
+
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(axisZ, _angleZ);
+
+		Vector3 axisX = this->GetAxisX();
+		axisX.Normalize();
+
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(axisX, _angleX);
+
+		Vector3 axisY = this->GetAxisY();
+		axisY.Normalize();
+
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(axisY, _angleY);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return *this = temp;
+	}
+
+	// ‰ñ“](ƒ[ƒJƒ‹Ž²‰ñ‚è)
+	Matrix4x4& RotationLocal(Vector3 _angle)
+	{
+		Vector3 axisZ = this->GetAxisZ();
+		axisZ.Normalize();
+
+		Matrix4x4 tempZ = Matrix4x4::RotationAxisMatrix(axisZ, _angle.z);
+
+		Vector3 axisX = this->GetAxisX();
+		axisX.Normalize();
+
+		Matrix4x4 tempX = Matrix4x4::RotationAxisMatrix(axisX, _angle.x);
+
+		Vector3 axisY = this->GetAxisY();
+		axisY.Normalize();
+
+		Matrix4x4 tempY = Matrix4x4::RotationAxisMatrix(axisY, _angle.y);
+
+		Matrix4x4 temp = tempZ;
+
+		temp *= tempX;
+		temp *= tempY;
+
+		return *this = temp;
+	}
+
 	// XŽ²‚ðŽæ“¾
-	Vector3& GetAxisX() 
+	Vector3 GetAxisX() 
 	{
 		Vector3 temp;
 
 		temp.x = this->m_11;
-		temp.x = this->m_12;
-		temp.x = this->m_13;
+		temp.y = this->m_12;
+		temp.z = this->m_13;
 
 		return temp;
 	}
 
 	// YŽ²‚ðŽæ“¾
-	Vector3& GetAxisY()
+	Vector3 GetAxisY()
 	{
 		Vector3 temp;
 
 		temp.x = this->m_21;
-		temp.x = this->m_22;
-		temp.x = this->m_23;
+		temp.y = this->m_22;
+		temp.z = this->m_23;
 
 		return temp;
 	}
 
 	// ZŽ²‚ðŽæ“¾
-	Vector3& GetAxisZ()
+	Vector3 GetAxisZ()
 	{
 		Vector3 temp;
 
 		temp.x = this->m_31;
-		temp.x = this->m_32;
-		temp.x = this->m_33;
+		temp.y = this->m_32;
+		temp.z = this->m_33;
 
 		return temp;
 	}
@@ -2036,12 +2306,362 @@ Vector4 operator* (const Matrix4x4& _m, const Vector4& _v);
 Vector4 operator* (const Vector4& _v, const Matrix4x4& _m);
 #pragma endregion
 
+#pragma region Quaternion
+
+struct Quaternion 
+{
+public:
+
+	float x;
+	float y;
+	float z;
+	float w;
+
+	Quaternion() = default;
+
+	Quaternion(const Quaternion&) = default;
+	Quaternion& operator=(const Quaternion&) = default;
+
+	Quaternion(Quaternion&&) = default;
+	Quaternion& operator=(Quaternion&&) = default;
+
+	Quaternion(const XMFLOAT4 & _value) {
+
+		this->x = _value.x;
+		this->y = _value.y;
+		this->z = _value.z;
+		this->w = _value.w;
+	}
+	Quaternion& operator= (const XMFLOAT4 & _value) {
+
+		this->x = _value.x;
+		this->y = _value.y;
+		this->z = _value.z;
+		this->w = _value.w;
+
+		return *this;
+	}
+
+	Quaternion(const XMVECTOR & _value) {
+
+		this->x = _value.m128_f32[0];
+		this->y = _value.m128_f32[1];
+		this->z = _value.m128_f32[2];
+		this->w = _value.m128_f32[3];
+	}
+	Quaternion& operator= (const XMVECTOR & _value) {
+
+		this->x = _value.m128_f32[0];
+		this->y = _value.m128_f32[1];
+		this->z = _value.m128_f32[2];
+		this->w = _value.m128_f32[3];
+
+		return *this;
+	}
+
+	operator XMFLOAT4() {
+
+		return XMFLOAT4(x, y, z, w);
+	}
+
+	operator XMVECTOR() {
+
+		return XMVECTOR{ x, y, z,w };
+	}
+
+	static Quaternion IdentityQuaternion() 
+	{
+		return Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	static Quaternion RotationXQuaternion(float _angle)
+	{
+		Quaternion temp;
+
+		Vector3 tempAxis = Vector3::right();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = tempAxis.x * tempSin;
+		temp.y = tempAxis.y * tempSin;
+		temp.z = tempAxis.z * tempSin;
+		temp.w = tempCos;
+
+		return temp;
+	}
+
+	static Quaternion RotationYQuaternion(float _angle)
+	{
+		Quaternion temp;
+
+		Vector3 tempAxis = Vector3::up();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = tempAxis.x * tempSin;
+		temp.y = tempAxis.y * tempSin;
+		temp.z = tempAxis.z * tempSin;
+		temp.w = tempCos;
+
+		return temp;
+	}
+
+	static Quaternion RotationZQuaternion(float _angle)
+	{
+		Quaternion temp;
+
+		Vector3 tempAxis = Vector3::forward();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = tempAxis.x * tempSin;
+		temp.y = tempAxis.y * tempSin;
+		temp.z = tempAxis.z * tempSin;
+		temp.w = tempCos;
+
+		return temp;
+	}
+
+	static Quaternion RotationAxisQuaternion(Vector3 _axis, float _angle)
+	{
+		Quaternion temp;	
+
+		_axis.Normalize();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = _axis.x * tempSin;
+		temp.y = _axis.y * tempSin;
+		temp.z = _axis.z * tempSin;
+		temp.w = tempCos;
+
+		return temp;
+	}
+
+	static Quaternion RotationMatrixQuaternion(Matrix4x4 _mtx)
+	{
+		float elem[4] =
+		{
+			_mtx.m_11 - _mtx.m_22 - _mtx.m_33 + 1.0f,
+			-_mtx.m_11 + _mtx.m_22 - _mtx.m_33 + 1.0f,
+			-_mtx.m_11 - _mtx.m_22 + _mtx.m_33 + 1.0f,
+			_mtx.m_11 + _mtx.m_22 + _mtx.m_33 + 1.0f,
+		};
+
+		uint32_t biggestindex = 0;
+
+		for (int i = 1; i < 4; ++i)
+		{
+			if (elem[i] > elem[biggestindex])
+			{
+				biggestindex = i;
+			}
+		}
+
+		if (elem[biggestindex] < 0.0f)
+			return IdentityQuaternion();
+
+		float v = sqrtf(elem[biggestindex]) * 0.5f;
+		float mult = 0.25f / v;
+
+		Quaternion temp;
+
+		switch (biggestindex)
+		{
+		case 0:
+
+			temp.x = v;
+			temp.y = (_mtx.m_12 + _mtx.m_21) * mult;
+			temp.z = (_mtx.m_31 + _mtx.m_13) * mult;
+			temp.w = (_mtx.m_23 - _mtx.m_32) * mult;
+
+			break;
+		case 1:
+
+			temp.x = (_mtx.m_12 + _mtx.m_21) * mult;
+			temp.y = v;
+			temp.z = (_mtx.m_23 + _mtx.m_32) * mult;
+			temp.w = (_mtx.m_31 - _mtx.m_13) * mult;
+
+			break;
+
+		case 2:
+
+			temp.x = (_mtx.m_31 + _mtx.m_13) * mult;
+			temp.y = (_mtx.m_23 + _mtx.m_32) * mult;
+			temp.z = v;
+			temp.w = (_mtx.m_12 - _mtx.m_21) * mult;
+
+			break;
+
+		case 3:
+
+			temp.x = (_mtx.m_23 - _mtx.m_32) * mult;
+			temp.y = (_mtx.m_31 - _mtx.m_13) * mult;
+			temp.z = (_mtx.m_12 - _mtx.m_21) * mult;
+			temp.w = v;
+
+			break;
+		}
+
+		return temp;
+	}
+
+	Quaternion& RotationX(float _angle)
+	{
+		Quaternion temp;
+
+		Vector3 tempAxis = Vector3::right();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = tempAxis.x * tempSin;
+		temp.y = tempAxis.y * tempSin;
+		temp.z = tempAxis.z * tempSin;
+		temp.w = tempCos;
+
+		return *this = temp;
+	}
+
+	Quaternion& RotationY(float _angle)
+	{
+		Quaternion temp;
+
+		Vector3 tempAxis = Vector3::up();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = tempAxis.x * tempSin;
+		temp.y = tempAxis.y * tempSin;
+		temp.z = tempAxis.z * tempSin;
+		temp.w = tempCos;
+
+		return *this = temp;
+	}
+
+	Quaternion& RotationZ(float _angle)
+	{
+		Quaternion temp;
+
+		Vector3 tempAxis = Vector3::forward();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = tempAxis.x * tempSin;
+		temp.y = tempAxis.y * tempSin;
+		temp.z = tempAxis.z * tempSin;
+		temp.w = tempCos;
+
+		return *this = temp;
+	}
+
+	Quaternion& RotationAxis(Vector3 _axis, float _angle)
+	{
+		Quaternion temp;
+
+		_axis.Normalize();
+
+		float tempSin = sinf((_angle / 2) * (PI_F / 180.0f));
+		float tempCos = cosf((_angle / 2) * (PI_F / 180.0f));
+
+		temp.x = _axis.x * tempSin;
+		temp.y = _axis.y * tempSin;
+		temp.z = _axis.z * tempSin;
+		temp.w = tempCos;
+
+		return *this = temp;
+	}
+
+	Quaternion& RotationMatrix(Matrix4x4 _mtx) 
+	{
+		float elem[4] =
+		{
+			_mtx.m_11 - _mtx.m_22 - _mtx.m_33 + 1.0f,
+			-_mtx.m_11 + _mtx.m_22 - _mtx.m_33 + 1.0f,
+			-_mtx.m_11 - _mtx.m_22 + _mtx.m_33 + 1.0f,
+			_mtx.m_11 + _mtx.m_22 + _mtx.m_33 + 1.0f,
+		};
+
+		uint32_t biggestindex = 0;
+
+		for (int i = 1; i < 4; ++i) 
+		{
+			if (elem[i] > elem[biggestindex]) 
+			{
+				biggestindex = i;
+			}
+		}
+
+		if (elem[biggestindex] < 0.0f)
+			return *this;
+
+		float v = sqrtf(elem[biggestindex]) * 0.5f;
+		float mult = 0.25f / v;
+
+		Quaternion temp = Quaternion::IdentityQuaternion();
+
+		switch (biggestindex) 
+		{
+		case 0:
+
+			temp.x = v;
+			temp.y = (_mtx.m_12 + _mtx.m_21) * mult;
+			temp.z = (_mtx.m_31 + _mtx.m_13) * mult;
+			temp.w = (_mtx.m_23 - _mtx.m_32) * mult;
+
+			break;
+		case 1:
+
+			temp.x = (_mtx.m_12 + _mtx.m_21) * mult;
+			temp.y = v;
+			temp.z = (_mtx.m_23 + _mtx.m_32) * mult;
+			temp.w = (_mtx.m_31 - _mtx.m_13) * mult;
+
+			break;
+
+		case 2:
+
+			temp.x = (_mtx.m_31 + _mtx.m_13) * mult;
+			temp.y = (_mtx.m_23 + _mtx.m_32) * mult;
+			temp.z = v;
+			temp.w = (_mtx.m_12 - _mtx.m_21) * mult;
+
+			break;
+
+		case 3:
+
+			temp.x = (_mtx.m_23 - _mtx.m_32) * mult;
+			temp.y = (_mtx.m_31 - _mtx.m_13) * mult;
+			temp.z = (_mtx.m_12 - _mtx.m_21) * mult;
+			temp.w = v;
+
+			break;
+		}
+
+		return *this = temp;
+	}
+
+	constexpr Quaternion(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
+	constexpr Quaternion(Vector4 _v) : x(_v.x), y(_v.y), z(_v.z), w(_v.w) {}
+};
+
+#pragma endregion
+
+
 template <class T>  class Property {
 
 public:
 
 	T& _value;
 
+	// Getter
 	operator T()
 	{
 		// get‚ªÝ’è‚³‚ê‚Ä‚ê‚Î“o˜^‚³‚ê‚½‚Ù‚¤‚ðŒÄ‚Ô
@@ -2053,6 +2673,7 @@ public:
 		this->_value = _pro._value;
 	};
 
+	// Setter
 	void operator =(const T _v)
 	{
 		_value = _v;

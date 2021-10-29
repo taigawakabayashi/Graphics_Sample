@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "Timer.h"
 #include "GHI/GHI_Renderer.h"
+#include "DirectX12/DirectX12_Renderer.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -13,7 +14,7 @@ bool Application::Init(HINSTANCE _hInstance, int32_t _winMode)
 {
 	bool sts = false;
 
-	m_useAPI = GraphicsAPI::DIRECTX11;
+	m_useAPI = GraphicsAPI::DIRECTX12;
 
 	wchar_t* Title = nullptr;
 
@@ -101,12 +102,12 @@ int32_t Application::MainLoop()
 	Timer timer(60);
 	timer.SetStart();
 
-	GHI_Renderer r;
-
-	r.Init(m_handle, Vector2(960.0f, 540.0f));
+	GHI::GHI_Renderer* renderer = new DirectX12::DX12_Renderer;
+	
+	renderer->Init(m_handle, Vector2(960.0f, 540.0f));
 
 	// 初期化
-	Render::Init(m_handle, Vector2Int(960, 540), m_useAPI);
+	//Render::Init(m_handle, Vector2Int(960, 540), m_useAPI);
 
 	// メインループ
 	while (WM_QUIT != message.message)
@@ -133,10 +134,16 @@ int32_t Application::MainLoop()
 			{
 				deltaTime = timer.GetDeltaTime();
 
+				float col[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
+
 				// ↓メイン処理
-				Render::Input(deltaTime);     // 入力
-				Render::Update(deltaTime);    // 更新
-				Render::Draw(deltaTime);      // 描画
+				renderer->BeforeRender(col);
+				
+				renderer->AfterRender();
+				
+				//Render::Input(deltaTime);     // 入力
+				//Render::Update(deltaTime);    // 更新
+				//Render::Draw(deltaTime);      // 描画
 				// ↑
 
 				/*swprintf_s(fpsCounter, 256, L"FPS:%.1f", timer.GetFPS());
@@ -151,7 +158,9 @@ int32_t Application::MainLoop()
 	}
 
 	// 終了処理
-	Render::Uninit();
+	//Render::Uninit();
+
+	delete renderer;
 
 	return message.message;
 }

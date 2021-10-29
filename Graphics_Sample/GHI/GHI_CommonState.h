@@ -6,6 +6,7 @@
 
 #include <wrl/client.h>
 #include <unordered_map>
+#include <memory>
 
 enum class StateType
 {
@@ -22,7 +23,7 @@ enum class BlendType : uint32_t
 	MAX,
 };
 
-enum class RasterType : uint32_t
+enum class RasterizerType : uint32_t
 {
 	CULL_NONE_FILL_SOLID = 0,	// カリングなし
 	CULL_FRONT_FILL_SOLID,		// 表面カリング
@@ -51,166 +52,58 @@ enum class SamplerType : uint32_t
 	MAX,
 };
 
-//
-class Device;
-class Context;
-
-#ifdef IS_DIRECTX11
-
-class CommonState
+namespace GHI 
 {
-public:
+	class GHI_BlendState 
+	{
+	public:
 
-	virtual void* Get() = 0;
-};
+		virtual void* Get() = 0;
 
-class BlendState : public CommonState 
-{
-public:
+		virtual ~GHI_BlendState() {}
+	};
 
-	HRESULT CreateState(Device* _pDevice, BlendType _blendType);
-	void* Get() override { return m_state.Get(); };
+	class GHI_RasterizerState 
+	{
+	public:
 
-private:
+		virtual void* Get() = 0;
 
-	Microsoft::WRL::ComPtr<ID3D11BlendState> m_state;
-};
+		virtual ~GHI_RasterizerState() {}
+	};
 
-class RasterizerState : public CommonState
-{
-public:
+	class GHI_DepthStencilState
+	{
+	public:
 
-	HRESULT CreateState(Device* _pDevice, RasterType _rasterType);
-	void* Get() override { return m_state.Get(); };
+		virtual void* Get() = 0;
 
-private:
+		virtual ~GHI_DepthStencilState() {}
+	};
 
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_state;
-};
+	class GHI_PipelineState
+	{
+	public:
 
-class DepthStencilState : public CommonState
-{
-public:
+		void SetBlendState(BlendType _blendType, std::unique_ptr<GHI_BlendState> _pBlendState);
+		void SetRasterizerState(RasterizerType _rasterizerType, std::unique_ptr<GHI_RasterizerState> _pRasterizerState);
+		void SetDepthStencilState(DepthStencilType _depthStencilType, std::unique_ptr<GHI_DepthStencilState> _pDepthStencilState);
 
-	HRESULT CreateState(Device* _pDevice, DepthStencilType _depthStencilType);
-	void* Get() override { return m_state.Get(); };
+		virtual void* Get(uint32_t hash) = 0;
+		virtual void* GetRootSignature(uint32_t hash) = 0;
 
-private:
+		GHI_BlendState* GetBlendState(BlendType _blendType) { return m_blendStates[_blendType].get(); };
+		GHI_RasterizerState* GetRasterizerState(RasterizerType _rasterizerType) { return m_rasterizerStates[_rasterizerType].get(); };
+		GHI_DepthStencilState* GetDepthStencilState(DepthStencilType _depthStencilType) { return m_depthStencilStates[_depthStencilType].get(); };
 
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_state;
-};
+		virtual ~GHI_PipelineState() {}
 
-class SamplerState : public CommonState
-{
-public:
+	protected:
 
-	HRESULT CreateState(Device* _pDevice, SamplerType samplerType);
-	void* Get() override { return m_state.Get(); };
-
-private:
-
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_state;
-};
-
-class PipelineStateObject
-{
-public:
-
-	HRESULT InitStates(Device* _pDevice);
-
-	BlendState* GetBlendState(BlendType _blendType);
-	RasterizerState* GetRastrizerState(RasterType _rasterizerType);
-	DepthStencilState* GetDepthStencilState(DepthStencilType _depthStencilType);
-	SamplerState* GetSamplerState(SamplerType _samplerType);
-
-private:
-
-	std::unordered_map<BlendType, BlendState>				m_blendStates;
-	std::unordered_map<RasterType, RasterizerState>			m_rasterizerStates;
-	std::unordered_map<DepthStencilType, DepthStencilState> m_depthStencilStates;
-	std::unordered_map<SamplerType, SamplerState>			m_samplerStates;
-};
-
-
-#elif defined IS_DIRECTX12
-
-class CommonState
-{
-public:
-
-	virtual void* Get() = 0;
-};
-
-class BlendState : public CommonState
-{
-public:
-
-	HRESULT CreateState(Device* _pDevice, BlendType _blendType);
-	void* Get() override { return &m_state; };
-
-private:
-
-	D3D12_BLEND_DESC m_state;
-};
-
-class RasterizerState : public CommonState
-{
-public:
-
-	HRESULT CreateState(Device* _pDevice, RasterType _rasterType);
-	void* Get() override { return &m_state; };
-
-private:
-
-	D3D12_RASTERIZER_DESC m_state;
-};
-
-class DepthStencilState : public CommonState
-{
-public:
-
-	HRESULT CreateState(Device* _pDevice, DepthStencilType _depthStencilType);
-	void* Get() override { return &m_state; };
-
-private:
-
-	D3D12_DEPTH_STENCIL_DESC m_state;
-};
-
-class SamplerState : public CommonState
-{
-public:
-
-	HRESULT CreateState(Device* _pDevice, SamplerType samplerType);
-	void* Get() override { return &m_state; };
-
-private:
-
-	D3D12_SAMPLER_DESC m_state;
-};
-
-class PipelineStateObject
-{
-public:
-
-	HRESULT InitStates(Device* _pDevice);
-
-	void SetStates(BlendType _blendType,
-				   RasterType _rasterizerType,
-				   DepthStencilType _depthStencilType,
-				   SamplerType _samplerType);
-
-private:
-
-	Device* m_device = nullptr;
-
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_pipelineStateObject = nullptr;
-
-	std::unordered_map<BlendType, BlendState>				m_blendStates;
-	std::unordered_map<RasterType, RasterizerState>			m_rasterizerStates;
-	std::unordered_map<DepthStencilType, DepthStencilState> m_depthStencilStates;
-	std::unordered_map<SamplerType, SamplerState>			m_samplerStates;
-};
-#endif
+		std::unordered_map<BlendType, std::unique_ptr<GHI_BlendState>> m_blendStates;
+		std::unordered_map<RasterizerType, std::unique_ptr<GHI_RasterizerState>> m_rasterizerStates;
+		std::unordered_map<DepthStencilType, std::unique_ptr<GHI_DepthStencilState>> m_depthStencilStates;
+	};
+}
 
 #endif // !COMMONSTATE_H

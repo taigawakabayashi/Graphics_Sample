@@ -34,9 +34,9 @@ namespace DirectX11 {
     {
         D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
         // ステンシルステート作成
-        ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
         depthStencilDesc.DepthEnable = true;
         depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
         depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;

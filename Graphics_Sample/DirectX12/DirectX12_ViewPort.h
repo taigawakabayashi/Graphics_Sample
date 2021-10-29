@@ -1,10 +1,10 @@
 #pragma once
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef DX12_VIEWPORT_H
+#define DX12_VIEWPORT_H
 
 #include <d3d12.h>
 
-#include <Utility/Math.h>
+#include <GHI/GHI_ViewPort.h>
 
 namespace DirectX12 
 {
@@ -24,7 +24,20 @@ namespace DirectX12
 
         D3D12_RECT     m_scissorRect = { 0 };
     };
+
+    class DX12_ViewPort : public GHI::GHI_ViewPort
+    {
+    public:
+
+        void CreateViewPort(Vector2 _size, Vector2 _topLeft) override;
+
+        void* Get() override { return &m_viewPort; }
+
+    private:
+
+        D3D12_VIEWPORT m_viewPort = { 0 };
+    };
 }
 
-#endif // !VIEW_H
+#endif // !DX12_VIEWPORT_H
 

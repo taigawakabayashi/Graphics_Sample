@@ -136,17 +136,25 @@ bool DirectX11_Object::Init()
 void DirectX11_Object::Update(uint64_t)
 {
 	m_angle.y += 2.0f;
-	//m_angle.x += 0.05f;
+	//m_angle.x += 2.0f;
 
 	ID3D11DeviceContext* devcontext = DirectX11::DirectX11_GraphicsMng::GetInstance()->GetImmediateContext();
 
 	HRESULT hr = S_OK;
 
-	Matrix4x4 mtxTransration = Matrix4x4::TranslationMatrix(m_pos);
-	Matrix4x4 mtxRotation = Matrix4x4::RotationZXYMatrix(m_angle);
-	Matrix4x4 mtxScale = Matrix4x4::ScalingMatrix(m_scale);
+	//float tempangle = XMConvertToRadians(30.0f);
 
-	m_worldMtx = mtxScale * mtxRotation * mtxTransration;
+	//XMVECTOR a = XMQuaternionRotationAxis(Vector3(0.5f, 0.0f, 0.5f), tempangle);
+	XMVECTOR a = XMQuaternionRotationMatrix(Matrix4x4::RotationWorldMatrix(30.0f, 0.0f, 45.0f));
+	//Quaternion b = Quaternion::RotationAxisQuaternion(Vector3(0.5f, 0.0f, 0.5f), 30.0f);
+	Quaternion b;
+	b.RotationMatrix(Matrix4x4::RotationWorldMatrix(30.0f, 0.0f, 45.0f));
+
+	m_mtxTransration.Translation(m_pos);
+	m_mtxRotation.RotationLocal(m_angle);
+	m_mtxScale.Scaling(m_scale);
+
+	m_worldMtx = m_mtxScale * m_mtxRotation * m_mtxTransration;
 
 	m_worldMtx.Transpose();
 
@@ -431,13 +439,13 @@ bool DirectX12_Object::Init()
 void DirectX12_Object::Update(uint64_t)
 {
 	m_angle.y += 2.0f;
-	//m_angle.x += 0.05f;
+	//m_angle.x += 2.0f;
 
-	Matrix4x4 mtxTransration = Matrix4x4::TranslationMatrix(m_pos);
-	Matrix4x4 mtxRotation = Matrix4x4::RotationZXYMatrix(m_angle);
-	Matrix4x4 mtxScale = Matrix4x4::ScalingMatrix(m_scale);
+	m_mtxTransration.Translation(m_pos);
+	m_mtxRotation.RotationLocal(m_angle);
+	m_mtxScale.Scaling(m_scale);
 
-	m_worldMtx = mtxScale * mtxRotation * mtxTransration;
+	m_worldMtx = m_mtxScale * m_mtxRotation * m_mtxTransration;
 
 	m_worldMtx.Transpose();
 

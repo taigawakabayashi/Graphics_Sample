@@ -18,7 +18,9 @@ enum class GraphicsAPI
 #define USE_VULKAN 3
 
 // Using Graphics API
-#define USINGAPI USE_DIRECTX12
+#define USINGAPI USE_OPENGL
+
+#include <d3d11_3.h>
 
 // DirectX11
 #if (USINGAPI == USE_DIRECTX11)

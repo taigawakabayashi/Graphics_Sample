@@ -1,12 +1,14 @@
 #include "GHI/GHI_Renderer.h"
+#include "DirectX12/DirectX12_Device.h"
 
-bool GHI_Renderer::Init(HWND _hWnd, Vector2 _size)
+namespace GHI
 {
-	m_device.CreateDevice(&m_immediateContext);
+	bool GHI_Renderer::Init(HWND _hWnd, Vector2 _size)
+	{
+		m_device = std::make_unique<DirectX12::DX12_Device>();
 
-	m_pipelineStateObject.InitStates(&m_device);
+		m_device->InitStates();
 
-	m_immediateContext.SetPipelineStateObject(&m_pipelineStateObject);
-
-	return false;
+		return false;
+	}
 }

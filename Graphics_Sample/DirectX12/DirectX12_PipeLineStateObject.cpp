@@ -114,7 +114,7 @@ namespace DirectX12 {
 			// 深度ステンシルステートの設定
 			D3D12_DEPTH_STENCIL_DESC depthDesc = {};
 
-			depthDesc.DepthEnable = false;
+			depthDesc.DepthEnable = true;
 			depthDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 			depthDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 			depthDesc.StencilEnable = false;
@@ -135,8 +135,8 @@ namespace DirectX12 {
 
 			pipeLineDesc.InputLayout = { elementDesc, _countof(elementDesc) };
 			pipeLineDesc.pRootSignature = m_rootSignature.Get();
-			pipeLineDesc.VS = Shader::GetInstance()->GetShaderByte(Shaders::VS);	// 頂点シェーダーの設定
-			pipeLineDesc.PS = Shader::GetInstance()->GetShaderByte(Shaders::PS);	// ピクセルシェーダーの設定
+			pipeLineDesc.VS = Shader::GetInstance()->GetShaderByte(ShadersStage::VS);	// 頂点シェーダーの設定
+			pipeLineDesc.PS = Shader::GetInstance()->GetShaderByte(ShadersStage::PS);	// ピクセルシェーダーの設定
 			pipeLineDesc.RasterizerState = rasterDesc;
 			pipeLineDesc.BlendState = blendDesc;
 			pipeLineDesc.DepthStencilState = depthDesc;

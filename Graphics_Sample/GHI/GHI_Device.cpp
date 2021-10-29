@@ -64,19 +64,42 @@ HRESULT Device::CreateBuffer(uint32_t _byteWidth, void* _initData, BufferType _b
 
 	switch (_bufferType)
 	{
-	case BufferType::VERTEX:
-
-		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		break;
-
-	case BufferType::INDEX:
-		
-		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		break;
-
 	case BufferType::CONSTANT:
 		
 		bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		break;
+	}
+
+	D3D11_SUBRESOURCE_DATA initData{};
+	initData.pSysMem = _initData;
+
+	HRESULT hr = m_device->CreateBuffer(&bufferDesc, &initData, _pBuffer->GetAddressOf());
+
+	return hr;
+}
+
+HRESULT Device::CreateIABuffer(uint32_t _byteWidth, void* _initData, IABufferType _bufferType, IABuffer* _pBuffer)
+{
+	D3D11_BUFFER_DESC bufferDesc{};
+
+	bufferDesc.ByteWidth = _byteWidth;
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	switch (_bufferType)
+	{
+	case IABufferType::VERTEX:
+	{
+		_pBuffer->Init(_byteWidth, _byteWidth, Format::UNKNOWN);
+
+		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		break;
+	}
+	case IABufferType::INDEX:
+
+		_pBuffer->Init(_byteWidth, 0, Format::R32_UINT);
+
+		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		break;
 	}
 

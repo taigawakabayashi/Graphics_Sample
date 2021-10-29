@@ -151,7 +151,7 @@ bool Texture::CreateTexture12()
     resourceDesc.SampleDesc = { 1, 0 };
     resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 
-    hr = pDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_texture12));
+    hr = pDevice->CreateCommittedResource(&heapProp, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&m_texture12));
     if (FAILED(hr)) {
         return false;
     }

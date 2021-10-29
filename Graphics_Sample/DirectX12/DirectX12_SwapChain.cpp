@@ -1,7 +1,15 @@
 #include "DirectX12/DirectX12_SwapChain.h"
 #include "DirectX12_GraphicsManager.h"
+#include "DirectX12//DirectX12_RenderTargetView.h"
 
-namespace DirectX12 {
+namespace DirectX12 
+{
+	void DX12_SwapChain::CreateRenderTargetView(GHI::GHI_Device* _pDevice)
+	{
+		m_renderTagetView = std::make_unique<DX12_RenderTaergetView>();
+
+		m_renderTagetView->Create(_pDevice, this);
+	}
 
 	bool DirectX12_SwapChain::CreateSwapChain(ID3D12CommandQueue* _pCommandQueue, HWND _hWnd, Vector2Int _size)
 	{
@@ -246,4 +254,5 @@ namespace DirectX12 {
 		// 現在のバックバッファのインデックスを取得
 		m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 	}
+	
 }

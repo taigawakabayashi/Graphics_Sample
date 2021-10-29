@@ -1,11 +1,13 @@
 #pragma once
-#ifndef BUFFER_H
-#define BUFFER_H
+#ifndef GHI_BUFFER_H
+#define GHI_BUFFER_H
 
 #include <wrl/client.h>
 #include "SwitchingAPI.h"
+#include "Texture.h"
+#include "Utility/Math.h"
 
-enum class BufferType 
+enum class BufferType
 {
 	VERTEX,
 	INDEX,
@@ -13,37 +15,35 @@ enum class BufferType
 	STRUCTURED
 };
 
-class Context;
-
-#ifdef IS_DIRECTX11
-
-class Buffer 
+struct BufferInfo 
 {
-public:
-
-	HRESULT Map(Context* _pContext,void* _pData);
-	void Unmap(Context* _pContext);
-
-	ID3D11Buffer* Get() { return m_buffer.Get(); }
-	ID3D11Buffer** GetAddressOf() { return m_buffer.GetAddressOf(); }
-
-private:
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
+	uint32_t	m_bufferSize = 0;
+	uint32_t	m_stride = 0;
+	Format		m_format = Format::UNKNOWN;
 };
 
-#elif defined IS_DIRECTX12
-
-class Buffer
+namespace GHI 
 {
-public:
+	class GHI_Buffer 
+	{
+	public:
 
+		void SetBufferInfo(BufferInfo* _pInfo);
+		BufferInfo* GetBufferInfo();
 
-private:
+		void UpdateData(void* _pData);
+		void* GetData();
+		virtual void* Get() = 0;
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> m_buffer;
+		virtual ~GHI_Buffer() {}
 
-};
-#endif
+	private:
 
-#endif // !BUFFER_H
+		void* m_data = nullptr;
+		bool m_isUpdate = false;
+
+		BufferInfo m_info{};
+	};
+}
+
+#endif // !GHI_BUFFER_H

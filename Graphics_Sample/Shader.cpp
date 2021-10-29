@@ -7,48 +7,48 @@ bool Shader::Init()
 
 	D3D11_INPUT_ELEMENT_DESC layout[] = 
 	{
-	    {"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
-	    {"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+		{"POSITION",    0,  DXGI_FORMAT_R32G32B32_FLOAT,    0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
+		{"TEXCOORD",    0,  DXGI_FORMAT_R32G32_FLOAT,       0,  D3D11_APPEND_ALIGNED_ELEMENT,   D3D11_INPUT_PER_VERTEX_DATA,    0   },
 	};
 
 	uint32_t numElements = ARRAYSIZE(layout);
 
 	// 頂点シェーダーを作成
 	bool sts = CreateVertexShader(
-	    device,
-	    "Shader/VertexShader.hlsl",
-	    "main",
-	    "vs_5_0",
-	    layout,
-	    numElements,
-	    nullptr,
-	    &m_vertexShader,
-	    &m_inputLayout);
+		device,
+		"Shader/VertexShader.hlsl",
+		"main",
+		"vs_5_0",
+		layout,
+		numElements,
+		nullptr,
+		&m_vertexShader,
+		&m_inputLayout);
 
 	if (!sts) 
-	    return false;
+		return false;
 
 	// ピクセルシェーダーを作成
 	sts = CreatePixelShader(
-	    device,
-	    "Shader/PixelShader.hlsl",
-	    "main",
-	    "ps_5_0",
-	    nullptr,
-	    &m_pixelShader);
+		device,
+		"Shader/PixelShader.hlsl",
+		"main",
+		"ps_5_0",
+		nullptr,
+		&m_pixelShader);
 	if (!sts)
-	    return false;
+		return false;
 
 	return true;
 }
 
 bool Shader::InitDirectX12()
 {
-	bool sts = LoadShaderFile(L"Shader/VertexShader.hlsl", "main", "vs_5_1", Shaders::VS);
+	bool sts = LoadShaderFile(L"Shader/VertexShader.hlsl", "main", "vs_5_1", ShadersStage::VS);
 	if (!sts)
 		return false;
 
-	sts = LoadShaderFile(L"Shader/PixelShader.hlsl", "main", "ps_5_1", Shaders::PS);
+	sts = LoadShaderFile(L"Shader/PixelShader.hlsl", "main", "ps_5_1", ShadersStage::PS);
 	if (!sts)
 		return false;
 
@@ -136,7 +136,7 @@ bool Shader::CreatePixelShader(ID3D11Device* device,
 	return true;
 }
 
-bool Shader::LoadShaderFile(LPCWSTR _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, Shaders _shaders)
+bool Shader::LoadShaderFile(LPCWSTR _pFileName, LPCSTR _entryPoint, LPCSTR _shaderModel, ShadersStage _shaders)
 {
 	HRESULT hr = S_OK;
 

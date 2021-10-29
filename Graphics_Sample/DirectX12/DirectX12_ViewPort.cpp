@@ -23,4 +23,15 @@ namespace DirectX12
 
 		_pCommandList->RSSetScissorRects(1, &m_scissorRect);
 	}
+
+
+	void DX12_ViewPort::CreateViewPort(Vector2 _size, Vector2 _topLeft) 
+	{
+		m_viewPort.Width = _size.x;
+		m_viewPort.Height = _size.y;
+		m_viewPort.TopLeftX = _topLeft.x;
+		m_viewPort.TopLeftY = _topLeft.y;
+		m_viewPort.MinDepth = 0.0f;
+		m_viewPort.MaxDepth = 1.0f;
+	}
 }

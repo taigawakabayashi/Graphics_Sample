@@ -1,5 +1,6 @@
 #include "GHI/GHI_Context.h"
 
+
 #ifdef IS_DIRECTX11
 
 void ImmediateContext::ClearRenderTargetView(RenderTargetView* _renderTargetView, const float _clearColor[])
@@ -22,21 +23,53 @@ void ImmediateContext::SetViewPorrt(ViewPort* _viewPort)
 	m_context->RSSetViewports(1, nullptr);
 }
 
-void ImmediateContext::SetConstantBuffer(uint32_t _setSlot, Buffer* _pConstantBuffer)
+void ImmediateContext::SetResourceBuffer(ResourceBuffer* _pBuffer, BufferType _bufferType, uint32_t _setSlot)
 {
-	
+	if (_pBuffer->isUpdate()) {
+
+		D3D11_MAPPED_SUBRESOURCE pData{};
+
+		HRESULT hr = m_context->Map(_pBuffer->Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &pData);
+
+		if (SUCCEEDED(hr))
+		{
+			pData.pData = _pBuffer->GetData();
+
+			m_context->Unmap(_pBuffer->Get(), 0);
+		}
+	}
+
+	switch (_bufferType)
+	{
+	case BufferType::CONSTANT:
+
+		m_context->VSSetConstantBuffers(_setSlot, 1, _pBuffer->GetAddressOf());
+
+		break;
+	}
 }
 
-void ImmediateContext::SetVertextBuffer(uint32_t _numBuffers, Buffer* _pVertexBuffers, uint32_t* _strides)
+void ImmediateContext::SetIABuffer(IABuffer* _pBuffer, IABufferType _bufferType)
 {
-	uint32_t offsets[] = { 0 };
+	switch (_bufferType)
+	{
+	case IABufferType::VERTEX:
+	{
 
-	m_context->IASetVertexBuffers(0, _numBuffers, nullptr, _strides, offsets);
-}
+		uint32_t offsets[] = { 0 };
 
-void ImmediateContext::SetIndexBuffer(Buffer* _pIndexBuffer)
-{
+		uint32_t stride = _pBuffer->GetBufferStride();
 
+		m_context->IASetVertexBuffers(0, 1, _pBuffer->GetAddressOf(), &stride, offsets);
+
+		break;
+	}
+	case IABufferType::INDEX:
+
+		m_context->IASetIndexBuffer(_pBuffer->Get(), static_cast<DXGI_FORMAT>(_pBuffer->GetBufferFormat()), 0);
+
+		break;
+	}
 }
 
 void ImmediateContext::SetPrimitiveTopology(PrimitiveTopology _topology)
@@ -60,7 +93,7 @@ void ImmediateContext::SetStates(BlendType _blendType,
 	SetState(m_pipelineStateObject->GetSamplerState(_samplerType), StateType::SAMPLER);
 }
 
-void ImmediateContext::SetPipelineStateObject(PipelineStateObject* _pipelineStateObject)
+void ImmediateContext::SetPipelineStateObject(PipelineState* _pipelineStateObject)
 {
 	m_pipelineStateObject = _pipelineStateObject;
 }
@@ -165,32 +198,47 @@ void ImmediateContext::SetViewPorrt(ViewPort* _viewPort)
 	m_context->RSSetViewports(1, nullptr);
 }
 
-void ImmediateContext::SetConstantBuffer(uint32_t _setSlot, Buffer* _pConstantBuffer)
+void ImmediateContext::SetResourceBuffer(ResourceBuffer* _pBuffer, BufferType _bufferType, uint32_t _setSlot)
 {
+	switch (_bufferType)
+	{
+	case BufferType::CONSTANT:
 
+		m_context->SetGraphicsRootConstantBufferView(_setSlot, _pBuffer->Get()->GetGPUVirtualAddress());
+
+		break;
+	}
 }
 
-void ImmediateContext::SetVertextBuffer(uint32_t _numBuffers, Buffer* _pVertexBuffers, uint32_t* _strides, uint32_t* _sizes)
+void ImmediateContext::SetIABuffer(IABuffer* _pBuffer, IABufferType _bufferType) 
 {
-	uint32_t offsets[] = { 0 };
-
-	std::vector<D3D12_VERTEX_BUFFER_VIEW> vertexBufferViews;
-
-	for (int i = 0; i < _numBuffers; ++i) 
+	switch (_bufferType)
+	{
+	case IABufferType::VERTEX:
 	{
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 
-		//vertexBufferView.BufferLocation = _pVertexBuffers[i].Get()->GetGPUVirtualAddress();
-		vertexBufferView.SizeInBytes = _sizes[i];
-		vertexBufferView.StrideInBytes = _strides[i];
+		vertexBufferView.BufferLocation = _pBuffer->Get()->GetGPUVirtualAddress();
+		vertexBufferView.SizeInBytes = _pBuffer->GetBufferSize();
+		vertexBufferView.StrideInBytes = _pBuffer->GetBufferStride();
+
+		m_context->IASetVertexBuffers(0, 1, &vertexBufferView);
+
+		break;
 	}
+	case IABufferType::INDEX:
+	{
+		D3D12_INDEX_BUFFER_VIEW indexBufferView{};
 
-	m_context->IASetVertexBuffers(0, _numBuffers, vertexBufferViews.data());
-}
+		indexBufferView.BufferLocation = _pBuffer->Get()->GetGPUVirtualAddress();
+		indexBufferView.SizeInBytes = _pBuffer->GetBufferSize();
+		indexBufferView.Format = static_cast<DXGI_FORMAT>( _pBuffer->GetBufferFormat());
 
-void ImmediateContext::SetIndexBuffer(Buffer* _pIndexBuffer)
-{
+		m_context->IASetIndexBuffer(&indexBufferView);
 
+		break;
+	}
+	}
 }
 
 void ImmediateContext::SetPrimitiveTopology(PrimitiveTopology _topology)

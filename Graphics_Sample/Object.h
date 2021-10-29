@@ -40,6 +40,10 @@ protected:
 	uint32_t m_numVertex = 0;
 	uint32_t m_numIndex = 0;
 
+	Matrix4x4 m_mtxTransration = Matrix4x4::IdentityMatrix();
+	Matrix4x4 m_mtxRotation = Matrix4x4::IdentityMatrix();
+	Matrix4x4 m_mtxScale = Matrix4x4::IdentityMatrix();
+
 	Matrix4x4 m_worldMtx = Matrix4x4::IdentityMatrix();
 
 	Texture m_tex;

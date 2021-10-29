@@ -6,10 +6,25 @@
 #include <dxgi1_6.h>
 #include <wrl/client.h>
 
+#include "GHI/GHI_SwapChain.h"
+
 #include <Utility/Math.h>
 
 namespace DirectX12 
 {
+	class DX12_SwapChain : public  GHI::GHI_SwapChain 
+	{
+	public:
+
+		void CreateRenderTargetView(GHI::GHI_Device* _pDevice) override;
+
+		void* GetCurrentRTV() override { return m_renderTagetView->Get(m_currentIndex); }
+
+		SIZE_T GetDescriptorHandle() override { return m_renderTagetView->GetDescriptorHandle(m_currentIndex); }
+
+	private:
+	};
+
 	using Microsoft::WRL::ComPtr;
 
 	class DirectX12_SwapChain 

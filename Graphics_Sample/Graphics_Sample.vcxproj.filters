@@ -85,11 +85,23 @@
     <Filter Include="ヘッダー ファイル\Utirity">
       <UniqueIdentifier>{bff6fc41-49f4-433a-8cfc-df9fe0eb195d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Graphics">
+    <Filter Include="ソース ファイル\GHI">
+      <UniqueIdentifier>{2885f282-8c2c-40ba-ba25-ad3776b27157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GHI\Graphics">
       <UniqueIdentifier>{07888718-2e97-44e4-b284-d6d5d2a70258}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Graphics">
+    <Filter Include="ヘッダー ファイル\GHI">
+      <UniqueIdentifier>{97ed1f1f-e689-4ed9-825a-1fd1d7ddb8d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GHI\Graphics">
       <UniqueIdentifier>{5ff7124c-89d8-460f-8555-a5b00d62968d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DirectX3D 12\Shader">
+      <UniqueIdentifier>{fd988637-09df-477e-8b7a-e72c1c1a260b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DirectX3D 12\Shader">
+      <UniqueIdentifier>{63980890-c8b6-4733-a5a5-ea543639fdfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -150,20 +162,53 @@
     <ClCompile Include="Timer.cpp">
       <Filter>ソース ファイル\Utirity</Filter>
     </ClCompile>
-    <ClCompile Include="GHI\Buffer.cpp">
-      <Filter>ソース ファイル\Graphics</Filter>
+    <ClCompile Include="GHI\GHI_Buffer.cpp">
+      <Filter>ソース ファイル\GHI\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="GHI\Context.cpp">
-      <Filter>ソース ファイル\Graphics</Filter>
+    <ClCompile Include="GHI\GHI_Context.cpp">
+      <Filter>ソース ファイル\GHI\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="GHI\Device.cpp">
-      <Filter>ソース ファイル\Graphics</Filter>
+    <ClCompile Include="GHI\GHI_Device.cpp">
+      <Filter>ソース ファイル\GHI\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="GHI\CommonState.cpp">
-      <Filter>ソース ファイル\Graphics</Filter>
+    <ClCompile Include="GHI\GHI_CommonState.cpp">
+      <Filter>ソース ファイル\GHI\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="GHI\GHI_Renderer.cpp">
-      <Filter>ソース ファイル\Graphics</Filter>
+      <Filter>ソース ファイル\GHI\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_Shader.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_Device.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_CommonState.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_Device.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_Shader.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_CommonState.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_Buffer.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DirectX11_Buffer.cpp">
+      <Filter>ソース ファイル\DirectX3D 11\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_Context.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_RenderTargetView.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DirectX12_Renderer.cpp">
+      <Filter>ソース ファイル\DirectX3D 12\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -222,19 +267,76 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GHI\GHI_Buffer.h">
-      <Filter>ヘッダー ファイル\Graphics</Filter>
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GHI\GHI_Context.h">
-      <Filter>ヘッダー ファイル\Graphics</Filter>
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GHI\GHI_Device.h">
-      <Filter>ヘッダー ファイル\Graphics</Filter>
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GHI\GHI_CommonState.h">
-      <Filter>ヘッダー ファイル\Graphics</Filter>
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GHI\GHI_Renderer.h">
-      <Filter>ヘッダー ファイル\Graphics</Filter>
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GHI\GHI_ViewPort.h">
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GHI\GHI_Shader.h">
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_Device.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_Shader.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_CommonState.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_Device.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_Shader.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_CommonState.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_Buffer.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DirectX11_Buffer.h">
+      <Filter>ヘッダー ファイル\DirectX3D 11\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GHI\GHI_Texture.h">
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_Context.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GHI\GHI_SwapChain.h">
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GHI\GHI_RenderTargetView.h">
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GHI\GHI_DepthStencilView.h">
+      <Filter>ヘッダー ファイル\GHI\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_DepthStencilView.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_RenderTargetView.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DirectX12_Renderer.h">
+      <Filter>ヘッダー ファイル\DirectX3D 12\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
